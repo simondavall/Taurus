@@ -7,3 +7,15 @@
 - Apply the theme globally using the root `MudThemeProvider`.
 - Centralise application icon identifiers in a dedicated `TaurusIcons` class using semantic names rather than embedding Material icon constants throughout components.
 - Keep feature components theme-aware by using MudBlazor semantic colours (`Color.Primary`, `Color.Secondary`, `Color.Success`, etc.) instead of hard-coded colour values.
+
+## Shared Application Layout
+
+- The application shell is implemented in `MainLayout`.
+- Keep `MainLayout.razor` declarative and place behaviour in `MainLayout.razor.cs`.
+- Use `MudLayout` as the root layout component.
+- Host global providers (`MudThemeProvider`, `MudPopoverProvider`, `MudDialogProvider` and `MudSnackbarProvider`) before the layout.
+- Use `MudAppBar` for application-level actions and branding.
+- Use a `MudDrawer` for primary navigation.
+- Keep the application name in the app bar only; avoid duplicate branding within the navigation drawer.
+- Allow the navigation drawer to be collapsed from the app bar while leaving responsive behaviour to the responsive layout implementation.
+- Render routed page content inside `MudMainContent`.

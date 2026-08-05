@@ -1,29 +1,45 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider Theme="@TaurusTheme.Default" 
-                  IsDarkMode="true" />
+<MudThemeProvider Theme="@TaurusTheme.Default" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<div class="page">
-    <div class="sidebar">
+<MudLayout>
+    <MudAppBar Elevation="1">
+
+        <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                       Color="Color.Inherit"
+                       Edge="Edge.Start"
+                       aria-label="Toggle navigation"
+                       OnClick="ToggleNavigation" />
+
+        <MudText Typo="Typo.h5"
+                 Class="taurus-app-title">
+            Taurus
+        </MudText>
+
+        <MudSpacer />
+
+        <MudIconButton Icon="@TaurusIcons.Actions.Refresh"
+                       Color="Color.Inherit"
+                       aria-label="Refresh page"
+                       OnClick="RefreshPageAsync" />
+
+    </MudAppBar>
+
+    <MudDrawer @bind-Open="_navigationOpen"
+               Variant="DrawerVariant.Persistent"
+               Elevation="1">
+
         <NavMenu />
-    </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
-        </div>
+    </MudDrawer>
 
-        <article class="content px-4">
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge"
+                      Class="taurus-main-content">
             @Body
-        </article>
-    </main>
-</div>
-
-<div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
-    <span class="dismiss">🗙</span>
-</div>
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
