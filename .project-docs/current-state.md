@@ -13,15 +13,15 @@ where development should continue.
 
 # Current task
 
-- Configure MudBlazor.
-  - Add the MudBlazor packages.
-  - Configure the required MudBlazor services.
-  - Configure the required MudBlazor providers.
-  - Verify MudBlazor components render correctly.
+- Establish the application theme.
+  - Create the Taurus theme.
+  - Configure the colour palette.
+  - Configure typography.
+  - Configure icons.
+  - Verify the theme is applied consistently.
 
 # Remaining milestone tasks
 
-- Establish the application theme.
 - Establish the shared application layout.
 - Establish the project structure.
 - Configure responsive layout foundations.
@@ -34,3 +34,7 @@ where development should continue.
 - Verified the application builds successfully.
 - Verified the application runs successfully.
 - Created the initial project documentation.
+- Added the MudBlazor package.
+- Configured MudBlazor services.
+- Added the required MudBlazor providers.
+- Verified MudBlazor components render correctly.

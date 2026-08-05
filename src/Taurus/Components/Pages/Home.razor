@@ -2,6 +2,38 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<MudText Typo="Typo.h3"
+         GutterBottom="true">
+    Taurus
+</MudText>
 
-Welcome to your new app.
+<MudText Typo="Typo.body1"
+         GutterBottom="true">
+    MudBlazor is configured successfully.
+</MudText>
+
+<MudButton Variant="Variant.Filled"
+           Color="Color.Primary"
+           OnClick="HandleButtonClickAsync">
+    Verify MudBlazor
+</MudButton>
+
+@if (_isVerified)
+{
+    <MudAlert Severity="Severity.Success"
+              Variant="Variant.Outlined"
+              Class="mt-4">
+        MudBlazor components are rendering and Interactive Server behaviour is working.
+    </MudAlert>
+}
+
+@code {
+    private bool _isVerified;
+
+    private Task HandleButtonClickAsync()
+    {
+        _isVerified = true;
+
+        return Task.CompletedTask;
+    }
+}
