@@ -2,7 +2,7 @@
 
 Taurus is a .NET 10 Blazor Web App that replaces the existing PegasusUI application.
 
-The application is responsible for presenting and coordinating the Pegasus user experience. PegasusApi remains the system of record for project and ticket data and is treated as an external dependency whose contract cannot be changed.
+The application is responsible for presenting and coordinating the Pegasus user experience. PegasusApi is the system of record for project and ticket data.
 
 Taurus uses Interactive Server rendering. UI interactions execute on the Taurus server, and the browser maintains an interactive Blazor connection to the application.
 
@@ -12,7 +12,7 @@ The initial architecture is intentionally limited to the boundaries required for
 
 Taurus interacts with two existing systems:
 
-- PegasusApi supplies project and ticket data and performs the available business operations.
+- PegasusApi supplies project and ticket data.
 - Soteria provides user authentication.
 
 The initial system flow is:
@@ -37,7 +37,7 @@ PegasusApi
 
 Taurus maintains its own authenticated application session after authentication through Soteria.
 
-PegasusApi is initially unprotected. API authentication and authorisation will be introduced separately after the initial Taurus UI has been completed.
+PegasusApi currently requires no authentication. It is a locally hosted third party api.
 
 ## Application responsibilities
 
@@ -58,10 +58,8 @@ Taurus does not own:
 
 - Project or ticket persistence.
 - Pegasus business data.
-- PegasusApi implementation.
 - PegasusApi request or response contracts.
 - User identity management.
-- API authorisation during the initial implementation.
 
 ## Rendering model
 
@@ -271,3 +269,7 @@ Taurus communicates with Soteria through OpenID Connect and with PegasusApi thro
 
 Detailed production hosting, credential and API-authorisation decisions will be documented when those concerns become current implementation work.
 
+## Develelopment Environment
+
+Rider IDE
+Powershell

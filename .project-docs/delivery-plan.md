@@ -16,11 +16,11 @@ Tasks listed here are intentionally concise. Detailed scope, goals and implement
 
 ## Milestone 1.1 – Project Foundation
 
-- Create the Taurus solution.
-  - Create the solution.
-  - Create the Blazor Web App project.
-  - Verify the application builds.
-  - Verify the application runs successfully.
+- ✓ Create the Taurus solution.
+  - ✓ Create the solution.
+  - ✓ Create the Blazor Web App project.
+  - ✓ Verify the application builds.
+  - ✓ Verify the application runs successfully.
 
 - Configure MudBlazor.
   - Add the MudBlazor packages.

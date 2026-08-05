@@ -1,0 +1,11 @@
+bin/
+obj/
+.env
+*.db
+*.db-wal
+*.db-shm
+*.user
+
+# Hidden folders
+.idea
+.data

@@ -5,7 +5,7 @@
 - Use Vertical Slice Architecture.
 - Organise the application by feature rather than technical layer.
 - Keep business logic within feature services.
-- Treat PegasusApi as an external dependency.
+- PegasusApi is an external dependency.
 - Do not couple the UI directly to PegasusApi request or response models.
 - Keep API integration behind a dedicated application layer.
 - Shared functionality should be actively considered whenever patterns emerge.
