@@ -18,7 +18,7 @@ The project aims to provide a clean, maintainable and responsive application tha
 
 The primary goals of the project are:
 
-- Replace PegasusUI without changing PegasusApi.
+- Replace PegasusUI.
 - Preserve existing business functionality while modernising the user experience.
 - Provide a fully responsive user interface.
 - Keep the application simple to understand and maintain.
@@ -119,8 +119,6 @@ The project values:
 
 The project deliberately does not aim to:
 
-- Replace PegasusApi.
-- Change PegasusApi's public contract.
 - Introduce unnecessary architectural layers.
 - Couple the UI directly to the PegasusApi models.
 - Optimise for hypothetical future requirements.

@@ -13,21 +13,24 @@ where development should continue.
 
 # Current task
 
-- Create the Taurus solution.
-  - Create the solution.
-  - Create the Blazor Web App project.
-  - Verify the application builds.
-  - Verify the application runs successfully.
+- Configure MudBlazor.
+  - Add the MudBlazor packages.
+  - Configure the required MudBlazor services.
+  - Configure the required MudBlazor providers.
+  - Verify MudBlazor components render correctly.
 
 # Remaining milestone tasks
 
-- Configure MudBlazor.
 - Establish the application theme.
 - Establish the shared application layout.
 - Establish the project structure.
 - Configure responsive layout foundations.
-- Create the initial project documentation.
 
 # Completed
 
-`<completed phase deliverables>`
+- Created the Taurus solution.
+- Created the .NET 10 Blazor Web App project.
+- Configured Interactive Server rendering.
+- Verified the application builds successfully.
+- Verified the application runs successfully.
+- Created the initial project documentation.
