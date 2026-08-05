@@ -72,8 +72,10 @@ Taurus
 │
 ├── Components
 │   ├── Features
+│   ├── Layout
 │   ├── Shared
-│   └── Layout
+│   ├── Status
+│   └── Theme
 ├── Application
 └── Docs
 ```

@@ -42,12 +42,12 @@ Tasks listed here are intentionally concise. Detailed scope, goals and implement
   - ✓ Create the main content area.
   - ✓ Verify the shared layout is used throughout the application.
 
-- Establish the project structure.
-  - Create the feature folder structure.
-  - Create the shared component structure.
-  - Create the application layer.
-  - Configure dependency injection.
-  - Verify the project structure supports feature development.
+- ✓ Establish the project structure.
+  - ✓ Create the feature folder structure.
+  - ✓ Create the shared component structure.
+  - ✓ Create the application layer.
+  - ✓ Configure dependency injection.
+  - ✓ Verify the project structure supports feature development.
 
 - Configure responsive layout foundations.
   - Establish responsive breakpoints.
@@ -56,14 +56,14 @@ Tasks listed here are intentionally concise. Detailed scope, goals and implement
   - Verify mobile layout behaviour.
   - Establish reusable responsive layout patterns.
 
-- Create the initial project documentation.
-  - Create the project document.
-  - Create the architecture document.
-  - Create the decisions document.
-  - Create the roadmap.
-  - Create the delivery plan.
-  - Create the backlog.
-  - Create the remaining project documentation.
+- ✓ Create the initial project documentation.
+  - ✓ Create the project document.
+  - ✓ Create the architecture document.
+  - ✓ Create the decisions document.
+  - ✓ Create the roadmap.
+  - ✓ Create the delivery plan.
+  - ✓ Create the backlog.
+  - ✓ Create the remaining project documentation.
 
 **Deliverable**
 

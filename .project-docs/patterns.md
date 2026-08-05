@@ -19,3 +19,27 @@
 - Keep the application name in the app bar only; avoid duplicate branding within the navigation drawer.
 - Allow the navigation drawer to be collapsed from the app bar while leaving responsive behaviour to the responsive layout implementation.
 - Render routed page content inside `MudMainContent`.
+## Project Structure
+
+- Organise user-facing functionality under `Components/Features`.
+- Each feature owns its pages, components and feature-specific code.
+- Shared UI belongs in `Components/Shared`.
+- Application-wide status pages belong in `Components/Status`.
+- Shared application shell components belong in `Components/Layout`.
+- Application theme assets belong in `Components/Theme`.
+- Application services and integration infrastructure belong under `Application`.
+
+## Dependency Injection
+
+- Expose application-layer registrations through a single `DependencyInjection` extension class.
+- Register the application layer from `Program.cs` using `AddTaurusApplication()`.
+- Register services explicitly as they are introduced.
+- Do not introduce marker interfaces or automatic assembly scanning.
+
+## Code-behind
+
+- Larger pages and layout components use Razor code-behind files.
+- Keep Razor files declarative.
+- Place interaction logic in the corresponding `.razor.cs` file.
+- Simple components without behaviour may remain as a single Razor file.
+

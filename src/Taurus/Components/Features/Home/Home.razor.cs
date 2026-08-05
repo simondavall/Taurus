@@ -1,4 +1,4 @@
-﻿namespace Taurus.Components.Pages;
+﻿namespace Taurus.Components.Features.Home;
 
 public partial class Home
 {
