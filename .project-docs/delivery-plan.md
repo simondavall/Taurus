@@ -49,12 +49,12 @@ Tasks listed here are intentionally concise. Detailed scope, goals and implement
   - ✓ Configure dependency injection.
   - ✓ Verify the project structure supports feature development.
 
-- Configure responsive layout foundations.
-  - Establish responsive breakpoints.
-  - Verify desktop layout behaviour.
-  - Verify tablet layout behaviour.
-  - Verify mobile layout behaviour.
-  - Establish reusable responsive layout patterns.
+- ✓ Configure responsive layout foundations.
+  - ✓ Establish responsive breakpoints.
+  - ✓ Verify desktop layout behaviour.
+  - ✓ Verify tablet layout behaviour.
+  - ✓ Verify mobile layout behaviour.
+  - ✓ Establish reusable responsive layout patterns.
 
 - ✓ Create the initial project documentation.
   - ✓ Create the project document.

@@ -1,3 +1,7 @@
 .taurus-navigation {
-    padding: 1rem 0.75rem;
+    padding: .75rem;
+}
+
+.taurus-navigation .mud-nav-link {
+    border-radius: var(--mud-default-borderradius);
 }

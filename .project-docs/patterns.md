@@ -43,3 +43,12 @@
 - Place interaction logic in the corresponding `.razor.cs` file.
 - Simple components without behaviour may remain as a single Razor file.
 
+## Responsive Layout
+
+- Use `MudBreakpointProvider` to adapt the shared application shell to the current viewport.
+- Use a persistent navigation drawer on desktop layouts.
+- Use a temporary overlay drawer on tablet and mobile layouts.
+- Keep the navigation drawer open by default on desktop and closed by default on smaller viewports.
+- Control drawer state from `MainLayout`.
+- Use the application bar menu button as the single mechanism for opening and closing the navigation drawer across all viewport sizes.
+- Keep responsive behaviour within the shared layout rather than individual feature pages wherever practical.
