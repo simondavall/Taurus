@@ -22,11 +22,11 @@ Tasks listed here are intentionally concise. Detailed scope, goals and implement
   - ✓ Verify the application builds.
   - ✓ Verify the application runs successfully.
 
-- Configure MudBlazor.
-  - Add the MudBlazor packages.
-  - Configure the required MudBlazor services.
-  - Configure the required MudBlazor providers.
-  - Verify MudBlazor components render correctly.
+- ✓ Configure MudBlazor.
+  - ✓ Add the MudBlazor packages.
+  - ✓ Configure the required MudBlazor services.
+  - ✓ Configure the required MudBlazor providers.
+  - ✓ Verify MudBlazor components render correctly.
 
 - Establish the application theme.
   - Create the Taurus theme.
