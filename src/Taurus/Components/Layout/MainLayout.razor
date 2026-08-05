@@ -5,6 +5,7 @@
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
+<MudBreakpointProvider OnBreakpointChanged="BreakpointChanged" />
 
 <MudLayout>
     <MudAppBar Elevation="1">
@@ -13,7 +14,7 @@
                        Color="Color.Inherit"
                        Edge="Edge.Start"
                        aria-label="Toggle navigation"
-                       OnClick="ToggleNavigation" />
+                       OnClick="@ToggleNavigation" />
 
         <MudText Typo="Typo.h5"
                  Class="taurus-app-title">
@@ -25,12 +26,14 @@
         <MudIconButton Icon="@TaurusIcons.Actions.Refresh"
                        Color="Color.Inherit"
                        aria-label="Refresh page"
-                       OnClick="RefreshPageAsync" />
+                       OnClick="@RefreshPageAsync" />
 
     </MudAppBar>
 
     <MudDrawer @bind-Open="_navigationOpen"
-               Variant="DrawerVariant.Persistent"
+               Breakpoint="Breakpoint.Md"
+               Variant="@_drawerVariant"
+               ClipMode="DrawerClipMode.Always"
                Elevation="1">
 
         <NavMenu />

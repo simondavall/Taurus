@@ -9,21 +9,25 @@ where development should continue.
 
 # Current milestone
 
-- Milestone 1.1 – Project Foundation
+- Milestone 1.2 – Authentication
 
 # Current task
 
-- Configure responsive layout foundations.
-  - Establish responsive breakpoints.
-  - Verify desktop layout behaviour.
-  - Verify tablet layout behaviour.
-  - Verify mobile layout behaviour.
-  - Establish reusable responsive layout patterns.
+- Integrate authentication with Soteria.
+  - Configure OpenID Connect authentication.
+  - Implement login.
+  - Implement logout.
+  - Display authenticated user information.
+  - Restrict anonymous access where appropriate.
 
 # Remaining milestone tasks
 
-None.
-
+- Configure PegasusApi connectivity.
+- Create the Taurus application layer.
+- Establish the API integration pattern.
+- Create the initial request and response mapping.
+- Implement consistent API error handling.
+- Implement application logging.
 
 # Completed
 
@@ -53,3 +57,5 @@ None.
 - Organised pages into feature-based folders.
 - Introduced application-level status components.
 - Verified the application structure supports future feature development.
+- Established responsive layout foundations.
+- Verified desktop, tablet and mobile layout behaviour.

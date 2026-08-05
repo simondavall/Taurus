@@ -3,12 +3,15 @@
     letter-spacing: 0.02rem;
 }
 
+.taurus-main-content {
+    padding: 1rem;
+}
+
+.mud-drawer {
+    width: 260px;
+}
+
 .mud-drawer-content {
     display: flex;
     flex-direction: column;
-}
-
-.taurus-main-content {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
 }
