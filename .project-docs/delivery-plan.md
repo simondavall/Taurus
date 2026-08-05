@@ -28,12 +28,12 @@ Tasks listed here are intentionally concise. Detailed scope, goals and implement
   - ✓ Configure the required MudBlazor providers.
   - ✓ Verify MudBlazor components render correctly.
 
-- Establish the application theme.
-  - Create the Taurus theme.
-  - Configure the colour palette.
-  - Configure typography.
-  - Configure icons.
-  - Verify the theme is applied consistently.
+- ✓ Establish the application theme.
+  - ✓ Create the Taurus theme.
+  - ✓ Configure the colour palette.
+  - ✓ Configure typography.
+  - ✓ Configure icons.
+  - ✓ Verify the theme is applied consistently.
 
 - Establish the shared application layout.
   - Create the main application layout.
