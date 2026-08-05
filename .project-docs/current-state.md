@@ -13,16 +13,15 @@ where development should continue.
 
 # Current task
 
-- Establish the application theme.
-  - Create the Taurus theme.
-  - Configure the colour palette.
-  - Configure typography.
-  - Configure icons.
-  - Verify the theme is applied consistently.
+- Establish the shared application layout.
+  - Create the main application layout.
+  - Create the application header.
+  - Create the navigation menu.
+  - Create the main content area.
+  - Verify the shared layout is used throughout the application.
 
 # Remaining milestone tasks
 
-- Establish the shared application layout.
 - Establish the project structure.
 - Configure responsive layout foundations.
 
@@ -38,3 +37,9 @@ where development should continue.
 - Configured MudBlazor services.
 - Added the required MudBlazor providers.
 - Verified MudBlazor components render correctly.
+- Created the Taurus application theme.
+- Configured the application colour palette.
+- Configured typography.
+- Established the initial application icon vocabulary.
+- Applied the theme globally.
+- Verified the theme is applied consistently.

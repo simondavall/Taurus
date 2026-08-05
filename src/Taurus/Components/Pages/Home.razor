@@ -2,35 +2,97 @@
 
 <PageTitle>Home</PageTitle>
 
-<MudText Typo="Typo.h3"
-         GutterBottom="true">
-    Taurus
-</MudText>
+<MudStack Spacing="4">
+    <div>
+        <MudText Typo="Typo.h3"
+                 GutterBottom="true">
+            Taurus
+        </MudText>
 
-<MudText Typo="Typo.body1"
-         GutterBottom="true">
-    MudBlazor is configured successfully.
-</MudText>
+        <MudText Typo="Typo.body1"
+                 Color="Color.Secondary">
+            Application theme verification
+        </MudText>
+    </div>
 
-<MudButton Variant="Variant.Filled"
-           Color="Color.Primary"
-           OnClick="HandleButtonClickAsync">
-    Verify MudBlazor
-</MudButton>
+    <MudPaper Elevation="1"
+              Class="pa-6">
+        <MudStack Spacing="3">
+            <MudText Typo="Typo.h5">
+                Theme palette
+            </MudText>
 
-@if (_isVerified)
-{
-    <MudAlert Severity="Severity.Success"
-              Variant="Variant.Outlined"
-              Class="mt-4">
-        MudBlazor components are rendering and Interactive Server behaviour is working.
-    </MudAlert>
-}
+            <MudText Typo="Typo.body1">
+                The initial Taurus colour palette, typography and icon vocabulary are applied globally.
+            </MudText>
+
+            <MudStack Row="true"
+                      Spacing="2">
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@TaurusIcons.Actions.Save"
+                           OnClick="HandleVerificationAsync">
+                    Verify theme
+                </MudButton>
+
+                <MudButton Variant="Variant.Outlined"
+                           Color="Color.Secondary"
+                           StartIcon="@TaurusIcons.Actions.Refresh">
+                    Secondary action
+                </MudButton>
+            </MudStack>
+
+            @if (_isVerified)
+            {
+                <MudAlert Severity="Severity.Success"
+                          Variant="Variant.Outlined">
+                    The Taurus theme is applied and Interactive Server behaviour remains operational.
+                </MudAlert>
+            }
+        </MudStack>
+    </MudPaper>
+
+    <MudPaper Elevation="1"
+              Class="pa-6">
+        <MudStack Spacing="3">
+            <MudText Typo="Typo.h5">
+                Semantic colours
+            </MudText>
+
+            <MudStack Row="true"
+                      Spacing="2">
+                <MudChip T="string"
+                         Color="Color.Info"
+                         Icon="@TaurusIcons.Feedback.Information">
+                    Information
+                </MudChip>
+
+                <MudChip T="string"
+                         Color="Color.Success"
+                         Icon="@TaurusIcons.Feedback.Success">
+                    Success
+                </MudChip>
+
+                <MudChip T="string"
+                         Color="Color.Warning"
+                         Icon="@TaurusIcons.Feedback.Warning">
+                    Warning
+                </MudChip>
+
+                <MudChip T="string"
+                         Color="Color.Error"
+                         Icon="@TaurusIcons.Feedback.Error">
+                    Error
+                </MudChip>
+            </MudStack>
+        </MudStack>
+    </MudPaper>
+</MudStack>
 
 @code {
     private bool _isVerified;
 
-    private Task HandleButtonClickAsync()
+    private Task HandleVerificationAsync()
     {
         _isVerified = true;
 
