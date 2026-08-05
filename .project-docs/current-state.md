@@ -13,16 +13,17 @@ where development should continue.
 
 # Current task
 
-- Establish the project structure.
-  - Create the feature folder structure.
-  - Create the shared component structure.
-  - Create the application layer.
-  - Configure dependency injection.
-  - Verify the project structure supports feature development.
+- Configure responsive layout foundations.
+  - Establish responsive breakpoints.
+  - Verify desktop layout behaviour.
+  - Verify tablet layout behaviour.
+  - Verify mobile layout behaviour.
+  - Establish reusable responsive layout patterns.
 
 # Remaining milestone tasks
 
-- Configure responsive layout foundations.
+None.
+
 
 # Completed
 
@@ -47,3 +48,8 @@ where development should continue.
 - Created the main content area.
 - Added user-controlled navigation drawer toggle.
 - Verified the shared layout is used consistently across the application.
+- Established the initial Vertical Slice project structure.
+- Created the application layer registration boundary.
+- Organised pages into feature-based folders.
+- Introduced application-level status components.
+- Verified the application structure supports future feature development.

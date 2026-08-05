@@ -1,4 +1,5 @@
 using MudBlazor.Services;
+using Taurus.Application;
 using Taurus.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,7 @@ builder.Services
     .AddInteractiveServerComponents();
 
 builder.Services.AddMudServices();
+builder.Services.AddTaurusApplication();
 
 var app = builder.Build();
 
