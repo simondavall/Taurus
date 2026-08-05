@@ -35,12 +35,12 @@ Tasks listed here are intentionally concise. Detailed scope, goals and implement
   - ✓ Configure icons.
   - ✓ Verify the theme is applied consistently.
 
-- Establish the shared application layout.
-  - Create the main application layout.
-  - Create the application header.
-  - Create the navigation menu.
-  - Create the main content area.
-  - Verify the shared layout is used throughout the application.
+- ✓ Establish the shared application layout.
+  - ✓ Create the main application layout.
+  - ✓ Create the application header.
+  - ✓ Create the navigation menu.
+  - ✓ Create the main content area.
+  - ✓ Verify the shared layout is used throughout the application.
 
 - Establish the project structure.
   - Create the feature folder structure.

@@ -4,14 +4,14 @@
 
 <MudStack Spacing="4">
     <div>
-        <MudText Typo="Typo.h3"
+        <MudText Typo="Typo.h4"
                  GutterBottom="true">
             Taurus
         </MudText>
 
         <MudText Typo="Typo.body1"
                  Color="Color.Secondary">
-            Application theme verification
+            The Taurus application foundation is ready.
         </MudText>
     </div>
 
@@ -19,83 +19,27 @@
               Class="pa-6">
         <MudStack Spacing="3">
             <MudText Typo="Typo.h5">
-                Theme palette
+                Shared application layout
             </MudText>
 
             <MudText Typo="Typo.body1">
-                The initial Taurus colour palette, typography and icon vocabulary are applied globally.
+                This page is rendered inside the common Taurus header, navigation, and content area.
             </MudText>
 
-            <MudStack Row="true"
-                      Spacing="2">
-                <MudButton Variant="Variant.Filled"
-                           Color="Color.Primary"
-                           StartIcon="@TaurusIcons.Actions.Save"
-                           OnClick="HandleVerificationAsync">
-                    Verify theme
-                </MudButton>
-
-                <MudButton Variant="Variant.Outlined"
-                           Color="Color.Secondary"
-                           StartIcon="@TaurusIcons.Actions.Refresh">
-                    Secondary action
-                </MudButton>
-            </MudStack>
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       StartIcon="@TaurusIcons.Feedback.Success"
+                       OnClick="VerifyLayoutAsync">
+                Verify layout
+            </MudButton>
 
             @if (_isVerified)
             {
                 <MudAlert Severity="Severity.Success"
                           Variant="Variant.Outlined">
-                    The Taurus theme is applied and Interactive Server behaviour remains operational.
+                    The shared layout and Interactive Server behaviour are working.
                 </MudAlert>
             }
         </MudStack>
     </MudPaper>
-
-    <MudPaper Elevation="1"
-              Class="pa-6">
-        <MudStack Spacing="3">
-            <MudText Typo="Typo.h5">
-                Semantic colours
-            </MudText>
-
-            <MudStack Row="true"
-                      Spacing="2">
-                <MudChip T="string"
-                         Color="Color.Info"
-                         Icon="@TaurusIcons.Feedback.Information">
-                    Information
-                </MudChip>
-
-                <MudChip T="string"
-                         Color="Color.Success"
-                         Icon="@TaurusIcons.Feedback.Success">
-                    Success
-                </MudChip>
-
-                <MudChip T="string"
-                         Color="Color.Warning"
-                         Icon="@TaurusIcons.Feedback.Warning">
-                    Warning
-                </MudChip>
-
-                <MudChip T="string"
-                         Color="Color.Error"
-                         Icon="@TaurusIcons.Feedback.Error">
-                    Error
-                </MudChip>
-            </MudStack>
-        </MudStack>
-    </MudPaper>
 </MudStack>
-
-@code {
-    private bool _isVerified;
-
-    private Task HandleVerificationAsync()
-    {
-        _isVerified = true;
-
-        return Task.CompletedTask;
-    }
-}

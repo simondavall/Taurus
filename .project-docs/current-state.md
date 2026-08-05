@@ -13,16 +13,15 @@ where development should continue.
 
 # Current task
 
-- Establish the shared application layout.
-  - Create the main application layout.
-  - Create the application header.
-  - Create the navigation menu.
-  - Create the main content area.
-  - Verify the shared layout is used throughout the application.
+- Establish the project structure.
+  - Create the feature folder structure.
+  - Create the shared component structure.
+  - Create the application layer.
+  - Configure dependency injection.
+  - Verify the project structure supports feature development.
 
 # Remaining milestone tasks
 
-- Establish the project structure.
 - Configure responsive layout foundations.
 
 # Completed
@@ -42,4 +41,9 @@ where development should continue.
 - Configured typography.
 - Established the initial application icon vocabulary.
 - Applied the theme globally.
-- Verified the theme is applied consistently.
+- Verified the theme is applied- Replaced the generated Blazor layout with the Taurus shared application layout.
+- Created the application header.
+- Created the primary navigation drawer.
+- Created the main content area.
+- Added user-controlled navigation drawer toggle.
+- Verified the shared layout is used consistently across the application.
