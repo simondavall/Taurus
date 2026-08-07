@@ -13,11 +13,11 @@ where development should continue.
 
 # Current task
 
-- Implement logout.
+- Display authenticated user information.
 
 # Remaining milestone tasks
 
-- Display authenticated user information.
+- Restrict visibility of protected menu items.
 
 # Completed
 
@@ -67,3 +67,7 @@ where development should continue.
 - Configured login to use a standard HTTP request rather than an interactive Blazor event.
 - Added authenticated placeholder UserName and Log Out controls to the application app bar.
 - Verified successful authentication redirects to Soteria and returns to Taurus.
+- Implemented the primary Log Out action in the application app bar.
+- Added a dedicated authentication logout endpoint.
+- Configured logout to terminate both the local authentication session and the OpenID Connect session.
+- Verified successful logout returns the user to Taurus.

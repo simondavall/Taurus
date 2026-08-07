@@ -19,6 +19,7 @@
 - Keep the application name in the app bar only; avoid duplicate branding within the navigation drawer.
 - Allow the navigation drawer to be collapsed from the app bar while leaving responsive behaviour to the responsive layout implementation.
 - Render routed page content inside `MudMainContent`.
+
 ## Project Structure
 
 - Organise user-facing functionality under `Components/Features`.

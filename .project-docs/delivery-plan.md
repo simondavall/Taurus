@@ -77,8 +77,9 @@ A runnable Taurus application with the shared layout established.
 - ✓ Configure OpenID Connect authentication.
 - ✓ Restrict anonymous access to sample pages.
 - ✓ Implement login.
-- Implement logout.
+- ✓ Implement logout.
 - Display authenticated user information.
+- Restrict visibility of protected menu items.
 
 **Deliverable**
 
