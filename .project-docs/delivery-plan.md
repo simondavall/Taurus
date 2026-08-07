@@ -80,7 +80,7 @@ A runnable Taurus application with the shared layout established.
 - ✓ Implement logout.
 - ✓ Display authenticated user information.
 - ✓ Implement authentication-first application flow.
-- Handle denied application access.
+- ✓ Handle denied application access.
 - Validate application environment configuration and authentication redirects.
 
 **Deliverable**

@@ -13,11 +13,11 @@ where development should continue.
 
 # Current task
 
-- Handle denied application access.
+- Validate application environment configuration and authentication redirects.
 
 # Remaining milestone tasks
 
-- Validate application environment configuration and authentication redirects.
+- None
 
 # Completed
 
@@ -81,3 +81,8 @@ where development should continue.
 - Removed the Log In action from the authenticated application shell.
 - Verified deep links return users to their requested page after authentication.
 - Verified logout returns the application to the authentication-first flow.
+- Implemented friendly handling of expected OpenID Connect authentication failures.
+- Added an Access Denied page for users who successfully authenticate but are not authorised to access Taurus.
+- Added support for handling disabled Taurus client applications.
+- Added a "Log in with another account" flow from the Access Denied page.
+- Preserved the default error pipeline for unexpected authentication failures.

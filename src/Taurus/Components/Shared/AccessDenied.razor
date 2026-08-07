@@ -1,0 +1,42 @@
+﻿@page "/access-denied"
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [AllowAnonymous]
+@layout MainLayout
+
+<PageTitle>@Title</PageTitle>
+
+<MudPaper Class="pa-6 mx-auto mt-8"
+          MaxWidth="MaxWidth.Small"
+          Elevation="2">
+
+    <MudText Typo="Typo.h4" GutterBottom="true">
+        @Title
+    </MudText>
+
+    <MudText Typo="Typo.body1" Class="mb-6">
+        @Message
+    </MudText>
+
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
+               Href="/authentication/logout">
+        Log in with another account
+    </MudButton>
+
+</MudPaper>
+
+@code {
+    [SupplyParameterFromQuery]
+    private string? Reason { get; set; }
+
+    private string Title =>
+        Reason == "disabled"
+            ? "Application is disabled"
+            : "Unauthorized";
+
+    private string Message =>
+        Reason == "disabled"
+            ? "This application has been disabled and cannot currently sign you in."
+            : "You are not authorized to sign in to this application.";
+}

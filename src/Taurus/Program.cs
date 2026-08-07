@@ -52,6 +52,26 @@ builder.Services
         options.Scope.Add("email");
         options.Scope.Add("offline_access");
         options.Scope.Add("reference_api");
+        
+        options.Events.OnRemoteFailure = context =>
+        {
+            var error = context.Failure?.Data["error"]?.ToString();
+            
+            var reason = error switch
+            {
+                "access_denied" => "unauthorized",
+                "unauthorized_client" => "disabled",
+                _ => null
+            };
+
+            if (reason is not null)
+            {
+                context.Response.Redirect($"/access-denied?reason={reason}");
+                context.HandleResponse();
+            }
+
+            return Task.CompletedTask;
+        };
     });
 
 builder.Services.AddAuthorization();
