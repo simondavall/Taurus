@@ -85,12 +85,13 @@ app.MapGet("/authentication/login", (string? returnUrl) =>
 {
     var properties = new AuthenticationProperties
     {
-        RedirectUri = string.IsNullOrWhiteSpace(returnUrl) ? "/" : returnUrl
+        RedirectUri = string.IsNullOrWhiteSpace(returnUrl) ? "/counter" : returnUrl
     };
 
-    return Results.Challenge(
-        properties,
-        [OpenIdConnectDefaults.AuthenticationScheme]);
+    return Results.Challenge(properties, 
+        [
+            OpenIdConnectDefaults.AuthenticationScheme
+        ]);
 });
 
 app.MapGet("/authentication/logout", () =>
@@ -100,10 +101,9 @@ app.MapGet("/authentication/logout", () =>
         RedirectUri = "/"
     };
 
-    return Results.SignOut(
-        properties,
+    return Results.SignOut(properties, 
         [
-            CookieAuthenticationDefaults.AuthenticationScheme,
+            CookieAuthenticationDefaults.AuthenticationScheme, 
             OpenIdConnectDefaults.AuthenticationScheme
         ]);
 });
