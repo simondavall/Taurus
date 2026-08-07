@@ -13,11 +13,10 @@ where development should continue.
 
 # Current task
 
-- Restrict anonymous access to sample pages.
+- Implement login.
 
 # Remaining milestone tasks
 
-- Implement login.
 - Implement logout.
 - Display authenticated user information.
 
@@ -58,3 +57,7 @@ where development should continue.
 - Configured OpenID Connect scopes.
 - Configured authentication and authorization middleware.
 - Adopted development-only `.env` configuration for local authentication settings.
+- Restricted anonymous access to the sample pages.
+- Protected the Counter page using ASP.NET Core authorization.
+- Protected the Weather page using ASP.NET Core authorization.
+- Verified anonymous users are challenged when accessing protected pages.

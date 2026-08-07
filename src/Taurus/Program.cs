@@ -54,6 +54,7 @@ builder.Services
     });
 
 builder.Services.AddAuthorization();
+builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddMudServices();
 builder.Services.AddTaurusApplication();
