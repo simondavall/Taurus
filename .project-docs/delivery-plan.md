@@ -73,12 +73,11 @@ A runnable Taurus application with the shared layout established.
 
 ## Milestone 1.2 – Authentication
 
-- Integrate authentication with Soteria.
+- ✓ Integrate authentication with Soteria.
 - Configure OpenID Connect authentication.
+- Restrict anonymous access to sample pages.
 - Implement login.
 - Implement logout.
-- Display authenticated user information.
-- Restrict anonymous access where appropriate.
 
 **Deliverable**
 

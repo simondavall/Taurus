@@ -13,21 +13,13 @@ where development should continue.
 
 # Current task
 
-- Integrate authentication with Soteria.
-  - Configure OpenID Connect authentication.
-  - Implement login.
-  - Implement logout.
-  - Display authenticated user information.
-  - Restrict anonymous access where appropriate.
+- Restrict anonymous access to sample pages.
 
 # Remaining milestone tasks
 
-- Configure PegasusApi connectivity.
-- Create the Taurus application layer.
-- Establish the API integration pattern.
-- Create the initial request and response mapping.
-- Implement consistent API error handling.
-- Implement application logging.
+- Implement login.
+- Implement logout.
+- Display authenticated user information.
 
 # Completed
 
@@ -59,3 +51,10 @@ where development should continue.
 - Verified the application structure supports future feature development.
 - Established responsive layout foundations.
 - Verified desktop, tablet and mobile layout behaviour.
+- Configured ASP.NET Core cookie authentication.
+- Configured OpenID Connect authentication with Soteria.
+- Enabled Authorization Code flow with PKCE.
+- Configured token persistence.
+- Configured OpenID Connect scopes.
+- Configured authentication and authorization middleware.
+- Adopted development-only `.env` configuration for local authentication settings.
