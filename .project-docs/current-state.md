@@ -13,7 +13,7 @@ where development should continue.
 
 # Current task
 
-- Restrict visibility of protected menu items.
+- Implement authentication-first application flow.
 
 # Remaining milestone tasks
 

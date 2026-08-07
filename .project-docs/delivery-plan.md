@@ -79,11 +79,11 @@ A runnable Taurus application with the shared layout established.
 - ✓ Implement login.
 - ✓ Implement logout.
 - ✓ Display authenticated user information.
-- Restrict visibility of protected menu items.
+- Implement authentication-first application flow.
 
 **Deliverable**
 
-Users authenticate through Soteria and access the Taurus application.
+Users authenticate through Soteria before accessing the Taurus application.
 
 ---
 
