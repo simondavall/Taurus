@@ -1,19 +1,26 @@
-﻿<MudNavMenu Class="taurus-navigation">
-    <MudNavLink Href=""
-        Match="NavLinkMatch.All"
-        Icon="@TaurusIcons.Navigation.Home">
-        Home
-    </MudNavLink>
+﻿@using Microsoft.AspNetCore.Components.Authorization
+<MudNavMenu Class="taurus-navigation">
+    <AuthorizeView>
+        <NotAuthorized>
+            <MudNavLink Href=""
+                        Match="NavLinkMatch.All"
+                        Icon="@TaurusIcons.Navigation.Home">
+                Home
+            </MudNavLink>
+        </NotAuthorized>
+        
+        <Authorized>
+            <MudNavLink Href="counter"
+                        Match="NavLinkMatch.Prefix"
+                        Icon="@Icons.Material.Filled.AddCircleOutline">
+                Counter
+            </MudNavLink>
 
-    <MudNavLink Href="counter"
-                Match="NavLinkMatch.Prefix"
-                Icon="@Icons.Material.Filled.AddCircleOutline">
-        Counter
-    </MudNavLink>
-
-    <MudNavLink Href="weather"
-                Match="NavLinkMatch.Prefix"
-                Icon="@Icons.Material.Filled.Cloud">
-        Weather
-    </MudNavLink>
+            <MudNavLink Href="weather"
+                        Match="NavLinkMatch.Prefix"
+                        Icon="@Icons.Material.Filled.Cloud">
+                Weather
+            </MudNavLink>
+        </Authorized>
+    </AuthorizeView>
 </MudNavMenu>
