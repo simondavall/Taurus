@@ -78,7 +78,7 @@ A runnable Taurus application with the shared layout established.
 - ✓ Restrict anonymous access to sample pages.
 - ✓ Implement login.
 - ✓ Implement logout.
-- Display authenticated user information.
+- ✓ Display authenticated user information.
 - Restrict visibility of protected menu items.
 
 **Deliverable**
