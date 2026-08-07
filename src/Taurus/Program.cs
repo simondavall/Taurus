@@ -93,6 +93,21 @@ app.MapGet("/authentication/login", (string? returnUrl) =>
         [OpenIdConnectDefaults.AuthenticationScheme]);
 });
 
+app.MapGet("/authentication/logout", () =>
+{
+    var properties = new AuthenticationProperties
+    {
+        RedirectUri = "/"
+    };
+
+    return Results.SignOut(
+        properties,
+        [
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            OpenIdConnectDefaults.AuthenticationScheme
+        ]);
+});
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 

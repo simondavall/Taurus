@@ -33,16 +33,18 @@
 
                 <MudButton Color="Color.Inherit"
                            Variant="Variant.Text"
-                           Disabled="true">
+                           Href="/authentication/logout">
                     Log Out
                 </MudButton>
             </Authorized>
 
             <NotAuthorized>
-                <MudLink Href="/authentication/login"
-                         Color="Color.Inherit">
+                <MudButton Color="Color.Inherit"
+                           Variant="Variant.Text"
+                           StartIcon="@Icons.Material.Filled.Login"
+                           Href="/authentication/login">
                     Log In
-                </MudLink>
+                </MudButton>
             </NotAuthorized>
         </AuthorizeView>
 
