@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inherits LayoutComponentBase
 
 <MudThemeProvider Theme="@TaurusTheme.Default" 
                   IsDarkMode="true" />
@@ -23,10 +24,27 @@
 
         <MudSpacer />
 
-        <MudIconButton Icon="@TaurusIcons.Actions.Refresh"
-                       Color="Color.Inherit"
-                       aria-label="Refresh page"
-                       OnClick="@RefreshPageAsync" />
+        <AuthorizeView>
+            <Authorized>
+                <MudText Typo="Typo.body2"
+                         Class="taurus-user-name">
+                    UserName
+                </MudText>
+
+                <MudButton Color="Color.Inherit"
+                           Variant="Variant.Text"
+                           Disabled="true">
+                    Log Out
+                </MudButton>
+            </Authorized>
+
+            <NotAuthorized>
+                <MudLink Href="/authentication/login"
+                         Color="Color.Inherit">
+                    Log In
+                </MudLink>
+            </NotAuthorized>
+        </AuthorizeView>
 
     </MudAppBar>
 

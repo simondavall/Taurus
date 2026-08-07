@@ -13,11 +13,10 @@ where development should continue.
 
 # Current task
 
-- Implement login.
+- Implement logout.
 
 # Remaining milestone tasks
 
-- Implement logout.
 - Display authenticated user information.
 
 # Completed
@@ -37,7 +36,8 @@ where development should continue.
 - Configured typography.
 - Established the initial application icon vocabulary.
 - Applied the theme globally.
-- Verified the theme is applied- Replaced the generated Blazor layout with the Taurus shared application layout.
+- Verified the theme is applied
+- Replaced the generated Blazor layout with the Taurus shared application layout.
 - Created the application header.
 - Created the primary navigation drawer.
 - Created the main content area.
@@ -61,3 +61,9 @@ where development should continue.
 - Protected the Counter page using ASP.NET Core authorization.
 - Protected the Weather page using ASP.NET Core authorization.
 - Verified anonymous users are challenged when accessing protected pages.
+- Replaced the app bar refresh action with authentication controls.
+- Added the primary Log In action to the application app bar.
+- Implemented a dedicated authentication challenge endpoint.
+- Configured login to use a standard HTTP request rather than an interactive Blazor event.
+- Added authenticated placeholder UserName and Log Out controls to the application app bar.
+- Verified successful authentication redirects to Soteria and returns to Taurus.

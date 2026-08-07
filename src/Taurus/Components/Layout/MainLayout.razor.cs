@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
 namespace Taurus.Components.Layout;
@@ -7,6 +9,8 @@ public partial class MainLayout
 {
     [Inject]
     private NavigationManager NavigationManager { get; set; } = default!;
+    [Inject]
+    private IHttpContextAccessor HttpContextAccessor { get; set; } = default!;
 
     private bool _navigationOpen = true;
 
@@ -24,10 +28,15 @@ public partial class MainLayout
         return Task.CompletedTask;
     }
     
-    private Task RefreshPageAsync()
+
+    private async Task LoginAsync()
     {
-        NavigationManager.Refresh(forceReload: true);
-        return Task.CompletedTask;
+        var httpContext = HttpContextAccessor.HttpContext;
+
+        if (httpContext is null)
+            return;
+
+        await httpContext.ChallengeAsync(OpenIdConnectDefaults.AuthenticationScheme);
     }
     
     private void ToggleNavigation()

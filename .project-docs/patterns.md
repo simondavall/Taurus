@@ -61,6 +61,10 @@
 - Configure OpenID Connect explicitly rather than relying on framework defaults.
 - Request the required Soteria scopes explicitly.
 - Configure the authentication middleware before the authorization middleware.
+- Place primary authentication actions in the shared application app bar.
+- Use `AuthorizeView` to switch between anonymous and authenticated app bar content.
+- Initiate OpenID Connect authentication through a dedicated server endpoint rather than directly from an interactive Blazor component.
+- Use normal browser navigation for authentication endpoints so the OpenID Connect handler can modify the HTTP response.
 
 ## Local Development Configuration
 
