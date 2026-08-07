@@ -13,11 +13,11 @@ where development should continue.
 
 # Current task
 
-- Display authenticated user information.
+- Restrict visibility of protected menu items.
 
 # Remaining milestone tasks
 
-- Restrict visibility of protected menu items.
+- None
 
 # Completed
 
@@ -71,3 +71,6 @@ where development should continue.
 - Added a dedicated authentication logout endpoint.
 - Configured logout to terminate both the local authentication session and the OpenID Connect session.
 - Verified successful logout returns the user to Taurus.
+- Displayed the authenticated user's display name in the application app bar.
+- Configured the display name to fall back to the user name when no display name is available.
+- Linked the authenticated user name to the Soteria account management page.

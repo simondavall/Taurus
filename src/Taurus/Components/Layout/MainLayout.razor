@@ -26,10 +26,14 @@
 
         <AuthorizeView>
             <Authorized>
-                <MudText Typo="Typo.body2"
+                <MudLink Href="https://soteria.local/Account/Manage"
+                         Target="_blank"
+                         Rel="noopener noreferrer"
+                         Typo="Typo.body2"
+                         Color="Color.Primary"
                          Class="taurus-user-name">
-                    UserName
-                </MudText>
+                    @DisplayName(context.User)
+                </MudLink>
 
                 <MudButton Color="Color.Inherit"
                            Variant="Variant.Text"

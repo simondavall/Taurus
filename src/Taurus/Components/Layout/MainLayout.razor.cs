@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -28,6 +29,12 @@ public partial class MainLayout
         return Task.CompletedTask;
     }
     
+    private static string DisplayName(ClaimsPrincipal user)
+    {
+        return user.FindFirst("display_name")?.Value
+               ?? user.Identity?.Name
+               ?? string.Empty;
+    }
 
     private async Task LoginAsync()
     {
