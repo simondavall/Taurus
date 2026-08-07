@@ -1,4 +1,5 @@
 using DotNetEnv;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -58,6 +59,7 @@ builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddMudServices();
 builder.Services.AddTaurusApplication();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
@@ -78,6 +80,19 @@ app.UseAuthorization();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
+
+app.MapGet("/authentication/login", (string? returnUrl) =>
+{
+    var properties = new AuthenticationProperties
+    {
+        RedirectUri = string.IsNullOrWhiteSpace(returnUrl) ? "/" : returnUrl
+    };
+
+    return Results.Challenge(
+        properties,
+        [OpenIdConnectDefaults.AuthenticationScheme]);
+});
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 

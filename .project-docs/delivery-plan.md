@@ -76,8 +76,9 @@ A runnable Taurus application with the shared layout established.
 - ✓ Integrate authentication with Soteria.
 - ✓ Configure OpenID Connect authentication.
 - ✓ Restrict anonymous access to sample pages.
-- Implement login.
+- ✓ Implement login.
 - Implement logout.
+- Display authenticated user information.
 
 **Deliverable**
 
