@@ -13,11 +13,11 @@ where development should continue.
 
 # Current task
 
-- Implement authentication-first application flow.
+- Handle denied application access.
 
 # Remaining milestone tasks
 
-- None
+- Validate application environment configuration and authentication redirects.
 
 # Completed
 
@@ -74,3 +74,10 @@ where development should continue.
 - Displayed the authenticated user's display name in the application app bar.
 - Configured the display name to fall back to the user name when no display name is available.
 - Linked the authenticated user name to the Soteria account management page.
+- Implemented authentication-first application flow.
+- Configured Taurus to require authentication before accessing application functionality.
+- Configured the root application route to use the authenticated Counter page.
+- Removed the anonymous Home navigation experience.
+- Removed the Log In action from the authenticated application shell.
+- Verified deep links return users to their requested page after authentication.
+- Verified logout returns the application to the authentication-first flow.

@@ -1,14 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 <MudNavMenu Class="taurus-navigation">
     <AuthorizeView>
-        <NotAuthorized>
-            <MudNavLink Href=""
-                        Match="NavLinkMatch.All"
-                        Icon="@TaurusIcons.Navigation.Home">
-                Home
-            </MudNavLink>
-        </NotAuthorized>
-        
         <Authorized>
             <MudNavLink Href="counter"
                         Match="NavLinkMatch.Prefix"

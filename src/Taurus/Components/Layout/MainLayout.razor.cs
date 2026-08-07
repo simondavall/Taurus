@@ -1,6 +1,4 @@
 ﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
@@ -10,8 +8,6 @@ public partial class MainLayout
 {
     [Inject]
     private NavigationManager NavigationManager { get; set; } = default!;
-    [Inject]
-    private IHttpContextAccessor HttpContextAccessor { get; set; } = default!;
 
     private bool _navigationOpen = true;
 
@@ -34,16 +30,6 @@ public partial class MainLayout
         return user.FindFirst("display_name")?.Value
                ?? user.Identity?.Name
                ?? string.Empty;
-    }
-
-    private async Task LoginAsync()
-    {
-        var httpContext = HttpContextAccessor.HttpContext;
-
-        if (httpContext is null)
-            return;
-
-        await httpContext.ChallengeAsync(OpenIdConnectDefaults.AuthenticationScheme);
     }
     
     private void ToggleNavigation()

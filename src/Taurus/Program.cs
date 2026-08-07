@@ -85,7 +85,7 @@ app.MapGet("/authentication/login", (string? returnUrl) =>
 {
     var properties = new AuthenticationProperties
     {
-        RedirectUri = string.IsNullOrWhiteSpace(returnUrl) ? "/counter" : returnUrl
+        RedirectUri = string.IsNullOrWhiteSpace(returnUrl) ? "/" : returnUrl
     };
 
     return Results.Challenge(properties, 
