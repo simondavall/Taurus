@@ -66,6 +66,8 @@
 - Use `AuthorizeView` to switch between anonymous and authenticated app bar content.
 - Initiate OpenID Connect authentication through a dedicated server endpoint rather than directly from an interactive Blazor component.
 - Use normal browser navigation for authentication endpoints so the OpenID Connect handler can modify the HTTP response.
+- Global authorization is enforced using a fallback policy.
+- Explicitly allow anonymous access to infrastructure that must operate before authentication, such as authentication endpoints, status pages and static assets.
 
 ## Local Development Configuration
 

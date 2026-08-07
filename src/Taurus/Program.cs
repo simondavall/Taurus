@@ -2,6 +2,7 @@ using DotNetEnv;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using MudBlazor.Services;
 using Taurus.Application;
@@ -17,6 +18,8 @@ if (builder.Environment.IsDevelopment())
 
     builder.Configuration.AddEnvironmentVariables();
 }
+
+ValidateRequiredConfiguration(builder.Configuration);
 
 builder.Services
     .AddRazorComponents()
@@ -74,7 +77,10 @@ builder.Services
         };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = options.DefaultPolicy;
+});
 builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddMudServices();
@@ -99,20 +105,22 @@ app.UseAuthorization();
 
 app.UseAntiforgery();
 
-app.MapStaticAssets();
+app.MapStaticAssets()
+    .Add(endpointBuilder =>
+        endpointBuilder.Metadata.Add(new AllowAnonymousAttribute()));
 
 app.MapGet("/authentication/login", (string? returnUrl) =>
 {
     var properties = new AuthenticationProperties
     {
-        RedirectUri = string.IsNullOrWhiteSpace(returnUrl) ? "/" : returnUrl
+        RedirectUri = IsLocalReturnUrl(returnUrl) ? returnUrl! : "/"
     };
 
     return Results.Challenge(properties, 
         [
             OpenIdConnectDefaults.AuthenticationScheme
         ]);
-});
+}).AllowAnonymous();
 
 app.MapGet("/authentication/logout", () =>
 {
@@ -126,9 +134,46 @@ app.MapGet("/authentication/logout", () =>
             CookieAuthenticationDefaults.AuthenticationScheme, 
             OpenIdConnectDefaults.AuthenticationScheme
         ]);
-});
+}).AllowAnonymous();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
+
+return;
+
+static void ValidateRequiredConfiguration(IConfiguration configuration)
+{
+    string[] keys =
+    [
+        "Authentication:OpenIdConnect:Authority",
+        "Authentication:OpenIdConnect:ClientId",
+        "Authentication:OpenIdConnect:ClientSecret"
+    ];
+    
+    var missing = keys
+        .Where(key => string.IsNullOrWhiteSpace(configuration[key]))
+        .ToArray();
+
+    if (missing.Length == 0)
+    {
+        return;
+    }
+
+    throw new InvalidOperationException(
+        "Missing required configuration values:" + Environment.NewLine +
+        string.Join(Environment.NewLine, missing.Select(key => $" - {key}")));
+}
+
+static bool IsLocalReturnUrl(string? returnUrl)
+{
+    if (string.IsNullOrWhiteSpace(returnUrl))
+    {
+        return false;
+    }
+
+    return returnUrl.StartsWith('/')
+           && !returnUrl.StartsWith("//")
+           && !returnUrl.StartsWith("/\\");
+}

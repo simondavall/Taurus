@@ -9,15 +9,19 @@ where development should continue.
 
 # Current milestone
 
-- Milestone 1.2 – Authentication
+- Milestone 1.3 – PegasusApi Integration
 
 # Current task
 
-- Validate application environment configuration and authentication redirects.
+- Configure PegasusApi connectivity.
 
 # Remaining milestone tasks
 
-- None
+- Create the Taurus application layer.
+- Establish the API integration pattern.
+- Create the initial request and response mapping.
+- Implement consistent API error handling.
+- Implement application logging.
 
 # Completed
 
@@ -86,3 +90,11 @@ where development should continue.
 - Added support for handling disabled Taurus client applications.
 - Added a "Log in with another account" flow from the Access Denied page.
 - Preserved the default error pipeline for unexpected authentication failures.
+- Added reusable startup validation for required application configuration.
+- Configured startup validation for the required Soteria OpenID Connect settings.
+- Validated authentication return URLs before redirecting users.
+- Configured authenticated access as the application default using the global authorization fallback policy.
+- Explicitly allowed anonymous access to authentication infrastructure, status pages and static assets.
+- Verified anonymous status pages retain their MudBlazor styling.
+- Completed the authentication-first application flow.
+- Completed Milestone 1.2 – Authentication.
