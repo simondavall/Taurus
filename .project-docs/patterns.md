@@ -52,3 +52,20 @@
 - Control drawer state from `MainLayout`.
 - Use the application bar menu button as the single mechanism for opening and closing the navigation drawer across all viewport sizes.
 - Keep responsive behaviour within the shared layout rather than individual feature pages wherever practical.
+
+## Authentication Configuration
+
+- Configure authentication in `Program.cs`.
+- Use ASP.NET Core Cookie authentication as the application authentication scheme.
+- Use OpenID Connect as the default challenge scheme.
+- Configure OpenID Connect explicitly rather than relying on framework defaults.
+- Request the required Soteria scopes explicitly.
+- Configure the authentication middleware before the authorization middleware.
+
+## Local Development Configuration
+
+- Store developer-specific configuration in a local `.env` file.
+- Load the `.env` file only when running in the Development environment.
+- Use `Env.NoClobber().TraversePath().Load()` so existing environment variables take precedence.
+- Use standard ASP.NET Core environment variables for production deployments.
+- Commit a `.env.example` file containing placeholder values for all required settings.

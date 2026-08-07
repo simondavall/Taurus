@@ -273,3 +273,13 @@ Detailed production hosting, credential and API-authorisation decisions will be 
 
 Rider IDE
 Powershell
+
+## Local configuration
+
+Developer-specific secrets are stored in a local `.env` file.
+
+The `.env` file is excluded from source control and loaded during application startup.
+
+A committed `.env.example` file documents the required configuration keys using placeholder values.
+
+Production deployments should supply the same configuration using the hosting environment's standard configuration mechanisms rather than a `.env` file.
