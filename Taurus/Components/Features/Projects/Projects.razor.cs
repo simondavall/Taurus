@@ -10,8 +10,28 @@ public partial class Projects
 
     private IReadOnlyList<Project> ProjectItems { get; set; } = [];
 
+    private bool ActiveOnly { get; set; }
+    private bool IncludeDeleted { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
-        ProjectItems = await ProjectService.GetProjectsAsync();
+        await LoadProjectsAsync();
+    }
+
+    private async Task LoadProjectsAsync()
+    {
+        ProjectItems = await ProjectService.GetProjectsAsync(ActiveOnly, IncludeDeleted);
+    }
+
+    private async Task ActiveOnlyChangedAsync(bool value)
+    {
+        ActiveOnly = value;
+        await LoadProjectsAsync();
+    }
+
+    private async Task IncludeDeletedChangedAsync(bool value)
+    {
+        IncludeDeleted = value;
+        await LoadProjectsAsync();
     }
 }

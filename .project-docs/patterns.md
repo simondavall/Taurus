@@ -54,6 +54,10 @@
 - Map PegasusApi responses to Taurus-owned application models before returning data to the Web layer.
 - Include only fields required by Taurus when mapping external API models to application models.
 - Keep API endpoint paths in integration code rather than environment configuration where the path is part of the stable API contract.
+- Pass feature-specific API query options explicitly through the application service contract.
+- Construct PegasusApi query strings within the integration boundary rather than the Web layer.
+- Keep query-string parameter names aligned with the published PegasusApi contract.
+- Introduce shared query-building abstractions only after repeated integrations demonstrate a common requirement.
 
 ## Code-behind
 
