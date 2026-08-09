@@ -13,13 +13,10 @@ where development should continue.
 
 # Current task
 
-- Configure PegasusApi connectivity.
+- Allow ability to use query string options.
 
 # Remaining milestone tasks
 
-- Create the Taurus application layer.
-- Establish the API integration pattern.
-- Create the initial request and response mapping.
 - Implement consistent API error handling.
 - Implement application logging.
 
@@ -111,3 +108,14 @@ where development should continue.
 - Configured the project listing to sort by title by default.
 - Verified the project listing across desktop, tablet and mobile layouts.
 - Completed Milestone 1.3 – Initial Project Listing with hardcoded data.
+- Added the PegasusApi abstractions package.
+- Configured the PegasusApi base address through application configuration.
+- Added startup validation for required PegasusApi configuration.
+- Configured the project application service as a typed HTTP client.
+- Replaced hardcoded project data with live data from PegasusApi.
+- Implemented the initial PegasusApi GET integration using the projects endpoint.
+- Used published PegasusApi abstractions within the integration boundary.
+- Mapped PegasusApi project responses to Taurus-owned project models.
+- Kept PegasusApi transport models isolated from the Web layer.
+- Verified the existing Projects UI operates unchanged against live PegasusApi data.
+- Established the initial PegasusApi integration and mapping pattern.

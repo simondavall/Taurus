@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.10" />
     <PackageReference Include="MudBlazor" Version="9.6.0" />
     <PackageReference Include="DotNetEnv" Version="3.1.1" />
+    <PackageReference Include="PegasusApi.Abstractions" Version="3.0.0" />
   </ItemGroup>
 
 </Project>
