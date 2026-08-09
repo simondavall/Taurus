@@ -44,6 +44,17 @@
 - UI features consume Taurus-owned application models through application services.
 - Register application services explicitly through `AddTaurusApplication()`.
 
+## PegasusApi Integration
+
+- Configure the PegasusApi base address through application configuration.
+- Validate required PegasusApi configuration during application startup.
+- Use typed `HttpClient` registrations for feature services that communicate with PegasusApi.
+- Use the published `PegasusApi.Abstractions` package for PegasusApi request and response contracts.
+- Keep PegasusApi abstraction types within the application integration boundary.
+- Map PegasusApi responses to Taurus-owned application models before returning data to the Web layer.
+- Include only fields required by Taurus when mapping external API models to application models.
+- Keep API endpoint paths in integration code rather than environment configuration where the path is part of the stable API contract.
+
 ## Code-behind
 
 - Larger pages and layout components use Razor code-behind files.

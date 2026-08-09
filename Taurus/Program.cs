@@ -84,7 +84,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddMudServices();
-builder.Services.AddTaurusApplication();
+builder.Services.AddTaurusApplication(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
@@ -149,7 +149,8 @@ static void ValidateRequiredConfiguration(IConfiguration configuration)
     [
         "Authentication:OpenIdConnect:Authority",
         "Authentication:OpenIdConnect:ClientId",
-        "Authentication:OpenIdConnect:ClientSecret"
+        "Authentication:OpenIdConnect:ClientSecret",
+        "PegasusApi:BaseAddress"
     ];
     
     var missing = keys

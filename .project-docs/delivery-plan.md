@@ -102,10 +102,11 @@ Users can view project listing.
 
 ## Milestone 1.4 – PegasusApi Integration
 
-- Configure PegasusApi connectivity.
-- Create the Taurus application layer.
-- Establish the API integration pattern.
-- Create the initial request and response mapping.
+- ✓ Configure PegasusApi connectivity.
+- ✓ Create the Taurus application layer.
+- ✓ Establish the API integration pattern.
+- ✓ Create the initial request and response mapping.
+- Allow ability to use query string options.
 - Implement consistent API error handling.
 - Implement application logging.
 
