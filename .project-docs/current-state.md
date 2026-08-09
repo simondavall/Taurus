@@ -9,19 +9,15 @@ where development should continue.
 
 # Current milestone
 
-- Milestone 1.3 – PegasusApi Integration
+- Milestone 1.3 – Initial Project Listing with hardcoded data
 
 # Current task
 
-- Configure PegasusApi connectivity.
+- Setup hard coded project data in Application layer.
 
 # Remaining milestone tasks
 
-- Create the Taurus application layer.
-- Establish the API integration pattern.
-- Create the initial request and response mapping.
-- Implement consistent API error handling.
-- Implement application logging.
+- Display projects.
 
 # Completed
 

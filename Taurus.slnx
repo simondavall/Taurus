@@ -1,3 +1,3 @@
 <Solution>
-  <Project Path="src/Taurus/Taurus.csproj" />
+  <Project Path="Taurus/Taurus.csproj" />
 </Solution>
