@@ -107,8 +107,9 @@ Users can view project listing.
 - ✓ Establish the API integration pattern.
 - ✓ Create the initial request and response mapping.
 - ✓ Allow ability to use query string options.
-- Implement consistent API error handling.
+- ✓ Establish initial Production deployment to IIS.
 - Implement application logging.
+- Implement consistent API error handling when an API workflow with expected failure responses is introduced.
 
 **Deliverable**
 
