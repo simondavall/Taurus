@@ -13,11 +13,11 @@ where development should continue.
 
 # Current task
 
-- Implement consistent API error handling.
+- Implement application logging.
 
 # Remaining milestone tasks
 
-- Implement application logging.
+- Implement consistent API error handling when an API workflow with expected failure responses is introduced.
 
 # Completed
 
