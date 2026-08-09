@@ -107,3 +107,25 @@
 - Use `Env.NoClobber().TraversePath().Load()` so existing environment variables take precedence.
 - Use standard ASP.NET Core environment variables for production deployments.
 - Commit a `.env.example` file containing placeholder values for all required settings.
+
+## Application Logging
+
+- Use Serilog as the application logging provider.
+- Use `ILogger<T>` within Taurus application code rather than depending directly on Serilog APIs.
+- Use structured message templates with named properties rather than interpolated log messages.
+- Configure logging sinks through environment-specific application configuration.
+- Log to the console during Development.
+- Log to daily rolling files in Production.
+- Store Production Taurus logs under `C:\inetpub\logs\Taurus`.
+- Retain Production log files according to the configured retention policy.
+- Log useful operation context while avoiding credentials, tokens and other sensitive information.
+- Log integration failures with the associated exception before allowing unhandled failures to propagate.
+
+## Local Environment Execution
+
+- Distinguish local execution from the ASP.NET Core environment name.
+- Use an explicit Taurus local-execution environment variable when running non-Development environments locally.
+- Load local `.env` configuration only during explicitly identified local execution.
+- Do not load `.env` files in deployed Production environments.
+- Use `UseStaticWebAssets()` during local execution outside Development so static web assets remain available.
+- Use IIS application-pool environment variables for Production secrets.

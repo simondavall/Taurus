@@ -5,19 +5,32 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using MudBlazor.Services;
+using Serilog;
 using Taurus.Application;
 using Taurus.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
-if (builder.Environment.IsDevelopment())
+var isLocalExecution = string.Equals(Environment.GetEnvironmentVariable("TAURUS_LOCAL_EXECUTION"), "true", StringComparison.OrdinalIgnoreCase);
+
+if (isLocalExecution)
 {
     Env.NoClobber()
         .TraversePath()
         .Load();
 
     builder.Configuration.AddEnvironmentVariables();
+    
+    builder.WebHost.UseStaticWebAssets();
 }
+
+builder.Services.AddSerilog((services, configuration) =>
+{
+    configuration
+        .ReadFrom.Configuration(builder.Configuration)
+        .ReadFrom.Services(services)
+        .Enrich.FromLogContext();
+});
 
 ValidateRequiredConfiguration(builder.Configuration);
 
@@ -34,7 +47,7 @@ builder.Services
     .AddCookie()
     .AddOpenIdConnect(options =>
     {
-        var configuration = builder.Configuration.GetSection("Taurus:OpenIdConnect");
+        var configuration = builder.Configuration.GetSection("OpenIdConnect");
 
         options.Authority = configuration["Authority"];
         options.ClientId = configuration["ClientId"];
@@ -147,9 +160,9 @@ static void ValidateRequiredConfiguration(IConfiguration configuration)
 {
     string[] keys =
     [
-        "Taurus:OpenIdConnect:Authority",
-        "Taurus:OpenIdConnect:ClientId",
-        "Taurus:OpenIdConnect:ClientSecret",
+        "OpenIdConnect:Authority",
+        "OpenIdConnect:ClientId",
+        "OpenIdConnect:ClientSecret",
         "PegasusApi:BaseAddress"
     ];
     

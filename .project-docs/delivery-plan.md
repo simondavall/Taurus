@@ -108,8 +108,7 @@ Users can view project listing.
 - ✓ Create the initial request and response mapping.
 - ✓ Allow ability to use query string options.
 - ✓ Establish initial Production deployment to IIS.
-- Implement application logging.
-- Implement consistent API error handling when an API workflow with expected failure responses is introduced.
+- ✓ Implement application logging.
 
 **Deliverable**
 
@@ -183,6 +182,8 @@ Users can inspect existing tickets.
 - Update ticket status.
 - Assign tickets.
 - Preserve existing Pegasus behaviour.
+- Implement consistent PegasusApi error handling when an API workflow with expected failure responses is introduced.
+
 
 **Deliverable**
 
