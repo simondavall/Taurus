@@ -13,11 +13,11 @@ where development should continue.
 
 # Current task
 
-- Implement consistent API error handling.
+- Implement application logging.
 
 # Remaining milestone tasks
 
-- Implement application logging.
+- Implement consistent API error handling when an API workflow with expected failure responses is introduced.
 
 # Completed
 
@@ -124,3 +124,18 @@ where development should continue.
 - Configured project query controls to reload project data automatically when changed.
 - Verified project query options are passed to PegasusApi and reflected in the returned listing.
 - Established the initial PegasusApi query-string integration pattern.
+- Established the initial Taurus Production deployment.
+- Published Taurus as a Release build for IIS hosting.
+- Created the dedicated Taurus IIS application pool.
+- Created the `https://taurus.local` IIS site.
+- Configured HTTPS using a trusted self-signed certificate and SNI.
+- Added Production-specific application configuration.
+- Configured Production to use the dedicated Soteria Taurus client registration.
+- Configured Production PegasusApi connectivity.
+- Verified authentication and logout through Soteria in Production.
+- Verified deep-link authentication in Production.
+- Verified the Projects feature communicates successfully with PegasusApi in Production.
+- Verified project query-string options in Production.
+- Verified static assets and application status pages in Production.
+- Verified Taurus remains runnable after recycling the IIS application pool.
+- Established a verified Production environment for testing environment-specific application behaviour.

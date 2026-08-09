@@ -34,7 +34,7 @@ builder.Services
     .AddCookie()
     .AddOpenIdConnect(options =>
     {
-        var configuration = builder.Configuration.GetSection("Authentication:OpenIdConnect");
+        var configuration = builder.Configuration.GetSection("Taurus:OpenIdConnect");
 
         options.Authority = configuration["Authority"];
         options.ClientId = configuration["ClientId"];
@@ -147,9 +147,9 @@ static void ValidateRequiredConfiguration(IConfiguration configuration)
 {
     string[] keys =
     [
-        "Authentication:OpenIdConnect:Authority",
-        "Authentication:OpenIdConnect:ClientId",
-        "Authentication:OpenIdConnect:ClientSecret",
+        "Taurus:OpenIdConnect:Authority",
+        "Taurus:OpenIdConnect:ClientId",
+        "Taurus:OpenIdConnect:ClientSecret",
         "PegasusApi:BaseAddress"
     ];
     
