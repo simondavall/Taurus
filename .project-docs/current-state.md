@@ -13,11 +13,10 @@ where development should continue.
 
 # Current task
 
-- Allow ability to use query string options.
+- Implement consistent API error handling.
 
 # Remaining milestone tasks
 
-- Implement consistent API error handling.
 - Implement application logging.
 
 # Completed
@@ -119,3 +118,9 @@ where development should continue.
 - Kept PegasusApi transport models isolated from the Web layer.
 - Verified the existing Projects UI operates unchanged against live PegasusApi data.
 - Established the initial PegasusApi integration and mapping pattern.
+- Added query-string option support to the project application service.
+- Added support for the PegasusApi `ActiveOnly` and `IncludeDeleted` project query options.
+- Added temporary Active only and Include deleted controls to the Projects listing.
+- Configured project query controls to reload project data automatically when changed.
+- Verified project query options are passed to PegasusApi and reflected in the returned listing.
+- Established the initial PegasusApi query-string integration pattern.

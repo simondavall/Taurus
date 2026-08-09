@@ -106,7 +106,7 @@ Users can view project listing.
 - ✓ Create the Taurus application layer.
 - ✓ Establish the API integration pattern.
 - ✓ Create the initial request and response mapping.
-- Allow ability to use query string options.
+- ✓ Allow ability to use query string options.
 - Implement consistent API error handling.
 - Implement application logging.
 

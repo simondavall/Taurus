@@ -2,11 +2,29 @@
 
 <PageTitle>Projects</PageTitle>
 
-<MudText Typo="Typo.h4"
-         HtmlTag="h1"
-         GutterBottom>
-    Projects
-</MudText>
+<MudStack Row
+          AlignItems="AlignItems.Center"
+          Justify="Justify.SpaceBetween"
+          Class="mb-4">
+    <MudText Typo="Typo.h4"
+             HtmlTag="h1">
+        Projects
+    </MudText>
+
+    <MudStack Row
+              AlignItems="AlignItems.Center"
+              Spacing="2">
+        <MudCheckBox T="bool"
+                     Value="@ActiveOnly"
+                     ValueChanged="ActiveOnlyChangedAsync"
+                     Label="Active only" />
+
+        <MudCheckBox T="bool"
+                     Value="@IncludeDeleted"
+                     ValueChanged="IncludeDeletedChangedAsync"
+                     Label="Include deleted" />
+    </MudStack>
+</MudStack>
 
 <MudTable T="Project"
           Items="@ProjectItems"

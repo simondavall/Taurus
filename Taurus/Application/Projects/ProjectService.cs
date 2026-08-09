@@ -4,14 +4,18 @@ namespace Taurus.Application.Projects;
 
 public interface IProjectService
 {
-    Task<IReadOnlyList<Project>> GetProjectsAsync();
+    Task<IReadOnlyList<Project>> GetProjectsAsync(bool activeOnly, bool includeDeleted);
 }
 
 public sealed class ProjectService(HttpClient httpClient) : IProjectService
 {
-    public async Task<IReadOnlyList<Project>> GetProjectsAsync()
+    public async Task<IReadOnlyList<Project>> GetProjectsAsync(bool activeOnly, bool includeDeleted)
     {
-        var response = await httpClient.GetFromJsonAsync<ProjectsResponse>("api/projects");
+        var requestUri = $"api/projects?"
+                         + $"activeOnly={activeOnly.ToString().ToLowerInvariant()}&"
+                         + $"includeDeleted={includeDeleted.ToString().ToLowerInvariant()}";
+
+        var response = await httpClient.GetFromJsonAsync<ProjectsResponse>(requestUri);
 
         if (response is null)
         {
