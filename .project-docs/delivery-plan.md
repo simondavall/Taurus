@@ -89,7 +89,18 @@ Users authenticate through Soteria before accessing the Taurus application.
 
 ---
 
-## Milestone 1.3 – PegasusApi Integration
+## Milestone 1.3 – Initial Project Listing with hardcoded data
+
+- Setup hard coded project data in Application layer.
+- Display projects.
+
+**Deliverable**
+
+Users can view project listing.
+
+---
+
+## Milestone 1.4 – PegasusApi Integration
 
 - Configure PegasusApi connectivity.
 - Create the Taurus application layer.
@@ -101,6 +112,34 @@ Users authenticate through Soteria before accessing the Taurus application.
 **Deliverable**
 
 Taurus communicates successfully with PegasusApi through the established integration layer.
+
+---
+
+# Phase 3 – Project Management
+
+## Milestone 3.1 – Project Listing
+
+- Display projects.
+- Support project searching.
+- Display project status.
+
+**Deliverable**
+
+Users can browse projects.
+
+---
+
+## Milestone 3.2 – Project Administration
+
+- Create projects.
+- Edit projects.
+- Activate projects.
+- Deactivate projects.
+- Preserve existing Pegasus project behaviour.
+
+**Deliverable**
+
+Users can administer projects.
 
 ---
 
@@ -146,34 +185,6 @@ Users can inspect existing tickets.
 **Deliverable**
 
 Users can perform normal day-to-day ticket management.
-
----
-
-# Phase 3 – Project Management
-
-## Milestone 3.1 – Project Listing
-
-- Display projects.
-- Support project searching.
-- Display project status.
-
-**Deliverable**
-
-Users can browse projects.
-
----
-
-## Milestone 3.2 – Project Administration
-
-- Create projects.
-- Edit projects.
-- Activate projects.
-- Deactivate projects.
-- Preserve existing Pegasus project behaviour.
-
-**Deliverable**
-
-Users can administer projects.
 
 ---
 
