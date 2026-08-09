@@ -9,15 +9,16 @@ where development should continue.
 
 # Current milestone
 
-- Milestone 1.4 – PegasusApi Integration
+- Milestone 3.1 – Project Listing
 
 # Current task
 
-- Implement application logging.
+- Display projects.
 
 # Remaining milestone tasks
 
-- Implement consistent API error handling when an API workflow with expected failure responses is introduced.
+- Support project searching.
+- Display project status.
 
 # Completed
 
@@ -139,3 +140,21 @@ where development should continue.
 - Verified static assets and application status pages in Production.
 - Verified Taurus remains runnable after recycling the IIS application pool.
 - Established a verified Production environment for testing environment-specific application behaviour.
+- Added Serilog as the Taurus application logging provider.
+- Retained `ILogger<T>` as the application-facing logging abstraction.
+- Configured environment-specific Serilog logging.
+- Configured console logging for Development.
+- Configured daily rolling file logging for Production.
+- Configured Production logs under `C:\inetpub\logs\Taurus`.
+- Configured Production log retention.
+- Granted the Taurus IIS application pool access to the dedicated log directory.
+- Added structured logging to the PegasusApi project integration.
+- Added project retrieval start, completion and failure logging.
+- Verified structured project logging in Development.
+- Verified rolling file logging under the IIS Production deployment.
+- Removed the duplicate project application service registration.
+- Added explicit local-execution configuration for running Taurus locally using the Production environment.
+- Enabled local `.env` configuration during explicitly identified local execution.
+- Enabled static web assets for local execution outside the Development environment.
+- Verified Taurus can run locally using Production configuration with static assets and styling intact.
+- Completed Milestone 1.4 – PegasusApi Integration.

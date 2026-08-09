@@ -7,7 +7,8 @@
         "launchBrowser": true,
         "applicationUrl": "https://localhost:7120;http://localhost:5050",
         "environmentVariables": {
-          "ASPNETCORE_ENVIRONMENT": "Development"
+          "ASPNETCORE_ENVIRONMENT": "Development",
+          "TAURUS_LOCAL_EXECUTION": "true"
         }
       },
       "Production": {
@@ -16,7 +17,8 @@
         "launchBrowser": true,
         "applicationUrl": "https://localhost:7120;http://localhost:5050",
         "environmentVariables": {
-          "ASPNETCORE_ENVIRONMENT": "Production"
+          "ASPNETCORE_ENVIRONMENT": "Production",
+          "TAURUS_LOCAL_EXECUTION": "true"
         }
       }
     }
