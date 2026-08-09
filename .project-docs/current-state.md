@@ -9,15 +9,19 @@ where development should continue.
 
 # Current milestone
 
-- Milestone 1.3 – Initial Project Listing with hardcoded data
+- Milestone 1.4 – PegasusApi Integration
 
 # Current task
 
-- Setup hard coded project data in Application layer.
+- Configure PegasusApi connectivity.
 
 # Remaining milestone tasks
 
-- Display projects.
+- Create the Taurus application layer.
+- Establish the API integration pattern.
+- Create the initial request and response mapping.
+- Implement consistent API error handling.
+- Implement application logging.
 
 # Completed
 
@@ -94,3 +98,16 @@ where development should continue.
 - Verified anonymous status pages retain their MudBlazor styling.
 - Completed the authentication-first application flow.
 - Completed Milestone 1.2 – Authentication.
+- Created the Projects feature.
+- Created the Taurus-owned project application model.
+- Created the project application service boundary using `IProjectService`.
+- Added hardcoded project data for the initial implementation.
+- Registered the project application service through the application dependency injection boundary.
+- Added Projects to the primary navigation.
+- Created the responsive project listing page.
+- Displayed project Id, Title, Prefix and active status.
+- Displayed project active status using MudBlazor chips.
+- Added sortable project listing columns.
+- Configured the project listing to sort by title by default.
+- Verified the project listing across desktop, tablet and mobile layouts.
+- Completed Milestone 1.3 – Initial Project Listing with hardcoded data.
