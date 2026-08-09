@@ -91,8 +91,8 @@ Users authenticate through Soteria before accessing the Taurus application.
 
 ## Milestone 1.3 – Initial Project Listing with hardcoded data
 
-- Setup hard coded project data in Application layer.
-- Display projects.
+- ✓ Setup hard coded project data in Application layer.
+- ✓ Display projects.
 
 **Deliverable**
 

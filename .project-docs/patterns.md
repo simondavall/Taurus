@@ -37,12 +37,28 @@
 - Register services explicitly as they are introduced.
 - Do not introduce marker interfaces or automatic assembly scanning.
 
+## Application Services
+
+- Define application-facing service interfaces where the service implementation is expected to change while its consumer contract remains stable.
+- Keep application models independent of external API transport models.
+- UI features consume Taurus-owned application models through application services.
+- Register application services explicitly through `AddTaurusApplication()`.
+
 ## Code-behind
 
 - Larger pages and layout components use Razor code-behind files.
 - Keep Razor files declarative.
 - Place interaction logic in the corresponding `.razor.cs` file.
 - Simple components without behaviour may remain as a single Razor file.
+
+## Feature Listings
+
+- Use MudBlazor tables for tabular feature listings.
+- Keep listing pages focused on presentation and workflow coordination.
+- Obtain listing data through the feature's application service rather than defining data directly in the UI.
+- Use `DataLabel` on table cells to preserve field context in responsive table layouts.
+- Use `MudTableSortLabel` for sortable columns.
+- Configure an explicit initial sort where the feature has a natural default ordering.
 
 ## Responsive Layout
 

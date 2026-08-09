@@ -1,7 +1,14 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
+
 <MudNavMenu Class="taurus-navigation">
     <AuthorizeView>
         <Authorized>
+            <MudNavLink Href="projects"
+                        Match="NavLinkMatch.Prefix"
+                        Icon="@Icons.Material.Filled.Folder">
+                Projects
+            </MudNavLink>
+
             <MudNavLink Href="counter"
                         Match="NavLinkMatch.Prefix"
                         Icon="@Icons.Material.Filled.AddCircleOutline">

@@ -1,0 +1,59 @@
+﻿@page "/projects"
+
+<PageTitle>Projects</PageTitle>
+
+<MudText Typo="Typo.h4"
+         HtmlTag="h1"
+         GutterBottom>
+    Projects
+</MudText>
+
+<MudTable T="Project"
+          Items="@ProjectItems"
+          Hover
+          Elevation="1">
+    <HeaderContent>
+        <MudTh>
+            <MudTableSortLabel T="Project"
+                               SortBy="project => project.Id">
+                Id
+            </MudTableSortLabel>
+        </MudTh>
+
+        <MudTh>
+            <MudTableSortLabel T="Project"
+                               SortBy="project => project.Title"
+                               InitialDirection="SortDirection.Ascending">
+                Title
+            </MudTableSortLabel>
+        </MudTh>
+
+        <MudTh>
+            <MudTableSortLabel T="Project"
+                               SortBy="project => project.Prefix">
+                Prefix
+            </MudTableSortLabel>
+        </MudTh>
+
+        <MudTh>
+            <MudTableSortLabel T="Project"
+                               SortBy="project => project.IsActive">
+                Active
+            </MudTableSortLabel>
+        </MudTh>
+    </HeaderContent>
+
+    <RowTemplate>
+        <MudTd DataLabel="Id">@context.Id</MudTd>
+        <MudTd DataLabel="Title">@context.Title</MudTd>
+        <MudTd DataLabel="Prefix">@context.Prefix</MudTd>
+        <MudTd DataLabel="Active">
+            <MudChip T="string"
+                     Color="@(context.IsActive ? Color.Success : Color.Default)"
+                     Variant="Variant.Filled"
+                     Size="Size.Small">
+                @(context.IsActive ? "Active" : "Inactive")
+            </MudChip>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
