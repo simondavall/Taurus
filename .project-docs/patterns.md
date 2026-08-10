@@ -154,3 +154,12 @@
 - Grant the application write access only to the Data Protection key-ring directory.
 - Grant the application read access only to the Data Protection certificate location.
 - Never commit Data Protection key rings, private-key certificates or certificate passwords to source control.
+
+## Persistent Browser State
+
+- Access persistent browser state through Taurus-owned application services rather than directly from feature components.
+- Use Protected Local Storage for lightweight user preferences and persistent application context.
+- Keep persisted state models incremental and introduce values only when required by implemented features.
+- Define an explicit default or fallback for every persisted value.
+- Treat missing, invalid or stale persisted state as its defined fallback rather than preventing application use.
+- Access protected browser storage only after the application becomes interactive because browser storage is unavailable during static prerendering.
