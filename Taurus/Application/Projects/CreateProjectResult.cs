@@ -1,8 +1,6 @@
 ﻿namespace Taurus.Application.Projects;
 
-public sealed record CreateProjectResult(
-    Project? Project,
-    string? ErrorMessage)
+public sealed record CreateProjectResult(Project? Project, string? ErrorMessage)
 {
     public bool Succeeded => Project is not null;
 

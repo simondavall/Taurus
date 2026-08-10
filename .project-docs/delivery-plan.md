@@ -123,7 +123,7 @@ Taurus communicates successfully with PegasusApi through the established integra
 
 - ✓ Tidy up project listing.
 - ✓ Create projects.
-- Edit projects.
+- ✓ Edit projects.
 - Implement consistent PegasusApi error handling.
 - Delete projects.
 - Preserve existing Pegasus project behaviour.

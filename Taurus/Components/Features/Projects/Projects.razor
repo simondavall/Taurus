@@ -20,8 +20,10 @@
     <div class="d-none d-sm-block">
         <MudTable T="Project"
                   Items="@PagedProjectItems"
+                  OnRowClick="ProjectRowClickedAsync"
                   Hover
-                  Elevation="1">
+                  Elevation="1"
+                  Class="projects-table">
             <HeaderContent>
                 <MudTh>
                     <MudButton Variant="Variant.Text"
@@ -30,7 +32,7 @@
                         @if (SortField == nameof(Project.Id))
                         {
                             <MudIcon Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
-                                     Size="Size.Small"/>
+                                     Size="Size.Small" />
                         }
                     </MudButton>
                 </MudTh>
@@ -42,7 +44,7 @@
                         @if (SortField == nameof(Project.Title))
                         {
                             <MudIcon Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
-                                     Size="Size.Small"/>
+                                     Size="Size.Small" />
                         }
                     </MudButton>
                 </MudTh>
@@ -54,7 +56,7 @@
                         @if (SortField == nameof(Project.Prefix))
                         {
                             <MudIcon Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
-                                     Size="Size.Small"/>
+                                     Size="Size.Small" />
                         }
                     </MudButton>
                 </MudTh>
@@ -66,7 +68,7 @@
                         @if (SortField == nameof(Project.IsActive))
                         {
                             <MudIcon Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
-                                     Size="Size.Small"/>
+                                     Size="Size.Small" />
                         }
                     </MudButton>
                 </MudTh>
@@ -105,14 +107,16 @@
             <MudIconButton Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
                            OnClick="ToggleSortDirection"
                            Color="Color.Primary"
-                           aria-label="Toggle sort direction"/>
+                           aria-label="Toggle sort direction" />
         </div>
 
         <MudPaper Elevation="1"
                   Class="mobile-project-list">
             @foreach (var project in PagedProjectItems)
             {
-                <div class="mobile-project">
+                <div class="mobile-project"
+                     @onclick="@(() => EditProjectAsync(project))">
+                    
                     <div class="mobile-project-header">
                         <MudText Typo="Typo.subtitle1">
                             @project.Title
@@ -140,7 +144,7 @@
         <div class="projects-pagination">
             <MudPagination Count="@PageCount"
                            @bind-Selected="CurrentPage"
-                           Color="Color.Primary"/>
+                           Color="Color.Primary" />
         </div>
     }
 </div>
