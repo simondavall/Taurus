@@ -179,15 +179,20 @@ Taurus does not initially have its own database.
 
 Project and ticket data remain owned by PegasusApi.
 
-User settings and preferences are stored in a browser cookie.
+User preferences and persistent application context are stored in protected browser local storage.
 
-Every stored setting must have a defined default value so that Taurus continues to operate when:
+Taurus uses ASP.NET Core Protected Local Storage so persisted browser state is protected using the application's Data Protection configuration.
 
-- The cookie does not exist.
-- The cookie has been removed.
+Persisted browser state is scoped to the browser profile rather than explicitly to the authenticated user.
+
+Every persisted value must have a defined default or fallback behaviour so that Taurus continues to operate when:
+
+- The stored value does not exist.
+- Browser storage has been cleared.
 - The stored value is incomplete.
 - The stored value is invalid.
-- New settings are introduced after the cookie was created.
+- The stored value refers to application state that is no longer available.
+- New persisted values are introduced after existing state was created.
 
 A Taurus database should only be introduced when a demonstrated requirement cannot be met appropriately through PegasusApi or cookie-based preferences.
 

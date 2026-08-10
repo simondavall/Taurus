@@ -132,7 +132,7 @@ public partial class Projects
 
     private Task ProjectRowClickedAsync(TableRowClickEventArgs<Project> args)
     {
-        return EditProjectAsync(args.Item);
+        return EditProjectAsync(args.Item!);
     }
     
     private IEnumerable<Project> Sort<TKey>(IEnumerable<Project> projects, Func<Project, TKey> selector)

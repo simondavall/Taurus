@@ -27,3 +27,22 @@ Taurus persists ASP.NET Core Data Protection keys to a host-configured filesyste
 - X.509 certificate protection provides the required key-at-rest protection while remaining compatible with future non-Windows hosting.
 - Key paths, certificate paths and certificate credentials remain hosting concerns rather than application-specific filesystem assumptions.
 
+2026-08-10
+
+### Use protected browser local storage for persistent UI state
+
+#### Decision
+
+Taurus stores lightweight user preferences and persistent application context using ASP.NET Core Protected Local Storage.
+
+Persisted state is scoped to the browser profile rather than explicitly to the authenticated user.
+
+#### Rationale
+
+- Interactive Server components need to persist UI state after the initial HTTP response has completed.
+- Browser local storage naturally survives application restarts and browser sessions.
+- Taurus already has explicit persistent ASP.NET Core Data Protection configuration, which can protect values stored through Protected Local Storage.
+- The application is intended primarily for local use, so browser-profile scoping is sufficient and avoids unnecessary user-specific persistence infrastructure.
+- A Taurus database is not justified for lightweight UI context and preferences.
+- The Protected Browser Storage API is currently experimental, but its limitations are acceptable for the application's intended deployment and can be revisited if requirements change.
+

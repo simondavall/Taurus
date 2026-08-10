@@ -138,12 +138,10 @@ Users can administer projects.
 
 ## Milestone 3.1 – Ticket Listing
 
-- Display tickets listing.
+- ✓ Display tickets listing.
 - Support project filtering.
 - Support status filtering.
-- Display ticket aging
-- Display status icon
-- Display priority icon
+- Add ticket listing state indicators.
 - Display sub task count
 
 **Deliverable**
