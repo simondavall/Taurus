@@ -28,11 +28,11 @@ Replace the existing project administration functionality.
 
 **Includes**
 
-- Display projects.
-- Create projects.
-- Edit projects.
-- Activate and deactivate projects.
-- Preserve existing project administration behaviour.
+- ✓ Display projects.
+- ✓ Create projects.
+- ✓ Edit projects.
+- ✓ Activate and deactivate projects.
+- ✓ Preserve existing project administration behaviour.
 
 **Deliverable**
 

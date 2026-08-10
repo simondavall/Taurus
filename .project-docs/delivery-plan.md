@@ -125,8 +125,8 @@ Taurus communicates successfully with PegasusApi through the established integra
 - ✓ Create projects.
 - ✓ Edit projects.
 - ✓ Implement consistent PegasusApi error handling.
-- Delete projects.
-- Preserve existing Pegasus project behaviour.
+- ✓ Delete projects.
+- ✓ Preserve existing Pegasus project behaviour.
 
 **Deliverable**
 
@@ -138,12 +138,13 @@ Users can administer projects.
 
 ## Milestone 3.1 – Ticket Listing
 
-- Display ticket listing.
-- Support paging.
-- Support sorting.
-- Support ticket filtering.
-- Support project selection.
-- Support ticket searching.
+- Display tickets listing.
+- Support project filtering.
+- Support status filtering.
+- Display ticket aging
+- Display status icon
+- Display priority icon
+- Display sub task count
 
 **Deliverable**
 

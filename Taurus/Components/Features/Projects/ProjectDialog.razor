@@ -45,17 +45,28 @@
     </DialogContent>
 
     <DialogActions>
+        @if (IsEdit)
+        {
+            <MudButton Variant="Variant.Text"
+                       Color="Color.Error"
+                       StartIcon="@Icons.Material.Filled.Delete"
+                       Disabled="@IsBusy"
+                       OnClick="DeleteAsync">
+                @(_deleting ? "Deleting..." : "Delete")
+            </MudButton>
+        }
+
+        <MudSpacer />
+
         <MudButton Variant="Variant.Text"
-                   Disabled="@_saving"
+                   Disabled="@IsBusy"
                    OnClick="Cancel">
             Cancel
         </MudButton>
 
-        <MudSpacer />
-
         <MudButton Variant="Variant.Filled"
                    Color="Color.Primary"
-                   Disabled="@_saving"
+                   Disabled="@IsBusy"
                    OnClick="SaveAsync">
             @(_saving ? "Saving..." : "Save")
         </MudButton>

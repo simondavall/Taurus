@@ -11,6 +11,7 @@ public interface IProjectService
     Task<IReadOnlyList<Project>> GetProjectsAsync();
     Task<ApplicationResult<Project>> CreateProjectAsync(CreateProjectRequest request);
     Task<ApplicationResult> UpdateProjectAsync(UpdateProjectRequest request);
+    Task<ApplicationResult> DeleteProjectAsync(Guid id);
 }
 
 public sealed class ProjectService(HttpClient httpClient, ILogger<ProjectService> logger) : IProjectService
@@ -138,6 +139,41 @@ public sealed class ProjectService(HttpClient httpClient, ILogger<ProjectService
         catch (Exception exception)
         {
             logger.LogError(exception, "Failed to update project {ProjectId} in PegasusApi", request.Id);
+            throw;
+        }
+    }
+
+    public async Task<ApplicationResult> DeleteProjectAsync(Guid id)
+    {
+        logger.LogInformation("Deleting project {ProjectId} in PegasusApi", id);
+
+        try
+        {
+            using var response = await httpClient.DeleteAsync($"api/projects/{id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                logger.LogInformation("Deleted project {ProjectId} in PegasusApi", id);
+                return ApplicationResult.Success();
+            }
+
+            if (response.StatusCode == HttpStatusCode.NotFound)
+            {
+                logger.LogWarning(
+                    "PegasusApi could not delete project {ProjectId} because it was not found",
+                    id);
+
+                return ApplicationResult.Failure(
+                    "The project could not be deleted because it no longer exists.");
+            }
+
+            response.EnsureSuccessStatusCode();
+
+            throw new InvalidOperationException("PegasusApi project deletion failed unexpectedly.");
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Failed to delete project {ProjectId} in PegasusApi", id);
             throw;
         }
     }
