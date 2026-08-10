@@ -13,12 +13,13 @@ where development should continue.
 
 # Current task
 
-- Display tickets listing.
+- Support project filtering.
 
 # Remaining milestone tasks
 
-- Support project filtering.
 - Support status filtering.
+- Add ticket listing state indicators.
+- Display sub task count
 
 # Completed
 
@@ -240,3 +241,21 @@ where development should continue.
 - Added successful project deletion feedback using a snackbar.
 - Preserved valid pagination state when deletion changes the number of available pages.
 - Verified project deletion across the existing project administration workflow.
+- Created the Tickets feature.
+- Created the Taurus-owned ticket application model.
+- Created the ticket application service boundary using `ITicketService`.
+- Integrated ticket retrieval with the PegasusApi `GET /api/tickets` endpoint.
+- Retrieved the unfiltered Pegasus ticket listing without project, parent or subtask query options.
+- Mapped PegasusApi ticket responses to Taurus-owned ticket models within the integration boundary.
+- Registered the ticket application service as a typed HTTP client.
+- Added Tickets to the authenticated primary navigation.
+- Created the responsive ticket listing page.
+- Displayed ticket RefId, title and last-updated information.
+- Displayed `Project: All` as the initial ticket-listing context.
+- Added configurable client-side ticket pagination.
+- Configured ticket page size through application configuration with a safe default.
+- Reserved the desktop secondary column for future Project and Status filtering.
+- Temporarily treated `StatusId == 3` as completed for ticket-listing presentation.
+- Displayed completed tickets using muted styling while preserving normal interaction semantics.
+- Deferred permanent ticket-status representation to the Support status filtering task.
+- Verified the ticket listing across desktop, tablet and mobile layouts.

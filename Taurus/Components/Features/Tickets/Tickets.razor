@@ -1,0 +1,74 @@
+﻿@page "/tickets"
+
+<PageTitle>Tickets</PageTitle>
+
+<div class="tickets-page">
+    <div class="tickets-listing">
+        <MudText Typo="Typo.h4"
+                 HtmlTag="h1"
+                 Class="tickets-heading">
+            Project: All
+        </MudText>
+
+        <MudPaper Elevation="1"
+                  Class="tickets-table d-none d-sm-block">
+            @foreach (var ticket in PagedTicketItems)
+            {
+                <div class="@GetTicketClass(ticket)">
+                    <MudText Typo="Typo.body2"
+                             Class="ticket-ref">
+                        @ticket.TicketRef
+                    </MudText>
+
+                    <MudText Typo="Typo.body2"
+                             Class="ticket-title">
+                        @ticket.Title
+                    </MudText>
+
+                    <MudText Typo="Typo.body2"
+                             Class="ticket-updated">
+                        @FormatLastUpdated(ticket.LastModified)
+                    </MudText>
+                </div>
+            }
+        </MudPaper>
+
+        <MudPaper Elevation="1"
+                  Class="mobile-ticket-list d-block d-sm-none">
+            @foreach (var ticket in PagedTicketItems)
+            {
+                <div class="@GetMobileTicketClass(ticket)">
+                    <div class="mobile-ticket-header">
+                        <MudText Typo="Typo.body2"
+                                 Class="ticket-ref">
+                            @ticket.TicketRef
+                        </MudText>
+
+                        <MudText Typo="Typo.caption"
+                                 Class="ticket-updated">
+                            @FormatLastUpdated(ticket.LastModified)
+                        </MudText>
+                    </div>
+
+                    <MudText Typo="Typo.body2"
+                             Class="ticket-title">
+                        @ticket.Title
+                    </MudText>
+                </div>
+            }
+        </MudPaper>
+
+        @if (PageCount > 1)
+        {
+            <div class="tickets-pagination">
+                <MudPagination Count="@PageCount"
+                               @bind-Selected="CurrentPage"
+                               Color="Color.Primary" />
+            </div>
+        }
+    </div>
+
+    <aside class="tickets-filters d-none d-md-block"
+           aria-label="Ticket filters">
+    </aside>
+</div>

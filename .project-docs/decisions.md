@@ -23,8 +23,9 @@
 
 - PegasusApi remains the system of record.
 - Do not introduce a Taurus database unless a demonstrated requirement exists.
-- Store user preferences in cookies.
-- Every persisted preference must have a reliable default value.
+- Store lightweight user preferences and persistent application context in protected browser local storage.
+- Treat persisted browser state as scoped to the browser profile rather than explicitly to the authenticated user.
+- Every persisted value must have a reliable default or fallback behaviour.
 
 # Authentication
 
