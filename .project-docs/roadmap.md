@@ -6,13 +6,13 @@ Establish the technical, architectural and presentation foundation for Taurus.
 
 **Includes**
 
-- Establish the project structure.
-- Configure MudBlazor.
-- Establish the shared application layout.
-- Establish the application theme and responsive design.
-- Integrate authentication with Soteria.
-- Establish the PegasusApi integration layer.
-- Establish project documentation and implementation patterns.
+- ✓ Establish the project structure.
+- ✓ Configure MudBlazor.
+- ✓ Establish the shared application layout.
+- ✓ Establish the application theme and responsive design.
+- ✓ Integrate authentication with Soteria.
+- ✓ Establish the PegasusApi integration layer.
+- ✓ Establish project documentation and implementation patterns.
 
 **Deliverable**
 
@@ -20,7 +20,27 @@ A runnable Taurus application capable of authenticating users and communicating 
 
 ---
 
-# Phase 2 – Ticket Management
+# Phase 2 – Project Management
+
+**Goal**
+
+Replace the existing project administration functionality.
+
+**Includes**
+
+- Display projects.
+- Create projects.
+- Edit projects.
+- Activate and deactivate projects.
+- Preserve existing project administration behaviour.
+
+**Deliverable**
+
+Projects are managed entirely through Taurus.
+
+---
+
+# Phase 3 – Ticket Management
 
 **Goal**
 
@@ -40,26 +60,6 @@ Replace the existing ticket browsing and management experience.
 **Deliverable**
 
 Users can perform their day-to-day ticket management entirely within Taurus.
-
----
-
-# Phase 3 – Project Management
-
-**Goal**
-
-Replace the existing project administration functionality.
-
-**Includes**
-
-- Display projects.
-- Create projects.
-- Edit projects.
-- Activate and deactivate projects.
-- Preserve existing project administration behaviour.
-
-**Deliverable**
-
-Projects are managed entirely through Taurus.
 
 ---
 

@@ -5,20 +5,22 @@ where development should continue.
 
 # Current phase
 
-- Phase 1 – Application Foundation
+# Phase 2 – Project Management
 
 # Current milestone
 
-- Milestone 3.1 – Project Listing
+- Milestone 2.1 – Project Administration
 
 # Current task
 
-- Display projects.
+- Tidy up project listing.
 
 # Remaining milestone tasks
 
-- Support project searching.
-- Display project status.
+- Create projects.
+- Edit projects.
+- Delete projects.
+- Preserve existing Pegasus project behaviour.
 
 # Completed
 

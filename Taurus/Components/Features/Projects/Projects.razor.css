@@ -1,0 +1,9 @@
+﻿.projects-listing {
+    width: 66.6667%;
+}
+
+@media (max-width: 959.98px) {
+    .projects-listing {
+        width: 100%;
+    }
+}

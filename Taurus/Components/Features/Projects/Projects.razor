@@ -2,76 +2,65 @@
 
 <PageTitle>Projects</PageTitle>
 
-<MudStack Row
-          AlignItems="AlignItems.Center"
-          Justify="Justify.SpaceBetween"
-          Class="mb-4">
+<div class="projects-listing">
     <MudText Typo="Typo.h4"
-             HtmlTag="h1">
+             HtmlTag="h1"
+             Class="mb-4">
         Projects
     </MudText>
 
-    <MudStack Row
-              AlignItems="AlignItems.Center"
-              Spacing="2">
-        <MudCheckBox T="bool"
-                     Value="@ActiveOnly"
-                     ValueChanged="ActiveOnlyChangedAsync"
-                     Label="Active only" />
+    <MudTable T="Project"
+              Items="@ProjectItems"
+              RowsPerPage="@PageSize"
+              Hover
+              Elevation="1">
+        <HeaderContent>
+            <MudTh>
+                <MudTableSortLabel T="Project"
+                                   SortBy="project => project.Id">
+                    Id
+                </MudTableSortLabel>
+            </MudTh>
 
-        <MudCheckBox T="bool"
-                     Value="@IncludeDeleted"
-                     ValueChanged="IncludeDeletedChangedAsync"
-                     Label="Include deleted" />
-    </MudStack>
-</MudStack>
+            <MudTh>
+                <MudTableSortLabel T="Project"
+                                   SortBy="project => project.Title"
+                                   InitialDirection="SortDirection.Ascending">
+                    Title
+                </MudTableSortLabel>
+            </MudTh>
 
-<MudTable T="Project"
-          Items="@ProjectItems"
-          Hover
-          Elevation="1">
-    <HeaderContent>
-        <MudTh>
-            <MudTableSortLabel T="Project"
-                               SortBy="project => project.Id">
-                Id
-            </MudTableSortLabel>
-        </MudTh>
+            <MudTh>
+                <MudTableSortLabel T="Project"
+                                   SortBy="project => project.Prefix">
+                    Prefix
+                </MudTableSortLabel>
+            </MudTh>
 
-        <MudTh>
-            <MudTableSortLabel T="Project"
-                               SortBy="project => project.Title"
-                               InitialDirection="SortDirection.Ascending">
-                Title
-            </MudTableSortLabel>
-        </MudTh>
+            <MudTh>
+                <MudTableSortLabel T="Project"
+                                   SortBy="project => project.IsActive">
+                    Active
+                </MudTableSortLabel>
+            </MudTh>
+        </HeaderContent>
 
-        <MudTh>
-            <MudTableSortLabel T="Project"
-                               SortBy="project => project.Prefix">
-                Prefix
-            </MudTableSortLabel>
-        </MudTh>
+        <RowTemplate>
+            <MudTd DataLabel="Id">@DisplayId(context.Id)</MudTd>
+            <MudTd DataLabel="Title">@context.Title</MudTd>
+            <MudTd DataLabel="Prefix">@context.Prefix</MudTd>
+            <MudTd DataLabel="Active">
+                <MudChip T="string"
+                         Color="@(context.IsActive ? Color.Success : Color.Default)"
+                         Variant="Variant.Filled"
+                         Size="Size.Small">
+                    @(context.IsActive ? "Active" : "Inactive")
+                </MudChip>
+            </MudTd>
+        </RowTemplate>
 
-        <MudTh>
-            <MudTableSortLabel T="Project"
-                               SortBy="project => project.IsActive">
-                Active
-            </MudTableSortLabel>
-        </MudTh>
-    </HeaderContent>
-
-    <RowTemplate>
-        <MudTd DataLabel="Id">@context.Id</MudTd>
-        <MudTd DataLabel="Title">@context.Title</MudTd>
-        <MudTd DataLabel="Prefix">@context.Prefix</MudTd>
-        <MudTd DataLabel="Active">
-            <MudChip T="string"
-                     Color="@(context.IsActive ? Color.Success : Color.Default)"
-                     Variant="Variant.Filled"
-                     Size="Size.Small">
-                @(context.IsActive ? "Active" : "Inactive")
-            </MudChip>
-        </MudTd>
-    </RowTemplate>
-</MudTable>
+        <PagerContent>
+            <MudTablePager HideRowsPerPage="true" />
+        </PagerContent>
+    </MudTable>
+</div>

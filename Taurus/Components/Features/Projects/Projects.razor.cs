@@ -5,33 +5,32 @@ namespace Taurus.Components.Features.Projects;
 
 public partial class Projects
 {
+    private const int DefaultPageSize = 10;
+
+    [Inject]
+    private IConfiguration Configuration { get; set; } = default!;
+
     [Inject]
     private IProjectService ProjectService { get; set; } = default!;
 
     private IReadOnlyList<Project> ProjectItems { get; set; } = [];
 
-    private bool ActiveOnly { get; set; }
-    private bool IncludeDeleted { get; set; }
+    private int PageSize { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadProjectsAsync();
+        PageSize = Configuration.GetValue("Projects:PageSize", DefaultPageSize);
+
+        if (PageSize <= 0)
+        {
+            PageSize = DefaultPageSize;
+        }
+
+        ProjectItems = await ProjectService.GetProjectsAsync();
     }
 
-    private async Task LoadProjectsAsync()
+    private static string DisplayId(Guid id)
     {
-        ProjectItems = await ProjectService.GetProjectsAsync(ActiveOnly, IncludeDeleted);
-    }
-
-    private async Task ActiveOnlyChangedAsync(bool value)
-    {
-        ActiveOnly = value;
-        await LoadProjectsAsync();
-    }
-
-    private async Task IncludeDeletedChangedAsync(bool value)
-    {
-        IncludeDeleted = value;
-        await LoadProjectsAsync();
+        return id.ToString("N")[..6];
     }
 }
