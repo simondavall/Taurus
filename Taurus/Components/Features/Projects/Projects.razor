@@ -9,58 +9,130 @@
         Projects
     </MudText>
 
-    <MudTable T="Project"
-              Items="@ProjectItems"
-              RowsPerPage="@PageSize"
-              Hover
-              Elevation="1">
-        <HeaderContent>
-            <MudTh>
-                <MudTableSortLabel T="Project"
-                                   SortBy="project => project.Id">
-                    Id
-                </MudTableSortLabel>
-            </MudTh>
+    <div class="d-none d-sm-block">
+        <MudTable T="Project"
+                  Items="@PagedProjectItems"
+                  Hover
+                  Elevation="1">
+            <HeaderContent>
+                <MudTh>
+                    <MudButton Variant="Variant.Text"
+                               OnClick="@(() => SortBy(nameof(Project.Id)))">
+                        Id
+                        @if (SortField == nameof(Project.Id))
+                        {
+                            <MudIcon Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
+                                     Size="Size.Small"/>
+                        }
+                    </MudButton>
+                </MudTh>
 
-            <MudTh>
-                <MudTableSortLabel T="Project"
-                                   SortBy="project => project.Title"
-                                   InitialDirection="SortDirection.Ascending">
-                    Title
-                </MudTableSortLabel>
-            </MudTh>
+                <MudTh>
+                    <MudButton Variant="Variant.Text"
+                               OnClick="@(() => SortBy(nameof(Project.Title)))">
+                        Title
+                        @if (SortField == nameof(Project.Title))
+                        {
+                            <MudIcon Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
+                                     Size="Size.Small"/>
+                        }
+                    </MudButton>
+                </MudTh>
 
-            <MudTh>
-                <MudTableSortLabel T="Project"
-                                   SortBy="project => project.Prefix">
-                    Prefix
-                </MudTableSortLabel>
-            </MudTh>
+                <MudTh>
+                    <MudButton Variant="Variant.Text"
+                               OnClick="@(() => SortBy(nameof(Project.Prefix)))">
+                        Prefix
+                        @if (SortField == nameof(Project.Prefix))
+                        {
+                            <MudIcon Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
+                                     Size="Size.Small"/>
+                        }
+                    </MudButton>
+                </MudTh>
 
-            <MudTh>
-                <MudTableSortLabel T="Project"
-                                   SortBy="project => project.IsActive">
-                    Active
-                </MudTableSortLabel>
-            </MudTh>
-        </HeaderContent>
+                <MudTh>
+                    <MudButton Variant="Variant.Text"
+                               OnClick="@(() => SortBy(nameof(Project.IsActive)))">
+                        Active
+                        @if (SortField == nameof(Project.IsActive))
+                        {
+                            <MudIcon Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
+                                     Size="Size.Small"/>
+                        }
+                    </MudButton>
+                </MudTh>
+            </HeaderContent>
 
-        <RowTemplate>
-            <MudTd DataLabel="Id">@DisplayId(context.Id)</MudTd>
-            <MudTd DataLabel="Title">@context.Title</MudTd>
-            <MudTd DataLabel="Prefix">@context.Prefix</MudTd>
-            <MudTd DataLabel="Active">
-                <MudChip T="string"
-                         Color="@(context.IsActive ? Color.Success : Color.Default)"
-                         Variant="Variant.Filled"
-                         Size="Size.Small">
-                    @(context.IsActive ? "Active" : "Inactive")
-                </MudChip>
-            </MudTd>
-        </RowTemplate>
+            <RowTemplate>
+                <MudTd>@DisplayId(context.Id)</MudTd>
+                <MudTd>@context.Title</MudTd>
+                <MudTd>@context.Prefix</MudTd>
+                <MudTd>
+                    <MudChip T="string"
+                             Color="@(context.IsActive ? Color.Success : Color.Default)"
+                             Variant="Variant.Filled"
+                             Size="Size.Small">
+                        @(context.IsActive ? "Active" : "Inactive")
+                    </MudChip>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </div>
 
-        <PagerContent>
-            <MudTablePager HideRowsPerPage="true" />
-        </PagerContent>
-    </MudTable>
+    <div class="d-block d-sm-none">
+        <div class="mobile-sort">
+            <MudSelect T="string"
+                       Label="Sort"
+                       Value="@SortField"
+                       ValueChanged="SortFieldChanged"
+                       Dense
+                       Margin="Margin.Dense">
+                <MudSelectItem Value="@nameof(Project.Title)">Title</MudSelectItem>
+                <MudSelectItem Value="@nameof(Project.Prefix)">Prefix</MudSelectItem>
+                <MudSelectItem Value="@nameof(Project.Id)">Id</MudSelectItem>
+                <MudSelectItem Value="@nameof(Project.IsActive)">Active</MudSelectItem>
+            </MudSelect>
+
+            <MudIconButton Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
+                           OnClick="ToggleSortDirection"
+                           Color="Color.Primary"
+                           aria-label="Toggle sort direction"/>
+        </div>
+
+        <MudPaper Elevation="1"
+                  Class="mobile-project-list">
+            @foreach (var project in PagedProjectItems)
+            {
+                <div class="mobile-project">
+                    <div class="mobile-project-header">
+                        <MudText Typo="Typo.subtitle1">
+                            @project.Title
+                        </MudText>
+
+                        <MudChip T="string"
+                                 Color="@(project.IsActive ? Color.Success : Color.Default)"
+                                 Variant="Variant.Filled"
+                                 Size="Size.Small">
+                            @(project.IsActive ? "Active" : "Inactive")
+                        </MudChip>
+                    </div>
+
+                    <MudText Typo="Typo.body2"
+                             Color="Color.Secondary">
+                        @project.Prefix · @DisplayId(project.Id)
+                    </MudText>
+                </div>
+            }
+        </MudPaper>
+    </div>
+
+    @if (PageCount > 1)
+    {
+        <div class="projects-pagination">
+            <MudPagination Count="@PageCount"
+                           @bind-Selected="CurrentPage"
+                           Color="Color.Primary"/>
+        </div>
+    }
 </div>

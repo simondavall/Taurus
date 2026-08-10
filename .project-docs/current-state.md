@@ -13,11 +13,10 @@ where development should continue.
 
 # Current task
 
-- Tidy up project listing.
+- Create projects.
 
 # Remaining milestone tasks
 
-- Create projects.
 - Edit projects.
 - Delete projects.
 - Preserve existing Pegasus project behaviour.
@@ -175,3 +174,15 @@ where development should continue.
 - Verified authentication remains valid across IIS application-pool recycling.
 - Verified persisted Data Protection keys are protected at rest.
 - Eliminated the ASP.NET Core ephemeral Data Protection key warnings.
+- Tidied the project listing for project administration.
+- Removed the temporary project ActiveOnly filtering behaviour.
+- Removed the ActiveOnly option from the project application service and PegasusApi request.
+- Added configurable client-side project pagination.
+- Configured the project listing page size through application configuration.
+- Shortened displayed project identifiers to the first six hexadecimal characters while retaining the full Guid application identifier.
+- Reduced the desktop project listing width while preserving full-width responsive layouts.
+- Adjusted the shared navigation drawer breakpoint so persistent navigation remains available at narrower viewport widths.
+- Added a dedicated compact mobile project listing.
+- Added explicit mobile project sorting by field and direction.
+- Shared project sorting and pagination state across desktop and mobile presentations.
+- Verified responsive project presentation across mobile, tablet and desktop viewport widths.

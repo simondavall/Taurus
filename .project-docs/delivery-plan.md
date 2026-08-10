@@ -121,7 +121,7 @@ Taurus communicates successfully with PegasusApi through the established integra
 
 ## Milestone 2.1 – Project Administration
 
-- Tidy up project listing.
+- ✓ Tidy up project listing.
 - Create projects.
 - Edit projects.
 - Delete projects.

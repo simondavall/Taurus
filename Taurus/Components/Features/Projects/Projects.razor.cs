@@ -15,7 +15,33 @@ public partial class Projects
 
     private IReadOnlyList<Project> ProjectItems { get; set; } = [];
 
+    private string SortField { get; set; } = nameof(Project.Title);
+
+    private bool SortDescending { get; set; }
+
     private int PageSize { get; set; }
+
+    private int CurrentPage { get; set; } = 1;
+
+    private int PageCount => Math.Max(1, (int)Math.Ceiling(ProjectItems.Count / (double)PageSize));
+
+    private IEnumerable<Project> PagedProjectItems
+    {
+        get
+        {
+            var sortedProjects = SortField switch
+            {
+                nameof(Project.Id) => Sort(ProjectItems, project => project.Id),
+                nameof(Project.Prefix) => Sort(ProjectItems, project => project.Prefix),
+                nameof(Project.IsActive) => Sort(ProjectItems, project => project.IsActive),
+                _ => Sort(ProjectItems, project => project.Title)
+            };
+
+            return sortedProjects
+                .Skip((CurrentPage - 1) * PageSize)
+                .Take(PageSize);
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -27,6 +53,41 @@ public partial class Projects
         }
 
         ProjectItems = await ProjectService.GetProjectsAsync();
+    }
+
+    private IEnumerable<Project> Sort<TKey>(IEnumerable<Project> projects, Func<Project, TKey> selector)
+    {
+        return SortDescending
+            ? projects.OrderByDescending(selector)
+            : projects.OrderBy(selector);
+    }
+
+    private void SortBy(string field)
+    {
+        if (SortField == field)
+        {
+            SortDescending = !SortDescending;
+        }
+        else
+        {
+            SortField = field;
+            SortDescending = false;
+        }
+
+        CurrentPage = 1;
+    }
+
+    private void SortFieldChanged(string field)
+    {
+        SortField = field;
+        SortDescending = false;
+        CurrentPage = 1;
+    }
+
+    private void ToggleSortDirection()
+    {
+        SortDescending = !SortDescending;
+        CurrentPage = 1;
     }
 
     private static string DisplayId(Guid id)
