@@ -129,3 +129,17 @@
 - Do not load `.env` files in deployed Production environments.
 - Use `UseStaticWebAssets()` during local execution outside Development so static web assets remain available.
 - Use IIS application-pool environment variables for Production secrets.
+
+## Data Protection
+
+- Configure ASP.NET Core Data Protection explicitly.
+- Use the stable application name `Taurus`.
+- Persist Data Protection keys to a host-configured filesystem location.
+- Protect persisted Data Protection keys at rest using an X.509 certificate.
+- Load the Data Protection certificate from a host-configured PKCS#12/PFX file.
+- Keep the key-ring path, certificate path and certificate password outside source-controlled application configuration.
+- Use separate Data Protection certificates and key rings for local and Production environments.
+- Do not depend on Windows DPAPI or the Windows certificate store for application Data Protection.
+- Grant the application write access only to the Data Protection key-ring directory.
+- Grant the application read access only to the Data Protection certificate location.
+- Never commit Data Protection key rings, private-key certificates or certificate passwords to source control.

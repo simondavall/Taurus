@@ -158,3 +158,18 @@ where development should continue.
 - Enabled static web assets for local execution outside the Development environment.
 - Verified Taurus can run locally using Production configuration with static assets and styling intact.
 - Completed Milestone 1.4 – PegasusApi Integration.
+- Configured explicit ASP.NET Core Data Protection for Taurus.
+- Configured a stable `Taurus` Data Protection application name.
+- Configured persistent filesystem-backed Data Protection key storage.
+- Configured X.509 certificate protection for persisted Data Protection keys.
+- Kept Data Protection key and certificate locations host-configurable.
+- Kept the Data Protection certificate password outside source control.
+- Configured Production Data Protection keys under `C:\inetpub\keys\Taurus`.
+- Configured the Production Data Protection certificate separately from the key ring.
+- Granted the Taurus IIS application pool only the required key and certificate filesystem permissions.
+- Configured separate local Data Protection keys and certificate material for local execution.
+- Excluded local Data Protection keys and certificate material from source control.
+- Verified persisted Data Protection keys survive application and IIS application-pool restarts.
+- Verified authentication remains valid across IIS application-pool recycling.
+- Verified persisted Data Protection keys are protected at rest.
+- Eliminated the ASP.NET Core ephemeral Data Protection key warnings.

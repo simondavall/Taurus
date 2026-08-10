@@ -1,8 +1,10 @@
+using System.Security.Cryptography.X509Certificates;
 using DotNetEnv;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using MudBlazor.Services;
 using Serilog;
@@ -33,6 +35,8 @@ builder.Services.AddSerilog((services, configuration) =>
 });
 
 ValidateRequiredConfiguration(builder.Configuration);
+
+ConfigureDataProtection(builder.Services, builder.Configuration);
 
 builder.Services
     .AddRazorComponents()
@@ -163,7 +167,10 @@ static void ValidateRequiredConfiguration(IConfiguration configuration)
         "OpenIdConnect:Authority",
         "OpenIdConnect:ClientId",
         "OpenIdConnect:ClientSecret",
-        "PegasusApi:BaseAddress"
+        "PegasusApi:BaseAddress",
+        "DataProtection:KeysPath",
+        "DataProtection:CertificatePath",
+        "DataProtection:CertificatePassword"
     ];
     
     var missing = keys
@@ -190,4 +197,22 @@ static bool IsLocalReturnUrl(string? returnUrl)
     return returnUrl.StartsWith('/')
            && !returnUrl.StartsWith("//")
            && !returnUrl.StartsWith("/\\");
+}
+
+static void ConfigureDataProtection(IServiceCollection services, IConfiguration configuration)
+{
+    var keysPath = configuration["DataProtection:KeysPath"];
+    var certificatePath = configuration["DataProtection:CertificatePath"];
+    var certificatePassword = configuration["DataProtection:CertificatePassword"];
+
+    var certificate = X509CertificateLoader.LoadPkcs12FromFile(
+        certificatePath!,
+        certificatePassword,
+        X509KeyStorageFlags.EphemeralKeySet);
+
+    services
+        .AddDataProtection()
+        .SetApplicationName("Taurus")
+        .PersistKeysToFileSystem(new DirectoryInfo(keysPath!))
+        .ProtectKeysWithCertificate(certificate);
 }
