@@ -1,0 +1,46 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudForm @ref="_form"
+                 Model="@Model"
+                 Validation="@(_validator.ValidateValue)">
+            <MudStack Spacing="3">
+                <MudTextField T="string"
+                              @bind-Value="Model.Title"
+                              For="@(() => Model.Title)"
+                              Label="Title"
+                              Variant="Variant.Outlined"
+                              AutoFocus />
+
+                <MudTextField T="string"
+                              @bind-Value="Model.Prefix"
+                              For="@(() => Model.Prefix)"
+                              Label="Prefix"
+                              Variant="Variant.Outlined" />
+
+                @if (!string.IsNullOrWhiteSpace(_errorMessage))
+                {
+                    <MudAlert Severity="Severity.Error">
+                        @_errorMessage
+                    </MudAlert>
+                }
+            </MudStack>
+        </MudForm>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton Variant="Variant.Text"
+                   Disabled="@_saving"
+                   OnClick="Cancel">
+            Cancel
+        </MudButton>
+
+        <MudSpacer />
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Disabled="@_saving"
+                   OnClick="SaveAsync">
+            @(_saving ? "Saving..." : "Save")
+        </MudButton>
+    </DialogActions>
+</MudDialog>

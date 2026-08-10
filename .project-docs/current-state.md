@@ -13,11 +13,11 @@ where development should continue.
 
 # Current task
 
-- Create projects.
+- Edit projects.
 
 # Remaining milestone tasks
 
-- Edit projects.
+- Implement consistent PegasusApi error handling.
 - Delete projects.
 - Preserve existing Pegasus project behaviour.
 
@@ -186,3 +186,19 @@ where development should continue.
 - Added explicit mobile project sorting by field and direction.
 - Shared project sorting and pagination state across desktop and mobile presentations.
 - Verified responsive project presentation across mobile, tablet and desktop viewport widths.
+- Added project creation from the Projects page.
+- Added the Create Project primary action to the Projects header.
+- Preserved the single-row Projects header across desktop and mobile layouts.
+- Created the feature-owned Project editor dialog.
+- Created the Taurus-owned ProjectEditorModel.
+- Added FluentValidation for interactive project editor validation.
+- Added field-level validation for project Title and Prefix.
+- Added the Taurus-owned create-project application request.
+- Extended IProjectService with project creation.
+- Mapped Taurus project creation requests to the PegasusApi contract within the integration boundary.
+- Added temporary feature-specific handling for expected PegasusApi project creation failures.
+- Kept PegasusApi failure types isolated from the Web layer.
+- Preserved existing logging and propagation for unexpected integration failures.
+- Reloaded the project listing after successful project creation.
+- Added successful project creation feedback using a snackbar.
+- Verified project creation across desktop and mobile layouts.
