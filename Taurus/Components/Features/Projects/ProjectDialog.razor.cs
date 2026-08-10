@@ -77,19 +77,15 @@ public partial class ProjectDialog
 
     private async Task CreateProjectAsync()
     {
-        var request = new CreateProjectRequest(
-            Model.Title.Trim(),
-            Model.Prefix.Trim());
-
+        var request = new CreateProjectRequest(Model.Title.Trim(), Model.Prefix.Trim());
         var result = await ProjectService.CreateProjectAsync(request);
-
         if (!result.Succeeded)
         {
             _errorMessage = result.ErrorMessage;
             return;
         }
 
-        MudDialog.Close(DialogResult.Ok(result.Project));
+        MudDialog.Close(DialogResult.Ok(result.Value));
     }
 
     private async Task UpdateProjectAsync()
