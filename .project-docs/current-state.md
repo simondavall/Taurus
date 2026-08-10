@@ -13,11 +13,10 @@ where development should continue.
 
 # Current task
 
-- Implement consistent PegasusApi error handling.
+- Delete projects.
 
 # Remaining milestone tasks
 
-- Delete projects.
 - Preserve existing Pegasus project behaviour.
 
 # Completed
@@ -220,3 +219,12 @@ where development should continue.
 - Kept PegasusApi update and failure types isolated from the Web layer.
 - Preserved existing project creation behaviour.
 - Verified project editing across desktop and mobile layouts.
+- Established consistent handling for expected PegasusApi failures.
+- Added Taurus-owned generic application results for operations with and without returned values.
+- Replaced the temporary project-specific CreateProjectResult and UpdateProjectResult types.
+- Added shared interpretation of published PegasusApi validation failure responses within the integration boundary.
+- Kept PegasusApi failure contracts isolated from the Web layer.
+- Standardised Create and Edit project workflows on Taurus-owned success and failure results.
+- Preserved exceptions for unexpected HTTP responses, network failures and unexpected deserialization failures.
+- Preserved structured logging for unexpected integration failures.
+- Verified consistent expected-failure handling across project creation and editing.

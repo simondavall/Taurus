@@ -59,6 +59,14 @@
 - Construct PegasusApi query strings within the integration boundary rather than the Web layer.
 - Keep query-string parameter names aligned with the published PegasusApi contract.
 - Introduce shared query-building abstractions only after repeated integrations demonstrate a common requirement.
+- Represent expected operation outcomes using Taurus-owned application result types.
+- Use `ApplicationResult` for operations that return success or failure without a value.
+- Use `ApplicationResult<T>` for operations that return a value on success.
+- Interpret published PegasusApi validation and expected failure responses within the integration boundary.
+- Return Taurus-owned failure information to the Web layer rather than PegasusApi failure types.
+- Treat expected API failures as application results and unexpected integration failures as exceptions.
+- Continue logging unexpected HTTP, network and deserialization failures before allowing them to propagate.
+- Keep operation-specific decisions about expected HTTP status codes explicit within the owning integration operation.
 
 ## Code-behind
 
