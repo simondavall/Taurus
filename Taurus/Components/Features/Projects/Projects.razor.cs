@@ -64,16 +64,9 @@ public partial class Projects
 
     private async Task CreateProjectAsync()
     {
-        var options = new DialogOptions
-        {
-            FullWidth = true,
-            MaxWidth = MaxWidth.Small,
-            CloseOnEscapeKey = true
-        };
-
         var dialog = await DialogService.ShowAsync<ProjectDialog>(
             "Create Project",
-            options);
+            CreateDialogOptions());
 
         var result = await dialog.Result;
 
@@ -87,6 +80,40 @@ public partial class Projects
         Snackbar.Add("Project created successfully.", Severity.Success);
     }
 
+    private async Task EditProjectAsync(Project project)
+    {
+        var parameters = new DialogParameters
+        {
+            [nameof(ProjectDialog.ProjectToEdit)] = project
+        };
+
+        var dialog = await DialogService.ShowAsync<ProjectDialog>(
+            "Edit Project",
+            parameters,
+            CreateDialogOptions());
+
+        var result = await dialog.Result;
+
+        if (result is null || result.Canceled || result.Data is not true)
+        {
+            return;
+        }
+
+        await LoadProjectsAsync();
+
+        Snackbar.Add("Project updated successfully.", Severity.Success);
+    }
+
+    private static DialogOptions CreateDialogOptions()
+    {
+        return new DialogOptions
+        {
+            FullWidth = true,
+            MaxWidth = MaxWidth.Small,
+            CloseOnEscapeKey = true
+        };
+    }
+
     private async Task LoadProjectsAsync()
     {
         ProjectItems = await ProjectService.GetProjectsAsync();
@@ -97,6 +124,11 @@ public partial class Projects
         }
     }
 
+    private Task ProjectRowClickedAsync(TableRowClickEventArgs<Project> args)
+    {
+        return EditProjectAsync(args.Item);
+    }
+    
     private IEnumerable<Project> Sort<TKey>(IEnumerable<Project> projects, Func<Project, TKey> selector)
     {
         return SortDescending

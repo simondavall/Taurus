@@ -15,6 +15,10 @@
     flex-shrink: 0;
 }
 
+.projects-table ::deep .mud-table-row {
+    cursor: pointer;
+}
+
 .mobile-sort {
     display: flex;
     align-items: center;
@@ -33,6 +37,7 @@
 .mobile-project {
     padding: 0.875rem 1rem;
     border-bottom: 1px solid var(--mud-palette-divider);
+    cursor: pointer;
 }
 
 .mobile-project:last-child {

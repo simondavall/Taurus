@@ -13,11 +13,10 @@ where development should continue.
 
 # Current task
 
-- Edit projects.
+- Implement consistent PegasusApi error handling.
 
 # Remaining milestone tasks
 
-- Implement consistent PegasusApi error handling.
 - Delete projects.
 - Preserve existing Pegasus project behaviour.
 
@@ -202,3 +201,22 @@ where development should continue.
 - Reloaded the project listing after successful project creation.
 - Added successful project creation feedback using a snackbar.
 - Verified project creation across desktop and mobile layouts.
+- Added project editing from the Projects page.
+- Made desktop project rows directly selectable for editing.
+- Made mobile project entries directly selectable for editing.
+- Reused the feature-owned Project editor dialog for create and edit workflows.
+- Extended the project editor with edit-mode Id and Active fields.
+- Displayed the full project Id as read-only when editing.
+- Reused the existing FluentValidation rules for editable project fields.
+- Added the Taurus-owned update-project application request.
+- Extended IProjectService with project update behaviour.
+- Integrated project updates with the PegasusApi `PUT /api/projects/{id}` endpoint.
+- Mapped the project identifier to the PegasusApi route and update values to the request body.
+- Treated successful PegasusApi project updates as bodyless responses.
+- Reloaded the project listing after successful updates to obtain authoritative project state.
+- Preserved existing project sorting and pagination state across successful updates.
+- Added successful project update feedback using a snackbar.
+- Continued temporary feature-specific handling for expected PegasusApi update failures.
+- Kept PegasusApi update and failure types isolated from the Web layer.
+- Preserved existing project creation behaviour.
+- Verified project editing across desktop and mobile layouts.

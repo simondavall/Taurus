@@ -2,6 +2,7 @@
 using System.Text.Json;
 using PegasusApi.Abstractions.Projects;
 using PegasusCreateProjectRequest = PegasusApi.Abstractions.Projects.CreateProjectRequest;
+using PegasusUpdateProjectRequest = PegasusApi.Abstractions.Projects.UpdateProjectRequest;
 
 namespace Taurus.Application.Projects;
 
@@ -9,6 +10,7 @@ public interface IProjectService
 {
     Task<IReadOnlyList<Project>> GetProjectsAsync();
     Task<CreateProjectResult> CreateProjectAsync(CreateProjectRequest request);
+    Task<UpdateProjectResult> UpdateProjectAsync(UpdateProjectRequest request);
 }
 
 public sealed class ProjectService(HttpClient httpClient, ILogger<ProjectService> logger) : IProjectService
@@ -69,7 +71,9 @@ public sealed class ProjectService(HttpClient httpClient, ILogger<ProjectService
 
             if (response.StatusCode is HttpStatusCode.BadRequest or HttpStatusCode.Conflict)
             {
-                var errorMessage = await ReadExpectedFailureAsync(response);
+                var errorMessage = await ReadExpectedFailureAsync(
+                    response,
+                    "The project could not be created because PegasusApi rejected the supplied details.");
 
                 logger.LogWarning("PegasusApi rejected project creation with status code {StatusCode}", (int)response.StatusCode);
                 return CreateProjectResult.Failure(errorMessage);
@@ -86,6 +90,55 @@ public sealed class ProjectService(HttpClient httpClient, ILogger<ProjectService
         }
     }
 
+    public async Task<UpdateProjectResult> UpdateProjectAsync(UpdateProjectRequest request)
+    {
+        logger.LogInformation("Updating project {ProjectId} in PegasusApi", request.Id);
+
+        try
+        {
+            var apiRequest = new PegasusUpdateProjectRequest
+            {
+                Title = request.Title,
+                Prefix = request.Prefix,
+                IsActive = request.IsActive,
+                IsDeleted = false
+            };
+
+            using var response = await httpClient.PutAsJsonAsync($"api/projects/{request.Id}", apiRequest);
+
+            if (response.IsSuccessStatusCode)
+            {
+                logger.LogInformation("Updated project {ProjectId} in PegasusApi", request.Id);
+                return UpdateProjectResult.Success();
+            }
+
+            if (response.StatusCode is HttpStatusCode.BadRequest
+                or HttpStatusCode.NotFound
+                or HttpStatusCode.Conflict)
+            {
+                var errorMessage = await ReadExpectedFailureAsync(
+                    response,
+                    "The project could not be updated because PegasusApi rejected the supplied details.");
+
+                logger.LogWarning(
+                    "PegasusApi rejected update of project {ProjectId} with status code {StatusCode}",
+                    request.Id,
+                    (int)response.StatusCode);
+
+                return UpdateProjectResult.Failure(errorMessage);
+            }
+
+            response.EnsureSuccessStatusCode();
+
+            throw new InvalidOperationException("PegasusApi project update failed unexpectedly.");
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Failed to update project {ProjectId} in PegasusApi", request.Id);
+            throw;
+        }
+    }
+    
     private static Project MapProject(ProjectResponse project)
     {
         return new Project(
@@ -95,10 +148,8 @@ public sealed class ProjectService(HttpClient httpClient, ILogger<ProjectService
             project.IsActive);
     }
 
-    private static async Task<string> ReadExpectedFailureAsync(HttpResponseMessage response)
+    private static async Task<string> ReadExpectedFailureAsync(HttpResponseMessage response, string fallbackMessage)
     {
-        const string fallbackMessage = "The project could not be created because PegasusApi rejected the supplied details.";
-
         var content = await response.Content.ReadAsStringAsync();
         if (string.IsNullOrWhiteSpace(content))
         {

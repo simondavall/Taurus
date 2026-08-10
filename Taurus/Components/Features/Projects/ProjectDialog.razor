@@ -4,6 +4,15 @@
                  Model="@Model"
                  Validation="@(_validator.ValidateValue)">
             <MudStack Spacing="3">
+                @if (IsEdit)
+                {
+                    <MudTextField T="string"
+                                  Value="@Model.Id?.ToString()"
+                                  Label="Id"
+                                  Variant="Variant.Outlined"
+                                  ReadOnly />
+                }
+
                 <MudTextField T="string"
                               @bind-Value="Model.Title"
                               For="@(() => Model.Title)"
@@ -16,6 +25,14 @@
                               For="@(() => Model.Prefix)"
                               Label="Prefix"
                               Variant="Variant.Outlined" />
+
+                @if (IsEdit)
+                {
+                    <MudSwitch T="bool"
+                               @bind-Value="Model.IsActive"
+                               Color="Color.Primary"
+                               Label="Active" />
+                }
 
                 @if (!string.IsNullOrWhiteSpace(_errorMessage))
                 {
