@@ -1,5 +1,6 @@
 ﻿using Taurus.Application.Projects;
 using Taurus.Application.Tickets;
+using Taurus.Application.UserState;
 
 namespace Taurus.Application;
 
@@ -18,6 +19,8 @@ public static class DependencyInjection
         {
             client.BaseAddress = new Uri(baseAddress!);
         });
+
+        services.AddScoped<IUserStateService, UserStateService>();
 
         return services;
     }

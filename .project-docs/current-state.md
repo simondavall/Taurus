@@ -13,11 +13,10 @@ where development should continue.
 
 # Current task
 
-- Support project filtering.
+- Support status filtering.
 
 # Remaining milestone tasks
 
-- Support status filtering.
 - Add ticket listing state indicators.
 - Display sub task count
 
@@ -259,3 +258,19 @@ where development should continue.
 - Displayed completed tickets using muted styling while preserving normal interaction semantics.
 - Deferred permanent ticket-status representation to the Support status filtering task.
 - Verified the ticket listing across desktop, tablet and mobile layouts.
+- Added project filtering to the ticket listing.
+- Added the Projects contextual widget to the ticket listing.
+- Displayed All followed by all active projects in the Projects widget.
+- Highlighted the currently selected project.
+- Updated the ticket listing heading to display the current project context.
+- Extended ticket retrieval to support the PegasusApi ProjectId query option.
+- Preserved unfiltered ticket retrieval when All is selected.
+- Added persistent application context using Protected Local Storage.
+- Added the Taurus-owned user-state service boundary for browser-persisted state.
+- Persisted and restored the selected project across browser sessions.
+- Defaulted project context to All when no persisted selection exists.
+- Fell back to All when persisted project context is stale or no longer active.
+- Ordered tickets by LastModified descending before pagination.
+- Reset ticket pagination when project context changes.
+- Preserved existing responsive ticket-listing behaviour.
+- Verified project filtering and persisted project context.
