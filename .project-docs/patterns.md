@@ -81,6 +81,8 @@
 - Use a persistent navigation drawer on desktop layouts.
 - Use a temporary overlay drawer on tablet and mobile layouts.
 - Keep the navigation drawer open by default on desktop and closed by default on smaller viewports.
+- Allow feature pages to provide dedicated responsive presentations where the desktop presentation does not adapt effectively to smaller viewports.
+- Keep feature-specific responsive presentations within the owning feature rather than introducing shared responsive abstractions without demonstrated reuse.
 - Control drawer state from `MainLayout`.
 - Use the application bar menu button as the single mechanism for opening and closing the navigation drawer across all viewport sizes.
 - Keep responsive behaviour within the shared layout rather than individual feature pages wherever practical.

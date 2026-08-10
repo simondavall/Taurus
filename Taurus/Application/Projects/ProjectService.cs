@@ -4,26 +4,18 @@ namespace Taurus.Application.Projects;
 
 public interface IProjectService
 {
-    Task<IReadOnlyList<Project>> GetProjectsAsync(bool activeOnly, bool includeDeleted);
+    Task<IReadOnlyList<Project>> GetProjectsAsync();
 }
 
 public sealed class ProjectService(HttpClient httpClient, ILogger<ProjectService> logger) : IProjectService
 {
-    public async Task<IReadOnlyList<Project>> GetProjectsAsync(bool activeOnly, bool includeDeleted)
+    public async Task<IReadOnlyList<Project>> GetProjectsAsync()
     {
-        var requestUri = $"api/projects?"
-                         + $"activeOnly={activeOnly.ToString().ToLowerInvariant()}&"
-                         + $"includeDeleted={includeDeleted.ToString().ToLowerInvariant()}";
-
-        logger.LogInformation(
-            "Retrieving projects from PegasusApi with ActiveOnly={ActiveOnly} and IncludeDeleted={IncludeDeleted}",
-            activeOnly,
-            includeDeleted);
+        logger.LogInformation("Retrieving projects from PegasusApi");
 
         try
         {
-            var response = await httpClient.GetFromJsonAsync<ProjectsResponse>(requestUri);
-
+            var response = await httpClient.GetFromJsonAsync<ProjectsResponse>("api/projects");
             if (response is null)
             {
                 throw new InvalidOperationException("PegasusApi returned an empty projects response.");
@@ -38,17 +30,11 @@ public sealed class ProjectService(HttpClient httpClient, ILogger<ProjectService
                 .ToArray();
 
             logger.LogInformation("Retrieved {ProjectCount} projects from PegasusApi", projects.Length);
-
             return projects;
         }
         catch (Exception exception)
         {
-            logger.LogError(
-                exception,
-                "Failed to retrieve projects from PegasusApi with ActiveOnly={ActiveOnly} and IncludeDeleted={IncludeDeleted}",
-                activeOnly,
-                includeDeleted);
-
+            logger.LogError(exception, "Failed to retrieve projects from PegasusApi");
             throw;
         }
     }

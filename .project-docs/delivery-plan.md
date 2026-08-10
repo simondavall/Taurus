@@ -109,6 +109,7 @@ Users can view project listing.
 - ✓ Allow ability to use query string options.
 - ✓ Establish initial Production deployment to IIS.
 - ✓ Implement application logging.
+- ✓ Configure Persistent Data Protection Keys
 
 **Deliverable**
 
@@ -116,26 +117,14 @@ Taurus communicates successfully with PegasusApi through the established integra
 
 ---
 
-# Phase 3 – Project Management
+# Phase 2 – Project Management
 
-## Milestone 3.1 – Project Listing
+## Milestone 2.1 – Project Administration
 
-- Display projects.
-- Support project searching.
-- Display project status.
-
-**Deliverable**
-
-Users can browse projects.
-
----
-
-## Milestone 3.2 – Project Administration
-
+- ✓ Tidy up project listing.
 - Create projects.
 - Edit projects.
-- Activate projects.
-- Deactivate projects.
+- Delete projects.
 - Preserve existing Pegasus project behaviour.
 
 **Deliverable**
@@ -144,9 +133,9 @@ Users can administer projects.
 
 ---
 
-# Phase 2 – Ticket Management
+# Phase 3 – Ticket Management
 
-## Milestone 2.1 – Ticket Listing
+## Milestone 3.1 – Ticket Listing
 
 - Display ticket listing.
 - Support paging.
@@ -161,7 +150,7 @@ Users can browse and locate tickets.
 
 ---
 
-## Milestone 2.2 – Ticket Details
+## Milestone 3.2 – Ticket Details
 
 - Display ticket details.
 - Display comments.
@@ -174,7 +163,7 @@ Users can inspect existing tickets.
 
 ---
 
-## Milestone 2.3 – Ticket Editing
+## Milestone 3.3 – Ticket Editing
 
 - Create tickets.
 - Edit tickets.

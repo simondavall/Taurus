@@ -15,7 +15,7 @@ public partial class MainLayout
 
     private Task BreakpointChanged(Breakpoint breakpoint)
     {
-        var mobile = breakpoint <= Breakpoint.Md;
+        var mobile = breakpoint <= Breakpoint.Sm;
 
         _drawerVariant = mobile ? DrawerVariant.Temporary : DrawerVariant.Persistent;
         _navigationOpen = !mobile;
