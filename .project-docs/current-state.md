@@ -5,19 +5,20 @@ where development should continue.
 
 # Current phase
 
-# Phase 2 – Project Management
+# Phase 3 – Ticket Management
 
 # Current milestone
 
-- Milestone 2.1 – Project Administration
+- Milestone 3.1 – Ticket Listing
 
 # Current task
 
-- Delete projects.
+- Display tickets listing.
 
 # Remaining milestone tasks
 
-- Preserve existing Pegasus project behaviour.
+- Support project filtering.
+- Support status filtering.
 
 # Completed
 
@@ -228,3 +229,14 @@ where development should continue.
 - Preserved exceptions for unexpected HTTP responses, network failures and unexpected deserialization failures.
 - Preserved structured logging for unexpected integration failures.
 - Verified consistent expected-failure handling across project creation and editing.
+- Added project deletion from the Project editor.
+- Added the Delete action to edit mode while preserving the existing Create editor.
+- Added explicit confirmation before project deletion.
+- Integrated project deletion with the PegasusApi `DELETE /api/projects/{id}` endpoint.
+- Used the established Taurus-owned ApplicationResult pattern for project deletion.
+- Treated PegasusApi 404 responses as expected application failures.
+- Preserved unexpected integration failures as logged exceptions.
+- Reloaded the project listing after successful deletion.
+- Added successful project deletion feedback using a snackbar.
+- Preserved valid pagination state when deletion changes the number of available pages.
+- Verified project deletion across the existing project administration workflow.

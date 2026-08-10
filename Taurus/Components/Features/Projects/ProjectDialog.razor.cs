@@ -10,6 +10,9 @@ public partial class ProjectDialog
     private IMudDialogInstance MudDialog { get; set; } = default!;
 
     [Inject]
+    private IDialogService DialogService { get; set; } = default!;
+
+    [Inject]
     private IProjectService ProjectService { get; set; } = default!;
 
     [Parameter]
@@ -23,9 +26,13 @@ public partial class ProjectDialog
 
     private bool IsEdit => ProjectToEdit is not null;
 
+    private bool IsBusy => _saving || _deleting;
+
     private string? _errorMessage;
 
     private bool _saving;
+
+    private bool _deleting;
 
     protected override void OnInitialized()
     {
@@ -75,10 +82,50 @@ public partial class ProjectDialog
         }
     }
 
+    private async Task DeleteAsync()
+    {
+        if (Model.Id is null)
+        {
+            throw new InvalidOperationException("A project identifier is required when deleting a project.");
+        }
+
+        var confirmed = await DialogService.ShowMessageBoxAsync(
+            "Delete Project",
+            $"Are you sure you want to delete '{Model.Title}'?",
+            yesText: "Delete",
+            cancelText: "Cancel");
+
+        if (confirmed != true)
+        {
+            return;
+        }
+
+        _errorMessage = null;
+        _deleting = true;
+
+        try
+        {
+            var result = await ProjectService.DeleteProjectAsync(Model.Id.Value);
+
+            if (!result.Succeeded)
+            {
+                _errorMessage = result.ErrorMessage;
+                return;
+            }
+
+            MudDialog.Close(DialogResult.Ok(ProjectDialogResult.Deleted));
+        }
+        finally
+        {
+            _deleting = false;
+        }
+    }
+
     private async Task CreateProjectAsync()
     {
         var request = new CreateProjectRequest(Model.Title.Trim(), Model.Prefix.Trim());
         var result = await ProjectService.CreateProjectAsync(request);
+
         if (!result.Succeeded)
         {
             _errorMessage = result.ErrorMessage;
@@ -109,6 +156,6 @@ public partial class ProjectDialog
             return;
         }
 
-        MudDialog.Close(DialogResult.Ok(true));
+        MudDialog.Close(DialogResult.Ok(ProjectDialogResult.Updated));
     }
 }

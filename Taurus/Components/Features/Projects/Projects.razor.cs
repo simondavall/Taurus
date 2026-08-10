@@ -94,14 +94,20 @@ public partial class Projects
 
         var result = await dialog.Result;
 
-        if (result is null || result.Canceled || result.Data is not true)
+        if (result is null || result.Canceled || result.Data is not ProjectDialogResult dialogResult)
         {
             return;
         }
 
         await LoadProjectsAsync();
 
-        Snackbar.Add("Project updated successfully.", Severity.Success);
+        var message = dialogResult switch
+        {
+            ProjectDialogResult.Deleted => "Project deleted successfully.",
+            _ => "Project updated successfully."
+        };
+
+        Snackbar.Add(message, Severity.Success);
     }
 
     private static DialogOptions CreateDialogOptions()
