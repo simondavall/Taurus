@@ -3,11 +3,19 @@
 <PageTitle>Projects</PageTitle>
 
 <div class="projects-listing">
-    <MudText Typo="Typo.h4"
-             HtmlTag="h1"
-             Class="mb-4">
-        Projects
-    </MudText>
+    <div class="projects-header">
+        <MudText Typo="Typo.h4"
+                 HtmlTag="h1">
+            Projects
+        </MudText>
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.Add"
+                   OnClick="CreateProjectAsync">
+            Create Project
+        </MudButton>
+    </div>
 
     <div class="d-none d-sm-block">
         <MudTable T="Project"

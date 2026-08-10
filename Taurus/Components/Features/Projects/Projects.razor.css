@@ -2,6 +2,19 @@
     width: 66.6667%;
 }
 
+.projects-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.projects-header ::deep .mud-button-root {
+    flex-shrink: 0;
+}
+
 .mobile-sort {
     display: flex;
     align-items: center;

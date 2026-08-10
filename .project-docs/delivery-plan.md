@@ -122,8 +122,9 @@ Taurus communicates successfully with PegasusApi through the established integra
 ## Milestone 2.1 – Project Administration
 
 - ✓ Tidy up project listing.
-- Create projects.
+- ✓ Create projects.
 - Edit projects.
+- Implement consistent PegasusApi error handling.
 - Delete projects.
 - Preserve existing Pegasus project behaviour.
 
@@ -171,8 +172,6 @@ Users can inspect existing tickets.
 - Update ticket status.
 - Assign tickets.
 - Preserve existing Pegasus behaviour.
-- Implement consistent PegasusApi error handling when an API workflow with expected failure responses is introduced.
-
 
 **Deliverable**
 
