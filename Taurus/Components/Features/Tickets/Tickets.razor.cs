@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using Taurus.Application.Projects;
 using Taurus.Application.Tickets;
 using Taurus.Application.UserState;
@@ -8,12 +9,6 @@ namespace Taurus.Components.Features.Tickets;
 public partial class Tickets
 {
     private const int DefaultPageSize = 20;
-
-    private const string CompletedStatusCode = "completed";
-    private const string ObsoleteStatusCode = "obsolete";
-    private const string BacklogStatusCode = "backlog";
-    private const string HighPriorityCode = "high";
-    private const string CriticalPriorityCode = "critical";
 
     private static readonly Guid AllProjectsId = Guid.Empty;
 
@@ -40,6 +35,8 @@ public partial class Tickets
     private int CompletedStatusId { get; set; }
     private int ObsoleteStatusId { get; set; }
     private int BacklogStatusId { get; set; }
+    private int InProgressStatusId { get; set; }
+    private int OnHoldStatusId { get; set; }
     private int HighPriorityId { get; set; }
     private int CriticalPriorityId { get; set; }
 
@@ -101,11 +98,14 @@ public partial class Tickets
         TicketPriorities = await TicketReferenceDataService.GetPrioritiesAsync();
         TicketTypes = await TicketReferenceDataService.GetTypesAsync();
 
-        CompletedStatusId = ResolveRequiredStatusId(CompletedStatusCode);
-        ObsoleteStatusId = ResolveRequiredStatusId(ObsoleteStatusCode);
-        BacklogStatusId = ResolveRequiredStatusId(BacklogStatusCode);
-        HighPriorityId = ResolveRequiredPriorityId(HighPriorityCode);
-        CriticalPriorityId = ResolveRequiredPriorityId(CriticalPriorityCode);
+        CompletedStatusId = ResolveRequiredStatusId(TicketReferenceCodes.Status.Completed);
+        ObsoleteStatusId = ResolveRequiredStatusId(TicketReferenceCodes.Status.Obsolete);
+        BacklogStatusId = ResolveRequiredStatusId(TicketReferenceCodes.Status.Backlog);
+        InProgressStatusId = ResolveRequiredStatusId(TicketReferenceCodes.Status.InProgress);
+        OnHoldStatusId = ResolveRequiredStatusId(TicketReferenceCodes.Status.OnHold);
+
+        HighPriorityId = ResolveRequiredPriorityId(TicketReferenceCodes.Priority.High);
+        CriticalPriorityId = ResolveRequiredPriorityId(TicketReferenceCodes.Priority.Critical);
     }
 
     private async Task RestoreSelectedProjectAsync()
@@ -230,6 +230,46 @@ public partial class Tickets
                || ticket.StatusId == ObsoleteStatusId;
     }
 
+    private string? GetPriorityIndicatorIcon(Ticket ticket)
+    {
+        if (ticket.PriorityId == HighPriorityId ||
+            ticket.PriorityId == CriticalPriorityId)
+        {
+            return Icons.Material.Filled.Bolt;
+        }
+
+        return null;
+    }
+    
+    private string GetPriorityIndicatorClass(Ticket ticket)
+    {
+        return ticket.PriorityId == CriticalPriorityId
+            ? "ticket-priority-critical"
+            : "ticket-priority-high";
+    }
+
+    private string? GetStatusIndicatorIcon(Ticket ticket)
+    {
+        if (ticket.StatusId == InProgressStatusId)
+        {
+            return Icons.Material.Filled.PlayArrow;
+        }
+
+        if (ticket.StatusId == OnHoldStatusId)
+        {
+            return Icons.Material.Filled.Pause;
+        }
+
+        return null;
+    }
+
+    private Color GetStatusIndicatorColor(Ticket ticket)
+    {
+        return ticket.StatusId == InProgressStatusId
+            ? Color.Info
+            : Color.Warning;
+    }
+    
     private static string FormatLastUpdated(DateTimeOffset lastModified)
     {
         var elapsed = DateTimeOffset.Now - lastModified.ToLocalTime();

@@ -22,6 +22,34 @@
                         @ticket.TicketRef
                     </MudText>
 
+                    <div class="ticket-indicator"
+                         title="@(ticket.PriorityId == CriticalPriorityId
+                                    ? "Critical priority"
+                                    : ticket.PriorityId == HighPriorityId
+                                        ? "High priority"
+                                        : null)">
+                        @if (GetPriorityIndicatorIcon(ticket) is { } priorityIcon)
+                        {
+                            <MudIcon Icon="@priorityIcon"
+                                     Size="Size.Small"
+                                     Class="@GetPriorityIndicatorClass(ticket)" />
+                        }
+                    </div>
+
+                    <div class="ticket-indicator"
+                         title="@(ticket.StatusId == InProgressStatusId
+                                    ? "In Progress"
+                                    : ticket.StatusId == OnHoldStatusId
+                                        ? "On Hold"
+                                        : null)">
+                        @if (GetStatusIndicatorIcon(ticket) is { } statusIcon)
+                        {
+                            <MudIcon Icon="@statusIcon"
+                                     Color="@GetStatusIndicatorColor(ticket)"
+                                     Size="Size.Small" />
+                        }
+                    </div>
+
                     <MudText Typo="Typo.body2"
                              Class="ticket-title">
                         @ticket.Title
@@ -41,10 +69,40 @@
             {
                 <div class="@GetMobileTicketClass(ticket)">
                     <div class="mobile-ticket-header">
-                        <MudText Typo="Typo.body2"
-                                 Class="ticket-ref">
-                            @ticket.TicketRef
-                        </MudText>
+                        <div class="mobile-ticket-identity">
+                            <MudText Typo="Typo.body2"
+                                     Class="ticket-ref">
+                                @ticket.TicketRef
+                            </MudText>
+
+                            <div class="ticket-indicator"
+                                 title="@(ticket.PriorityId == CriticalPriorityId
+                                            ? "Critical priority"
+                                            : ticket.PriorityId == HighPriorityId
+                                                ? "High priority"
+                                                : null)">
+                                @if (GetPriorityIndicatorIcon(ticket) is { } priorityIcon)
+                                {
+                                    <MudIcon Icon="@priorityIcon"
+                                             Size="Size.Small"
+                                             Class="@GetPriorityIndicatorClass(ticket)" />
+                                }
+                            </div>
+
+                            <div class="ticket-indicator"
+                                 title="@(ticket.StatusId == InProgressStatusId
+                                            ? "In Progress"
+                                            : ticket.StatusId == OnHoldStatusId
+                                                ? "On Hold"
+                                                : null)">
+                                @if (GetStatusIndicatorIcon(ticket) is { } statusIcon)
+                                {
+                                    <MudIcon Icon="@statusIcon"
+                                             Color="@GetStatusIndicatorColor(ticket)"
+                                             Size="Size.Small" />
+                                }
+                            </div>
+                        </div>
 
                         <MudText Typo="Typo.caption"
                                  Class="ticket-updated">

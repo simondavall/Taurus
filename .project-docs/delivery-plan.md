@@ -141,7 +141,7 @@ Users can administer projects.
 - ✓ Display tickets listing.
 - ✓ Support project filtering.
 - ✓ Support predefined ticket filters.
-- Add ticket listing state indicators.
+- ✓ Add ticket listing state indicators.
 
 **Deliverable**
 

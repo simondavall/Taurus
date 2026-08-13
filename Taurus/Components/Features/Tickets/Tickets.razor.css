@@ -13,15 +13,24 @@
     margin-bottom: 2rem;
 }
 
+.ticket-indicator {
+    display: flex;
+    width: 1.5rem;
+    height: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 1.5rem;
+}
+
 .tickets-table {
     overflow: hidden;
 }
 
 .ticket-row {
     display: grid;
-    grid-template-columns: 7.5rem minmax(0, 1fr) 8rem;
+    grid-template-columns: 7.5rem 1.5rem 1.5rem minmax(0, 1fr) 8rem;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
     min-height: 2.5rem;
     padding: 0.5rem 0.75rem;
     border-bottom: 1px solid var(--mud-palette-divider);
@@ -69,10 +78,24 @@
     margin-bottom: 0.25rem;
 }
 
+.mobile-ticket-identity {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
 .tickets-pagination {
     display: flex;
     justify-content: flex-end;
     margin-top: 1rem;
+}
+
+::deep .ticket-priority-high {
+    color: #ffc107;
+}
+
+::deep .ticket-priority-critical {
+    color: #ff0000;
 }
 
 .tickets-filters {
