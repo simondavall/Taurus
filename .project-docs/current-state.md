@@ -13,12 +13,11 @@ where development should continue.
 
 # Current task
 
-- Support status filtering.
+- Add ticket listing state indicators.
 
 # Remaining milestone tasks
 
-- Add ticket listing state indicators.
-- Display sub task count
+- None.
 
 # Completed
 
@@ -274,3 +273,17 @@ where development should continue.
 - Reset ticket pagination when project context changes.
 - Preserved existing responsive ticket-listing behaviour.
 - Verified project filtering and persisted project context.
+- Added predefined filtering to the ticket listing.
+- Added the Filters contextual widget alongside project filtering.
+- Added All Tickets, Open Tickets, Backlog Tickets, High Priority and Obsolete predefined filters.
+- Made Open Tickets the default predefined filter while retaining All Tickets as the first displayed option.
+- Persisted and restored the selected predefined filter using Protected Local Storage.
+- Integrated PegasusApi ticket status, priority and type reference data.
+- Added Taurus-owned ticket status, priority and type reference models.
+- Used stable PegasusApi lookup codes to resolve ticket semantics without depending on database lookup IDs.
+- Extended the Taurus ticket model with TypeId and PriorityId.
+- Applied predefined filtering before LastModified ordering and pagination.
+- Removed the temporary hard-coded completed status ID.
+- Treated both completed and obsolete tickets as inactive for listing presentation.
+- Displayed inactive tickets using muted styling while preserving normal interaction semantics.
+- Verified predefined filters in combination with persisted project context and pagination.

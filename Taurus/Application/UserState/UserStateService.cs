@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Taurus.Application.Tickets;
 
 namespace Taurus.Application.UserState;
 
@@ -6,11 +7,14 @@ public interface IUserStateService
 {
     Task<Guid?> GetSelectedProjectIdAsync();
     Task SetSelectedProjectIdAsync(Guid? projectId);
+    Task<TicketFilter?> GetSelectedTicketFilterAsync();
+    Task SetSelectedTicketFilterAsync(TicketFilter filter);
 }
 
 public sealed class UserStateService(ProtectedLocalStorage localStorage) : IUserStateService
 {
     private const string SelectedProjectIdKey = "Taurus.SelectedProjectId";
+    private const string SelectedTicketFilterKey = "Taurus.SelectedTicketFilter";
 
     public async Task<Guid?> GetSelectedProjectIdAsync()
     {
@@ -34,5 +38,28 @@ public sealed class UserStateService(ProtectedLocalStorage localStorage) : IUser
         }
 
         await localStorage.DeleteAsync(SelectedProjectIdKey);
+    }
+
+    public async Task<TicketFilter?> GetSelectedTicketFilterAsync()
+    {
+        try
+        {
+            var result = await localStorage.GetAsync<TicketFilter>(SelectedTicketFilterKey);
+            if (!result.Success || !Enum.IsDefined(result.Value))
+            {
+                return null;
+            }
+
+            return result.Value;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public Task SetSelectedTicketFilterAsync(TicketFilter filter)
+    {
+        return localStorage.SetAsync(SelectedTicketFilterKey, filter).AsTask();
     }
 }

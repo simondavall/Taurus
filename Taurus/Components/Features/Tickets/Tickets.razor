@@ -1,5 +1,6 @@
 ﻿@page "/"
 @page "/tickets"
+@using Taurus.Application.Tickets
 
 <PageTitle>Tickets</PageTitle>
 
@@ -97,6 +98,45 @@
                         @project.Title
                     </MudListItem>
                 }
+            </MudList>
+        </div>
+        <div class="filter-widget">
+            <MudText Typo="Typo.h6"
+                     Class="filter-widget-heading">
+                Filters
+            </MudText>
+
+            <MudList T="TicketFilter"
+                     Dense="true"
+                     SelectionMode="SelectionMode.SingleSelection"
+                     SelectedValue="SelectedTicketFilter"
+                     SelectedValueChanged="SelectedTicketFilterChangedAsync"
+                     Color="Color.Primary"
+                     Class="filter-widget-list">
+                <MudListItem T="TicketFilter"
+                             Value="TicketFilter.All">
+                    All Tickets
+                </MudListItem>
+
+                <MudListItem T="TicketFilter"
+                             Value="TicketFilter.Open">
+                    Open Tickets
+                </MudListItem>
+
+                <MudListItem T="TicketFilter"
+                             Value="TicketFilter.Backlog">
+                    Backlog Tickets
+                </MudListItem>
+
+                <MudListItem T="TicketFilter"
+                             Value="TicketFilter.HighPriority">
+                    High Priority
+                </MudListItem>
+
+                <MudListItem T="TicketFilter"
+                             Value="TicketFilter.Obsolete">
+                    Obsolete
+                </MudListItem>
             </MudList>
         </div>
     </aside>

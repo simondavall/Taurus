@@ -9,9 +9,13 @@ public partial class Tickets
 {
     private const int DefaultPageSize = 20;
 
-    // TODO TAU: Replace this temporary hard-coded status rule when
-    // "Support status filtering" establishes the Taurus ticket status representation.
-    private const int CompletedStatusId = 3;
+    private const string CompletedStatusCode = "completed";
+    private const string ObsoleteStatusCode = "obsolete";
+    private const string BacklogStatusCode = "backlog";
+    private const string HighPriorityCode = "high";
+    private const string CriticalPriorityCode = "critical";
+
+    private static readonly Guid AllProjectsId = Guid.Empty;
 
     [Inject]
     private IConfiguration Configuration { get; set; } = default!;
@@ -20,13 +24,24 @@ public partial class Tickets
     [Inject]
     private ITicketService TicketService { get; set; } = default!;
     [Inject]
+    private ITicketReferenceDataService TicketReferenceDataService { get; set; } = default!;
+    [Inject]
     private IUserStateService UserStateService { get; set; } = default!;
 
     private IReadOnlyList<Project> ProjectItems { get; set; } = [];
     private IReadOnlyList<Ticket> TicketItems { get; set; } = [];
+    private IReadOnlyList<TicketStatus> TicketStatuses { get; set; } = [];
+    private IReadOnlyList<TicketPriority> TicketPriorities { get; set; } = [];
+    private IReadOnlyList<TicketType> TicketTypes { get; set; } = [];
     private Guid? SelectedProjectId { get; set; }
-    private static readonly Guid AllProjectsId = Guid.Empty;
     private Guid SelectedProjectListValue => SelectedProjectId ?? AllProjectsId;
+    private TicketFilter SelectedTicketFilter { get; set; } = TicketFilter.Open;
+
+    private int CompletedStatusId { get; set; }
+    private int ObsoleteStatusId { get; set; }
+    private int BacklogStatusId { get; set; }
+    private int HighPriorityId { get; set; }
+    private int CriticalPriorityId { get; set; }
 
     private string SelectedProjectTitle =>
         SelectedProjectId.HasValue
@@ -34,13 +49,12 @@ public partial class Tickets
             : "All";
 
     private int PageSize { get; set; }
-
     private int CurrentPage { get; set; } = 1;
-
-    private int PageCount => Math.Max(1, (int)Math.Ceiling(TicketItems.Count / (double)PageSize));
-
+    private IEnumerable<Ticket> FilteredTicketItems => ApplyTicketFilter(TicketItems);
+    private int FilteredTicketCount => FilteredTicketItems.Count();
+    private int PageCount => Math.Max(1, (int)Math.Ceiling(FilteredTicketCount / (double)PageSize));
     private IEnumerable<Ticket> PagedTicketItems =>
-        TicketItems
+        FilteredTicketItems
             .OrderByDescending(ticket => ticket.LastModified)
             .Skip((CurrentPage - 1) * PageSize)
             .Take(PageSize);
@@ -63,7 +77,9 @@ public partial class Tickets
         }
 
         await LoadProjectsAsync();
+        await LoadTicketReferenceDataAsync();
         await RestoreSelectedProjectAsync();
+        await RestoreSelectedTicketFilterAsync();
         await LoadTicketsAsync();
 
         StateHasChanged();
@@ -79,10 +95,22 @@ public partial class Tickets
             .ToArray();
     }
 
+    private async Task LoadTicketReferenceDataAsync()
+    {
+        TicketStatuses = await TicketReferenceDataService.GetStatusesAsync();
+        TicketPriorities = await TicketReferenceDataService.GetPrioritiesAsync();
+        TicketTypes = await TicketReferenceDataService.GetTypesAsync();
+
+        CompletedStatusId = ResolveRequiredStatusId(CompletedStatusCode);
+        ObsoleteStatusId = ResolveRequiredStatusId(ObsoleteStatusCode);
+        BacklogStatusId = ResolveRequiredStatusId(BacklogStatusCode);
+        HighPriorityId = ResolveRequiredPriorityId(HighPriorityCode);
+        CriticalPriorityId = ResolveRequiredPriorityId(CriticalPriorityCode);
+    }
+
     private async Task RestoreSelectedProjectAsync()
     {
         var storedProjectId = await UserStateService.GetSelectedProjectIdAsync();
-
         if (!storedProjectId.HasValue)
         {
             SelectedProjectId = null;
@@ -99,14 +127,27 @@ public partial class Tickets
         await UserStateService.SetSelectedProjectIdAsync(null);
     }
 
+    private async Task RestoreSelectedTicketFilterAsync()
+    {
+        var storedFilter = await UserStateService.GetSelectedTicketFilterAsync();
+        SelectedTicketFilter = storedFilter ?? TicketFilter.Open;
+    }
+
     private async Task SelectedProjectChangedAsync(Guid projectId)
     {
         SelectedProjectId = projectId == AllProjectsId ? null : projectId;
-
         CurrentPage = 1;
 
         await UserStateService.SetSelectedProjectIdAsync(SelectedProjectId);
         await LoadTicketsAsync();
+    }
+
+    private async Task SelectedTicketFilterChangedAsync(TicketFilter filter)
+    {
+        SelectedTicketFilter = filter;
+        CurrentPage = 1;
+
+        await UserStateService.SetSelectedTicketFilterAsync(filter);
     }
 
     private async Task LoadTicketsAsync()
@@ -119,18 +160,74 @@ public partial class Tickets
         }
     }
 
-    private static string GetTicketClass(Ticket ticket)
+    private IEnumerable<Ticket> ApplyTicketFilter(IEnumerable<Ticket> tickets)
     {
-        return ticket.StatusId == CompletedStatusId
-            ? "ticket-row ticket-completed"
+        return SelectedTicketFilter switch
+        {
+            TicketFilter.Open => tickets.Where(ticket =>
+                ticket.StatusId != CompletedStatusId &&
+                ticket.StatusId != ObsoleteStatusId),
+
+            TicketFilter.Backlog => tickets.Where(ticket =>
+                ticket.StatusId == BacklogStatusId),
+
+            TicketFilter.HighPriority => tickets.Where(ticket =>
+                ticket.PriorityId == HighPriorityId ||
+                ticket.PriorityId == CriticalPriorityId),
+
+            TicketFilter.Obsolete => tickets.Where(ticket =>
+                ticket.StatusId == ObsoleteStatusId),
+
+            _ => tickets
+        };
+    }
+
+    private int ResolveRequiredStatusId(string code)
+    {
+        var status = TicketStatuses.FirstOrDefault(status =>
+            string.Equals(status.Code, code, StringComparison.OrdinalIgnoreCase));
+
+        if (status is null)
+        {
+            throw new InvalidOperationException(
+                $"PegasusApi ticket status '{code}' is required by Taurus but was not returned.");
+        }
+
+        return status.Id;
+    }
+
+    private int ResolveRequiredPriorityId(string code)
+    {
+        var priority = TicketPriorities.FirstOrDefault(priority =>
+            string.Equals(priority.Code, code, StringComparison.OrdinalIgnoreCase));
+
+        if (priority is null)
+        {
+            throw new InvalidOperationException(
+                $"PegasusApi ticket priority '{code}' is required by Taurus but was not returned.");
+        }
+
+        return priority.Id;
+    }
+
+    private string GetTicketClass(Ticket ticket)
+    {
+        return IsInactiveTicket(ticket)
+            ? "ticket-row ticket-inactive"
             : "ticket-row";
     }
 
-    private static string GetMobileTicketClass(Ticket ticket)
+    private string GetMobileTicketClass(Ticket ticket)
+    {
+        return IsInactiveTicket(ticket)
+            ? "mobile-ticket ticket-inactive"
+            : "mobile-ticket";
+    }
+
+    private bool IsInactiveTicket(Ticket ticket)
     {
         return ticket.StatusId == CompletedStatusId
-            ? "mobile-ticket ticket-completed"
-            : "mobile-ticket";
+               || ticket.StatusId == ObsoleteStatusId;
     }
 
     private static string FormatLastUpdated(DateTimeOffset lastModified)

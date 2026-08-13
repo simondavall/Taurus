@@ -46,3 +46,24 @@ Persisted state is scoped to the browser profile rather than explicitly to the a
 - A Taurus database is not justified for lightweight UI context and preferences.
 - The Protected Browser Storage API is currently experimental, but its limitations are acceptable for the application's intended deployment and can be revisited if requirements change.
 
+2026-08-13
+
+### Use stable reference-data codes for ticket semantics
+
+#### Decision
+
+Ticket status, priority and type remain reference data owned by PegasusApi.
+
+PegasusApi provides a stable machine-readable code for each lookup value alongside its numeric identifier, display title and display order.
+
+Taurus maps this reference data into Taurus-owned models and resolves semantic application behaviour using the stable codes rather than numeric database identifiers or display titles.
+
+Predefined ticket filters remain Taurus-owned application concepts.
+
+#### Rationale
+
+- Numeric lookup identifiers are persistence details and should not encode application semantics.
+- Display titles are presentation values and may change independently of application behaviour.
+- Stable codes allow PegasusApi lookup identifiers and titles to change without requiring corresponding Taurus behaviour changes.
+- PegasusApi remains the system of record for ticket reference data.
+- Taurus can define application-specific concepts such as Open Tickets and High Priority without pushing those UI concepts into PegasusApi.

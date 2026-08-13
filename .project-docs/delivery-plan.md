@@ -140,9 +140,8 @@ Users can administer projects.
 
 - ✓ Display tickets listing.
 - ✓ Support project filtering.
-- Support status filtering.
+- ✓ Support predefined ticket filters.
 - Add ticket listing state indicators.
-- Display sub task count
 
 **Deliverable**
 
