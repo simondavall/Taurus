@@ -9,15 +9,17 @@ where development should continue.
 
 # Current milestone
 
-- Milestone 3.1 – Ticket Listing
+- Milestone 3.2 – Ticket Details
 
 # Current task
 
-- Add ticket listing state indicators.
+- Display ticket details.
 
 # Remaining milestone tasks
 
-- None.
+- Display comments.
+- Display related information.
+- Support navigation between tickets.
 
 # Completed
 
@@ -287,3 +289,17 @@ where development should continue.
 - Treated both completed and obsolete tickets as inactive for listing presentation.
 - Displayed inactive tickets using muted styling while preserving normal interaction semantics.
 - Verified predefined filters in combination with persisted project context and pagination.
+- Added ticket listing state indicators.
+- Added dedicated Priority and Status indicator columns between ticket RefId and title.
+- Added High and Critical priority lightning indicators.
+- Added In Progress and On Hold status indicators.
+- Allowed Priority and Status indicators to appear simultaneously while preserving row alignment.
+- Used fixed high-contrast amber and red colours for priority indicators so their meaning remains visually distinct across application themes.
+- Retained theme-based colours for status indicators.
+- Added indicator tooltips describing their meaning.
+- Added state indicators to the responsive mobile ticket listing.
+- Centralised known PegasusApi ticket reference codes in `TicketReferenceCodes`.
+- Replaced ticket feature lookup-code literals with the centralised reference-code vocabulary.
+- Preserved existing filtering, ordering, pagination, persisted context and inactive-ticket presentation.
+- Verified ticket listing state indicators across desktop and mobile layouts.
+- Completed Milestone 3.1 – Ticket Listing.
