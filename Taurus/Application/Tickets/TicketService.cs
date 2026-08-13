@@ -46,6 +46,8 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
             ticket.TicketRef,
             ticket.Title,
             ticket.StatusId,
+            ticket.TypeId,
+            ticket.PriorityId,
             ticket.LastModified);
     }
 }

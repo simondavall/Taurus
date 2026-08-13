@@ -10,16 +10,9 @@ public static class DependencyInjection
     {
         var baseAddress = configuration["PegasusApi:BaseAddress"];
 
-        services.AddHttpClient<IProjectService, ProjectService>(client =>
-        {
-            client.BaseAddress = new Uri(baseAddress!);
-        });
-
-        services.AddHttpClient<ITicketService, TicketService>(client =>
-        {
-            client.BaseAddress = new Uri(baseAddress!);
-        });
-
+        services.AddHttpClient<IProjectService, ProjectService>(client => { client.BaseAddress = new Uri(baseAddress!); });
+        services.AddHttpClient<ITicketService, TicketService>(client => { client.BaseAddress = new Uri(baseAddress!); });
+        services.AddHttpClient<ITicketReferenceDataService, TicketReferenceDataService>(client => { client.BaseAddress = new Uri(baseAddress!); });
         services.AddScoped<IUserStateService, UserStateService>();
 
         return services;

@@ -5,4 +5,6 @@ public sealed record Ticket(
     string TicketRef,
     string Title,
     int StatusId,
+    int TypeId,
+    int PriorityId,
     DateTimeOffset LastModified);

@@ -163,3 +163,12 @@
 - Define an explicit default or fallback for every persisted value.
 - Treat missing, invalid or stale persisted state as its defined fallback rather than preventing application use.
 - Access protected browser storage only after the application becomes interactive because browser storage is unavailable during static prerendering.
+
+## Reference Data
+
+- Map PegasusApi reference data to Taurus-owned application models at the integration boundary.
+- Use stable reference-data codes when Taurus behaviour depends on the semantic meaning of a lookup value.
+- Resolve semantic codes to the current lookup IDs before comparing them with foreign-key identifiers on application models.
+- Do not hard-code PegasusApi lookup IDs or use display titles to determine application behaviour.
+- Keep Taurus-owned predefined filters separate from PegasusApi reference-data models.
+- Apply client-side ticket filtering before ordering and pagination.

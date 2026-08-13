@@ -44,7 +44,7 @@
     text-align: right;
 }
 
-.ticket-completed {
+.ticket-inactive {
     opacity: 0.38;
 }
 
@@ -77,6 +77,10 @@
 
 .tickets-filters {
     min-height: 20rem;
+}
+
+.tickets-filters .filter-widget + .filter-widget {
+    margin-top: 1.5rem;
 }
 
 .filter-widget {
