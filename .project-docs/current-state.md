@@ -13,7 +13,7 @@ where development should continue.
 
 # Current task
 
-- Display ticket details.
+- Display and edit ticket details.
 
 # Remaining milestone tasks
 

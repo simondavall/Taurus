@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using Taurus.Application.Projects;
 using Taurus.Application.Tickets;
@@ -14,6 +15,8 @@ public partial class Tickets
 
     [Inject]
     private IConfiguration Configuration { get; set; } = default!;
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
     [Inject]
     private IProjectService ProjectService { get; set; } = default!;
     [Inject]
@@ -160,6 +163,20 @@ public partial class Tickets
         }
     }
 
+    private void OpenTicket(Ticket ticket)
+    {
+        NavigationManager.NavigateTo(
+            $"/tickets/{Uri.EscapeDataString(ticket.TicketRef)}");
+    }
+
+    private void TicketKeyDown(KeyboardEventArgs args, Ticket ticket)
+    {
+        if (args.Key is "Enter" or " ")
+        {
+            OpenTicket(ticket);
+        }
+    }
+    
     private IEnumerable<Ticket> ApplyTicketFilter(IEnumerable<Ticket> tickets)
     {
         return SelectedTicketFilter switch

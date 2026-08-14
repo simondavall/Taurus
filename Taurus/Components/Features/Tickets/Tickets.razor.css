@@ -98,6 +98,22 @@
     color: #ff0000;
 }
 
+.ticket-row,
+.mobile-ticket {
+    cursor: pointer;
+}
+
+.ticket-row:hover,
+.mobile-ticket:hover {
+    background: var(--mud-palette-action-default-hover);
+}
+
+.ticket-row:focus-visible,
+.mobile-ticket:focus-visible {
+    outline: 2px solid var(--mud-palette-primary);
+    outline-offset: -2px;
+}
+
 .tickets-filters {
     min-height: 20rem;
 }
