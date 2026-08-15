@@ -13,11 +13,10 @@ where development should continue.
 
 # Current task
 
-- Display and edit ticket details.
+- Display comments.
 
 # Remaining milestone tasks
 
-- Display comments.
 - Display related information.
 - Support navigation between tickets.
 
@@ -303,3 +302,26 @@ where development should continue.
 - Preserved existing filtering, ordering, pagination, persisted context and inactive-ticket presentation.
 - Verified ticket listing state indicators across desktop and mobile layouts.
 - Completed Milestone 3.1 – Ticket Listing.
+- Added navigation from desktop and mobile ticket listings to ticket details.
+- Added friendly ticket routes using `/tickets/<ticket-ref>`.
+- Integrated ticket retrieval with the PegasusApi `GET /api/tickets/by_ref/{ticketRef}` endpoint.
+- Added a Taurus-owned ticket details model and preserved PegasusApi transport models within the integration boundary.
+- Created the responsive ticket details and editing page.
+- Displayed ticket content in a constrained two-column desktop layout with ticket metadata in a secondary card.
+- Stacked ticket metadata below the main ticket content on tablet and mobile layouts.
+- Displayed the ticket RefId and editable Title in the page header.
+- Displayed Title and Description as normal page text until their fields receive focus.
+- Used plain-text Description editing to preserve historic ticket content without interpreting markup-like text as HTML.
+- Displayed Project as read-only.
+- Added editable Type, Priority and Status fields using existing PegasusApi reference data.
+- Added editable Fixed In Release.
+- Integrated ticket updates with the PegasusApi `PUT /api/tickets/{id}` endpoint.
+- Preserved existing ParentTicketId and AssignedTo values when updating tickets without exposing them on the current page.
+- Supplied the authenticated Soteria user's `sub` Guid as the PegasusApi update UserId.
+- Used the established Taurus-owned ApplicationResult pattern for expected ticket update failures.
+- Reloaded authoritative ticket data after successful updates.
+- Added successful ticket update feedback using a snackbar.
+- Added Cancel navigation back to the ticket listing without saving or prompting for confirmation.
+- Preserved persisted ticket-listing project and predefined-filter context when returning to the listing.
+- Verified ticket details and editing across desktop, tablet and mobile layouts.
+- Completed Display and edit ticket details.

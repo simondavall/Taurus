@@ -151,7 +151,7 @@ Users can browse and locate tickets.
 
 ## Milestone 3.2 – Ticket Details
 
-- Display and edit ticket details.
+- ✓ Display and edit ticket details.
 - Display comments.
 - Display related information.
 - Support navigation between tickets.
