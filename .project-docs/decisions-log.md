@@ -87,3 +87,25 @@ HTML sanitisation is exposed through a Taurus-owned shared abstraction rather th
 - Preserving the original content avoids destructive migration or silent modification of PegasusApi data.
 - Sanitising only at the rendering boundary allows raw markup to remain editable.
 - HTML rendering is expected to be required by multiple Taurus features, so a shared application-owned sanitisation policy provides a single security boundary and avoids feature-specific sanitisation behaviour.
+
+2026-08-15
+
+### Use Markdown for ticket comment content
+
+#### Decision
+
+Ticket comments use Markdown as their canonical authoring and storage format.
+
+Taurus converts stored comment Markdown to HTML for presentation. The generated HTML is passed through the existing Taurus-owned HTML sanitisation boundary before being rendered.
+
+Comment editing and creation continue to use plain-text textareas so users work directly with the stored Markdown.
+
+Existing historic comments will not receive an automated content migration. The limited incompatible historic HTML content will be corrected manually.
+
+#### Rationale
+
+- Markdown provides the required links, lists and text formatting without requiring users to author HTML directly.
+- The existing plain-text comment editor already provides a suitable Markdown authoring experience.
+- Markdown-to-HTML conversion can be introduced at the presentation boundary without changing the PegasusApi comment contracts.
+- Retaining HTML sanitisation after Markdown conversion preserves the established security boundary for rendered user-authored content.
+- Historic comments contain sufficiently little HTML that manual correction is preferable to introducing automated migration complexity.

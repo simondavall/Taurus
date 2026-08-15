@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 using Taurus.Application;
-using Taurus.Application.Html;
+using Taurus.Application.Markdown;
 using Taurus.Application.Projects;
 using Taurus.Application.Tickets;
 using Severity = MudBlazor.Severity;
@@ -24,7 +24,7 @@ public partial class TicketDetails
     [Inject]
     private IProjectService ProjectService { get; set; } = default!;
     [Inject]
-    private IHtmlContentSanitizer HtmlContentSanitizer { get; set; } = default!;
+    private IMarkdownRenderer MarkdownRenderer { get; set; } = default!;
     [Inject]
     private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
     [Inject]
@@ -215,9 +215,9 @@ public partial class TicketDetails
         comment.IsEditing = false;
     }
 
-    private string SanitizeComment(string content)
+    private string RenderComment(string content)
     {
-        return HtmlContentSanitizer.Sanitize(content);
+        return MarkdownRenderer.Render(content);
     }
 
     private static string GetCommentClass(CommentEditorModel comment)

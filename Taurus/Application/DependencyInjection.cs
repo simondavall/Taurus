@@ -1,4 +1,5 @@
 ﻿using Taurus.Application.Html;
+using Taurus.Application.Markdown;
 using Taurus.Application.Projects;
 using Taurus.Application.Tickets;
 using Taurus.Application.UserState;
@@ -17,6 +18,7 @@ public static class DependencyInjection
         services.AddHttpClient<ITicketCommentService, TicketCommentService>(client => { client.BaseAddress = new Uri(baseAddress!); });
         
         services.AddSingleton<IHtmlContentSanitizer, HtmlContentSanitizer>();
+        services.AddSingleton<IMarkdownRenderer, MarkdownRenderer>();
         services.AddScoped<IUserStateService, UserStateService>();
         
         return services;

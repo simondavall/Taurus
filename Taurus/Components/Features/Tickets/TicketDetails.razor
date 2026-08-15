@@ -57,7 +57,7 @@ else if (Editor is not null)
                          aria-labelledby="ticket-description-heading">
                     <MudText Typo="Typo.h6"
                              HtmlTag="h2"
-                             Id="ticket-description-heading"
+                             id="ticket-description-heading"
                              Class="mb-2">
                         Description
                     </MudText>
@@ -77,7 +77,7 @@ else if (Editor is not null)
                          aria-labelledby="ticket-comments-heading">
                     <MudText Typo="Typo.h6"
                              HtmlTag="h2"
-                             Id="ticket-comments-heading"
+                             id="ticket-comments-heading"
                              Class="ticket-comments-heading">
                         Comments
                     </MudText>
@@ -151,7 +151,7 @@ else if (Editor is not null)
                                                       @bind-Value="comment.Content"
                                                       Variant="Variant.Outlined"
                                                       Lines="3"
-                                                      AutoGrow="true"
+                                                      Sizing="InputSizing.Auto"
                                                       Immediate="true"
                                                       Disabled="@_saving"
                                                       Class="ticket-comment-editor"
@@ -160,7 +160,7 @@ else if (Editor is not null)
                                     else
                                     {
                                         <div class="ticket-comment-content">
-                                            @((MarkupString)SanitizeComment(comment.Content))
+                                            @((MarkupString)RenderComment(comment.Content))
                                         </div>
                                     }
                                 </article>
@@ -179,7 +179,7 @@ else if (Editor is not null)
                                       @bind-Value="NewComment"
                                       Variant="Variant.Outlined"
                                       Lines="3"
-                                      AutoGrow="true"
+                                      Sizing="InputSizing.Auto"
                                       Immediate="true"
                                       Disabled="@_saving"
                                       Placeholder="Add a comment"

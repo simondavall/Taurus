@@ -325,3 +325,15 @@ where development should continue.
 - Preserved persisted ticket-listing project and predefined-filter context when returning to the listing.
 - Verified ticket details and editing across desktop, tablet and mobile layouts.
 - Completed Display and edit ticket details.
+- Replaced the interim raw-HTML ticket comment presentation with Markdown rendering.
+- Established Markdown as the canonical authoring and storage format for ticket comments.
+- Added Markdig for Markdown-to-HTML conversion.
+- Added the Taurus-owned Markdown rendering abstraction.
+- Converted stored comment Markdown to HTML only at the presentation boundary.
+- Continued to pass generated comment HTML through the Taurus-owned HTML sanitisation boundary before rendering.
+- Preserved original Markdown unchanged when retrieving, editing and persisting comments.
+- Preserved the existing plain-text comment editing and creation workflow.
+- Retained manual migration as the approach for the limited incompatible historic comment content.
+- Updated HtmlSanitizer to 9.2.995 to remove the vulnerable transitive AngleSharp dependency.
+- Verified Markdown formatting, safe HTML rendering and existing ticket-comment workflows.
+- Completed Render ticket comments as Markdown.
