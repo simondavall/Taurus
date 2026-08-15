@@ -41,8 +41,9 @@
 - No AutoMapper.
 - Use MudBlazor as the primary UI framework.
 - Wrap third-party libraries behind Taurus abstractions where practical.
-- Render user-authored HTML only after sanitising it through the Taurus-owned HTML sanitisation boundary.
-- Keep persisted user-authored HTML unchanged; sanitisation is a presentation concern rather than a persistence transformation.
+- Use Markdown as the canonical authoring and storage format for ticket comments.
+- Convert ticket comment Markdown to HTML for presentation and sanitise the generated HTML through the Taurus-owned HTML sanitisation boundary before rendering it.
+- Keep HTML sanitisation as a presentation concern rather than a persistence transformation.
 
 # Feature Design
 
