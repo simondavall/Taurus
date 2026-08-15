@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using Taurus.Application.Projects;
 using Taurus.Application.Tickets;
@@ -16,19 +17,14 @@ public partial class TicketDetails
 
     [Inject]
     private ITicketService TicketService { get; set; } = default!;
-
     [Inject]
     private ITicketReferenceDataService TicketReferenceDataService { get; set; } = default!;
-
     [Inject]
     private IProjectService ProjectService { get; set; } = default!;
-
     [Inject]
     private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
-
     [Inject]
     private NavigationManager NavigationManager { get; set; } = default!;
-
     [Inject]
     private ISnackbar Snackbar { get; set; } = default!;
 
@@ -44,12 +40,11 @@ public partial class TicketDetails
 
     private bool _loading;
     private bool _saving;
-    private bool _editingTitle;
     private bool _editingDescription;
     private string? _loadError;
     private string? _updateError;
     private string? _titleError;
-
+    
     private string ProjectTitle =>
         Editor is null
             ? string.Empty
@@ -62,7 +57,6 @@ public partial class TicketDetails
         _loadError = null;
         _updateError = null;
         _titleError = null;
-        _editingTitle = false;
         _editingDescription = false;
 
         try
@@ -136,17 +130,7 @@ public partial class TicketDetails
             AssignedTo = ticket.AssignedTo
         };
     }
-
-    private void BeginTitleEdit()
-    {
-        if (_saving)
-        {
-            return;
-        }
-
-        _editingTitle = true;
-    }
-
+    
     private void BeginDescriptionEdit()
     {
         if (_saving)
@@ -157,14 +141,14 @@ public partial class TicketDetails
         _editingDescription = true;
     }
     
-    private void TitleChanged(string value)
+    private void TitleChanged(string? value)
     {
         if (Editor is null)
         {
             return;
         }
 
-        Editor.Title = value;
+        Editor.Title = value ?? string.Empty;
         _titleError = null;
     }
 
@@ -212,7 +196,6 @@ public partial class TicketDetails
 
             if (Editor is not null)
             {
-                _editingTitle = false;
                 _editingDescription = false;
 
                 Snackbar.Add(

@@ -6,7 +6,7 @@
 {
     <div class="ticket-details-loading">
         <MudProgressCircular Indeterminate="true"
-                             Color="Color.Primary" />
+                             Color="Color.Primary"/>
     </div>
 }
 else if (!string.IsNullOrWhiteSpace(_loadError))
@@ -22,35 +22,28 @@ else if (Editor is not null)
         <div class="ticket-details-page">
             <main class="ticket-details-main">
                 <header class="ticket-details-header">
-                    <MudText Typo="Typo.h4"
+
+                    <MudText Typo="Typo.h6"
                              HtmlTag="h1"
                              Class="ticket-details-ref">
                         @Editor.TicketRef
                     </MudText>
 
-                    @if (_editingTitle)
-                    {
-                        <MudTextField T="string"
-                                      Value="@Editor.Title"
-                                      ValueChanged="TitleChanged"
-                                      Variant="Variant.Outlined"
-                                      Margin="Margin.Dense"
-                                      Immediate="true"
-                                      Error="@(!string.IsNullOrWhiteSpace(_titleError))"
-                                      ErrorText="@_titleError"
-                                      Disabled="@_saving"
-                                      Class="ticket-details-title-editor"
-                                      aria-label="Ticket title" />
-                    }
-                    else
-                    {
-                        <button type="button"
-                                class="ticket-details-title"
-                                disabled="@_saving"
-                                @onclick="BeginTitleEdit">
-                            @Editor.Title
-                        </button>
-                    }
+                    <MudTextField T="string"
+                                  Typo="Typo.h4"
+                                  Value="@Editor.Title"
+                                  ValueChanged="TitleChanged"
+                                  Variant="Variant.Text"
+                                  Underline="false"
+                                  Margin="Margin.Dense"
+                                  Immediate="true"
+                                  Error="@(!string.IsNullOrWhiteSpace(_titleError))"
+                                  ErrorText="@_titleError"
+                                  Disabled="@_saving"
+                                  Sizing="InputSizing.Auto"
+                                  Class="ticket-details-title-editor"
+                                  aria-label="Ticket title"/>
+                    
                 </header>
 
                 @if (!string.IsNullOrWhiteSpace(_updateError))
@@ -80,7 +73,7 @@ else if (Editor is not null)
                                       AutoGrow="true"
                                       Disabled="@_saving"
                                       Class="ticket-description-editor"
-                                      aria-label="Ticket description" />
+                                      aria-label="Ticket description"/>
                     }
                     else
                     {
@@ -115,7 +108,7 @@ else if (Editor is not null)
                         {
                             <MudProgressCircular Indeterminate="true"
                                                  Size="Size.Small"
-                                                 Class="mr-2" />
+                                                 Class="mr-2"/>
                         }
 
                         Update
@@ -135,7 +128,7 @@ else if (Editor is not null)
                               Value="@ProjectTitle"
                               ReadOnly="true"
                               Variant="Variant.Outlined"
-                              Margin="Margin.Dense" />
+                              Margin="Margin.Dense"/>
 
                 <MudSelect T="int"
                            Label="Type"
@@ -187,7 +180,7 @@ else if (Editor is not null)
                               @bind-Value="Editor.FixedInRelease"
                               Variant="Variant.Outlined"
                               Margin="Margin.Dense"
-                              Disabled="@_saving" />
+                              Disabled="@_saving"/>
             </aside>
         </div>
     </MudForm>
