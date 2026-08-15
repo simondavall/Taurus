@@ -70,37 +70,25 @@
     min-width: 0;
 }
 
-.ticket-description-text {
-    background: transparent;
-    border: 0;
-    color: var(--mud-palette-text-primary);
-    cursor: text;
-    display: block;
-    font: inherit;
+.ticket-description ::deep .ticket-description-editor {
+    border: 1px solid transparent;
+    border-radius: var(--mud-default-borderradius);
+    transition: border-color 150ms ease;
+    width: 100%;
+}
+
+.ticket-description ::deep .ticket-description-editor:focus-within {
+    border-color: var(--mud-palette-primary);
+}
+
+.ticket-description ::deep .ticket-description-editor textarea {
     line-height: 1.6;
-    min-height: 8rem;
-    overflow-wrap: anywhere;
-    padding: 0;
-    text-align: left;
+    padding-inline: 0;
     white-space: pre-wrap;
-    width: 100%;
 }
 
-.ticket-description-text:hover {
-    /*color: var(--mud-palette-primary);*/
-}
-
-.ticket-description-text:disabled {
-    cursor: default;
-}
-
-.ticket-description-empty {
-    color: var(--mud-palette-text-secondary);
-    font-style: italic;
-}
-
-.ticket-description-editor {
-    width: 100%;
+.ticket-description ::deep .ticket-description-editor:focus-within textarea {
+    padding-inline: 0.75rem;
 }
 
 .ticket-details-actions {

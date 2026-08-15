@@ -64,33 +64,15 @@ else if (Editor is not null)
                         Description
                     </MudText>
 
-                    @if (_editingDescription)
-                    {
-                        <MudTextField T="string"
-                                      @bind-Value="Editor.Description"
-                                      Variant="Variant.Outlined"
-                                      Lines="12"
-                                      AutoGrow="true"
-                                      Disabled="@_saving"
-                                      Class="ticket-description-editor"
-                                      aria-label="Ticket description"/>
-                    }
-                    else
-                    {
-                        <button type="button"
-                                class="ticket-description-text"
-                                disabled="@_saving"
-                                @onclick="BeginDescriptionEdit">
-                            @if (string.IsNullOrWhiteSpace(Editor.Description))
-                            {
-                                <span class="ticket-description-empty">No description</span>
-                            }
-                            else
-                            {
-                                @Editor.Description
-                            }
-                        </button>
-                    }
+                    <MudTextField T="string"
+                                  @bind-Value="Editor.Description"
+                                  Variant="Variant.Text"
+                                  Underline="false"
+                                  Lines="4"
+                                  Sizing="InputSizing.Auto"
+                                  Disabled="@_saving"
+                                  Class="ticket-description-editor"
+                                  aria-label="Ticket description" />
                 </section>
 
                 <div class="ticket-details-actions">

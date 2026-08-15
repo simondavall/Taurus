@@ -40,7 +40,6 @@ public partial class TicketDetails
 
     private bool _loading;
     private bool _saving;
-    private bool _editingDescription;
     private string? _loadError;
     private string? _updateError;
     private string? _titleError;
@@ -57,7 +56,6 @@ public partial class TicketDetails
         _loadError = null;
         _updateError = null;
         _titleError = null;
-        _editingDescription = false;
 
         try
         {
@@ -131,16 +129,6 @@ public partial class TicketDetails
         };
     }
     
-    private void BeginDescriptionEdit()
-    {
-        if (_saving)
-        {
-            return;
-        }
-
-        _editingDescription = true;
-    }
-    
     private void TitleChanged(string? value)
     {
         if (Editor is null)
@@ -196,8 +184,6 @@ public partial class TicketDetails
 
             if (Editor is not null)
             {
-                _editingDescription = false;
-
                 Snackbar.Add(
                     $"Ticket {Editor.TicketRef} updated successfully.",
                     Severity.Success);
