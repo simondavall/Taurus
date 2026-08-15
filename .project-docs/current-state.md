@@ -9,16 +9,18 @@ where development should continue.
 
 # Current milestone
 
-- Milestone 3.2 – Ticket Details
+- Milestone 3.3 – Ticket Editing
 
 # Current task
 
-- Display comments.
+- Review and standardise editor validation.
 
 # Remaining milestone tasks
 
 - Display related information.
 - Support navigation between tickets.
+- Assign tickets.
+- Verify existing Pegasus behaviour preserved.
 
 # Completed
 
@@ -337,3 +339,22 @@ where development should continue.
 - Updated HtmlSanitizer to 9.2.995 to remove the vulnerable transitive AngleSharp dependency.
 - Verified Markdown formatting, safe HTML rendering and existing ticket-comment workflows.
 - Completed Render ticket comments as Markdown.
+- Added ticket creation from the ticket listing.
+- Added a Create Ticket primary action to the ticket listing header.
+- Scoped ticket creation to the currently selected project.
+- Disabled Create Ticket when All projects is selected and provided explanatory tooltip feedback.
+- Added a responsive Create Ticket dialog with clear read-only project context.
+- Added Title and Description fields for ticket creation.
+- Added Type, Priority and Status selection using existing PegasusApi reference data.
+- Defaulted Type, Priority and Status to the first item in each ordered reference-data list.
+- Added FluentValidation validation for required Title and Description fields.
+- Added the initial shared `IMudValidator<T>` bridge between FluentValidation validators and MudBlazor form validation.
+- Integrated ticket creation with PegasusApi `POST /api/tickets`.
+- Supplied the authenticated Soteria `sub` Guid as the acting UserId.
+- Left FixedInRelease, ParentTicketId and AssignedTo outside the normal ticket-creation workflow.
+- Used the established Taurus-owned `ApplicationResult<T>` pattern for expected ticket-creation failures.
+- Used the TicketRef allocated by PegasusApi after successful creation.
+- Navigated successful ticket creation directly to the new `/tickets/<ticket-ref>` details page.
+- Verified ticket creation across desktop, tablet and mobile layouts.
+- Completed Create tickets.
+- Completed Milestone 3.2 – Ticket Details.

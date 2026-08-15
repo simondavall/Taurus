@@ -14,7 +14,19 @@
 }
 
 .tickets-heading {
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
     margin-bottom: 2rem;
+}
+
+.tickets-heading ::deep .mud-button-root {
+    flex-shrink: 0;
+}
+
+.create-ticket-disabled {
+    display: inline-flex;
 }
 
 .tickets-table {
@@ -159,5 +171,15 @@
 
     .tickets-pagination {
         justify-content: center;
+    }
+}
+
+@media (max-width: 599.98px) {
+    .tickets-heading {
+        gap: 0.75rem;
+    }
+
+    .tickets-heading ::deep .mud-button-label {
+        white-space: nowrap;
     }
 }

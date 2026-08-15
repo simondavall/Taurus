@@ -152,27 +152,24 @@ Users can browse and locate tickets.
 ## Milestone 3.2 – Ticket Details
 
 - ✓ Display and edit ticket details.
-- Display comments.
-- Display related information.
-- Support navigation between tickets.
+- ✓ Display comments.
+- ✓ Add comments.
+- ✓ Update ticket status.
+- ✓ Create tickets.
 
 **Deliverable**
 
-Users can inspect and update existing tickets.
+Users can inspect, create and update tickets.
 
 ---
 
 ## Milestone 3.3 – Ticket Editing
 
-- Create tickets.
-- Add comments.
-- Update ticket status.
+- Review and standardise editor validation.
+- Display related information.
+- Support navigation between tickets.
 - Assign tickets.
-- Preserve existing Pegasus behaviour.
-
-**Deliverable**
-
-Users can perform normal day-to-day ticket management.
+- Verify existing Pegasus behaviour preserved.
 
 ---
 

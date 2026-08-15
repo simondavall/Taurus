@@ -25,6 +25,10 @@ public partial class Tickets
     private ITicketReferenceDataService TicketReferenceDataService { get; set; } = default!;
     [Inject]
     private IUserStateService UserStateService { get; set; } = default!;
+    [Inject]
+    private IDialogService DialogService { get; set; } = default!;
+    [Inject]
+    private ISnackbar Snackbar { get; set; } = default!;
 
     private IReadOnlyList<Project> ProjectItems { get; set; } = [];
     private IReadOnlyList<Ticket> TicketItems { get; set; } = [];
@@ -47,7 +51,12 @@ public partial class Tickets
         SelectedProjectId.HasValue
             ? ProjectItems.FirstOrDefault(project => project.Id == SelectedProjectId.Value)?.Title ?? "All"
             : "All";
-
+    private Project? SelectedProject =>
+        SelectedProjectId.HasValue
+            ? ProjectItems.FirstOrDefault(project => project.Id == SelectedProjectId.Value)
+            : null;
+    private bool CanCreateTicket => SelectedProject is not null;
+    
     private int PageSize { get; set; }
     private int CurrentPage { get; set; } = 1;
     private IEnumerable<Ticket> FilteredTicketItems => ApplyTicketFilter(TicketItems);
@@ -153,6 +162,50 @@ public partial class Tickets
         await UserStateService.SetSelectedTicketFilterAsync(filter);
     }
 
+    private async Task CreateTicketAsync()
+    {
+        var project = SelectedProject;
+        if (project is null)
+        {
+            return;
+        }
+
+        var parameters = new DialogParameters
+        {
+            [nameof(TicketCreateDialog.Project)] = project,
+            [nameof(TicketCreateDialog.TicketTypes)] = TicketTypes,
+            [nameof(TicketCreateDialog.TicketPriorities)] = TicketPriorities,
+            [nameof(TicketCreateDialog.TicketStatuses)] = TicketStatuses
+        };
+
+        var dialog = await DialogService.ShowAsync<TicketCreateDialog>(
+            $"Create Ticket — {project.Title}",
+            parameters,
+            CreateTicketDialogOptions());
+
+        var result = await dialog.Result;
+
+        if (result is null ||
+            result.Canceled ||
+            result.Data is not Application.Tickets.TicketDetails ticket)
+        {
+            return;
+        }
+
+        Snackbar.Add($"Ticket {ticket.TicketRef} created successfully.", Severity.Success);
+        NavigationManager.NavigateTo($"/tickets/{Uri.EscapeDataString(ticket.TicketRef)}");
+    }
+
+    private static DialogOptions CreateTicketDialogOptions()
+    {
+        return new DialogOptions
+        {
+            FullWidth = true,
+            MaxWidth = MaxWidth.Small,
+            CloseOnEscapeKey = true
+        };
+    }
+    
     private async Task LoadTicketsAsync()
     {
         TicketItems = await TicketService.GetTicketsAsync(SelectedProjectId);
