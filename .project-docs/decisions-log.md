@@ -67,3 +67,23 @@ Predefined ticket filters remain Taurus-owned application concepts.
 - Stable codes allow PegasusApi lookup identifiers and titles to change without requiring corresponding Taurus behaviour changes.
 - PegasusApi remains the system of record for ticket reference data.
 - Taurus can define application-specific concepts such as Open Tickets and High Priority without pushing those UI concepts into PegasusApi.
+
+2026-08-15
+
+### Sanitise user-authored HTML at the presentation boundary
+
+#### Decision
+
+Taurus sanitises user-authored HTML before rendering it as markup.
+
+The original content remains unchanged when retrieved from or persisted to PegasusApi. Sanitisation is applied only to HTML being rendered by Taurus.
+
+HTML sanitisation is exposed through a Taurus-owned shared abstraction rather than consumed directly from feature code.
+
+#### Rationale
+
+- Existing Pegasus data may contain arbitrary historic HTML and malformed markup.
+- User-authored HTML must not be rendered directly because it could introduce cross-site scripting or other unsafe markup.
+- Preserving the original content avoids destructive migration or silent modification of PegasusApi data.
+- Sanitising only at the rendering boundary allows raw markup to remain editable.
+- HTML rendering is expected to be required by multiple Taurus features, so a shared application-owned sanitisation policy provides a single security boundary and avoids feature-specific sanitisation behaviour.
