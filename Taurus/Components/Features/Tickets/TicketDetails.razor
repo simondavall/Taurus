@@ -1,0 +1,169 @@
+﻿@page "/tickets/{TicketRef}"
+
+<PageTitle>@TicketRef</PageTitle>
+
+@if (_loading)
+{
+    <div class="ticket-details-loading">
+        <MudProgressCircular Indeterminate="true"
+                             Color="Color.Primary"/>
+    </div>
+}
+else if (!string.IsNullOrWhiteSpace(_loadError))
+{
+    <MudAlert Severity="Severity.Error"
+              Variant="Variant.Outlined">
+        @_loadError
+    </MudAlert>
+}
+else if (Editor is not null)
+{
+    <MudForm @ref="_form">
+        <div class="ticket-details-page">
+            <main class="ticket-details-main">
+                <header class="ticket-details-header">
+
+                    <MudText Typo="Typo.h6"
+                             HtmlTag="h1"
+                             Class="ticket-details-ref">
+                        @Editor.TicketRef
+                    </MudText>
+
+                    <MudTextField T="string"
+                                  Typo="Typo.h4"
+                                  Value="@Editor.Title"
+                                  ValueChanged="TitleChanged"
+                                  Variant="Variant.Text"
+                                  Underline="false"
+                                  Margin="Margin.Dense"
+                                  Immediate="true"
+                                  Error="@(!string.IsNullOrWhiteSpace(_titleError))"
+                                  ErrorText="@_titleError"
+                                  Disabled="@_saving"
+                                  Sizing="InputSizing.Auto"
+                                  Class="ticket-details-title-editor"
+                                  aria-label="Ticket title"/>
+                    
+                </header>
+
+                @if (!string.IsNullOrWhiteSpace(_updateError))
+                {
+                    <MudAlert Severity="Severity.Error"
+                              Variant="Variant.Outlined"
+                              Class="mb-4">
+                        @_updateError
+                    </MudAlert>
+                }
+
+                <section class="ticket-description"
+                         aria-labelledby="ticket-description-heading">
+                    <MudText Typo="Typo.h6"
+                             HtmlTag="h2"
+                             Id="ticket-description-heading"
+                             Class="mb-2">
+                        Description
+                    </MudText>
+
+                    <MudTextField T="string"
+                                  @bind-Value="Editor.Description"
+                                  Variant="Variant.Text"
+                                  Underline="false"
+                                  Lines="4"
+                                  Sizing="InputSizing.Auto"
+                                  Disabled="@_saving"
+                                  Class="ticket-description-editor"
+                                  aria-label="Ticket description" />
+                </section>
+
+                <div class="ticket-details-actions">
+                    <MudButton Variant="Variant.Text"
+                               Disabled="@_saving"
+                               OnClick="Cancel">
+                        Cancel
+                    </MudButton>
+
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Disabled="@_saving"
+                               OnClick="UpdateAsync">
+                        @if (_saving)
+                        {
+                            <MudProgressCircular Indeterminate="true"
+                                                 Size="Size.Small"
+                                                 Class="mr-2"/>
+                        }
+
+                        Update
+                    </MudButton>
+                </div>
+            </main>
+
+            <aside class="ticket-details-metadata"
+                   aria-label="Ticket metadata">
+                <MudText Typo="Typo.h6"
+                         Class="ticket-metadata-heading">
+                    Details
+                </MudText>
+
+                <MudTextField T="string"
+                              Label="Project"
+                              Value="@ProjectTitle"
+                              ReadOnly="true"
+                              Variant="Variant.Outlined"
+                              Margin="Margin.Dense"/>
+
+                <MudSelect T="int"
+                           Label="Type"
+                           @bind-Value="Editor.TypeId"
+                           Variant="Variant.Outlined"
+                           Margin="Margin.Dense"
+                           Disabled="@_saving">
+                    @foreach (var type in TicketTypes)
+                    {
+                        <MudSelectItem T="int"
+                                       Value="@type.Id">
+                            @type.Title
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+
+                <MudSelect T="int"
+                           Label="Priority"
+                           @bind-Value="Editor.PriorityId"
+                           Variant="Variant.Outlined"
+                           Margin="Margin.Dense"
+                           Disabled="@_saving">
+                    @foreach (var priority in TicketPriorities)
+                    {
+                        <MudSelectItem T="int"
+                                       Value="@priority.Id">
+                            @priority.Title
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+
+                <MudSelect T="int"
+                           Label="Status"
+                           @bind-Value="Editor.StatusId"
+                           Variant="Variant.Outlined"
+                           Margin="Margin.Dense"
+                           Disabled="@_saving">
+                    @foreach (var status in TicketStatuses)
+                    {
+                        <MudSelectItem T="int"
+                                       Value="@status.Id">
+                            @status.Title
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+
+                <MudTextField T="string"
+                              Label="Fixed In Release"
+                              @bind-Value="Editor.FixedInRelease"
+                              Variant="Variant.Outlined"
+                              Margin="Margin.Dense"
+                              Disabled="@_saving"/>
+            </aside>
+        </div>
+    </MudForm>
+}

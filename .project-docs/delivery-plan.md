@@ -151,21 +151,20 @@ Users can browse and locate tickets.
 
 ## Milestone 3.2 – Ticket Details
 
-- Display ticket details.
+- ✓ Display and edit ticket details.
 - Display comments.
 - Display related information.
 - Support navigation between tickets.
 
 **Deliverable**
 
-Users can inspect existing tickets.
+Users can inspect and update existing tickets.
 
 ---
 
 ## Milestone 3.3 – Ticket Editing
 
 - Create tickets.
-- Edit tickets.
 - Add comments.
 - Update ticket status.
 - Assign tickets.

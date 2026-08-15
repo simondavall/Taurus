@@ -16,7 +16,12 @@
                   Class="tickets-table d-none d-sm-block">
             @foreach (var ticket in PagedTicketItems)
             {
-                <div class="@GetTicketClass(ticket)">
+                <div class="@GetTicketClass(ticket)"
+                     role="link"
+                     tabindex="0"
+                     @onclick="() => OpenTicket(ticket)"
+                     @onkeydown="args => TicketKeyDown(args, ticket)">
+                    
                     <MudText Typo="Typo.body2"
                              Class="ticket-ref">
                         @ticket.TicketRef
@@ -32,7 +37,7 @@
                         {
                             <MudIcon Icon="@priorityIcon"
                                      Size="Size.Small"
-                                     Class="@GetPriorityIndicatorClass(ticket)" />
+                                     Class="@GetPriorityIndicatorClass(ticket)"/>
                         }
                     </div>
 
@@ -46,7 +51,7 @@
                         {
                             <MudIcon Icon="@statusIcon"
                                      Color="@GetStatusIndicatorColor(ticket)"
-                                     Size="Size.Small" />
+                                     Size="Size.Small"/>
                         }
                     </div>
 
@@ -67,7 +72,12 @@
                   Class="mobile-ticket-list d-block d-sm-none">
             @foreach (var ticket in PagedTicketItems)
             {
-                <div class="@GetMobileTicketClass(ticket)">
+                <div class="@GetMobileTicketClass(ticket)"
+                     role="link"
+                     tabindex="0"
+                     @onclick="() => OpenTicket(ticket)"
+                     @onkeydown="args => TicketKeyDown(args, ticket)">
+                    
                     <div class="mobile-ticket-header">
                         <div class="mobile-ticket-identity">
                             <MudText Typo="Typo.body2"
@@ -85,7 +95,7 @@
                                 {
                                     <MudIcon Icon="@priorityIcon"
                                              Size="Size.Small"
-                                             Class="@GetPriorityIndicatorClass(ticket)" />
+                                             Class="@GetPriorityIndicatorClass(ticket)"/>
                                 }
                             </div>
 
@@ -99,7 +109,7 @@
                                 {
                                     <MudIcon Icon="@statusIcon"
                                              Color="@GetStatusIndicatorColor(ticket)"
-                                             Size="Size.Small" />
+                                             Size="Size.Small"/>
                                 }
                             </div>
                         </div>
