@@ -1,0 +1,87 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudForm @ref="_form"
+                 Model="@Model"
+                 Validation="@(_validator.ValidateValueAsync)">
+            <MudStack Spacing="3">
+                <MudTextField T="string"
+                              @bind-Value="Model.Title"
+                              For="@(() => Model.Title)"
+                              Label="Title"
+                              Variant="Variant.Outlined"
+                              OnlyValidateIfDirty="true"
+                              AutoFocus />
+
+                <MudTextField T="string"
+                              @bind-Value="Model.Description"
+                              For="@(() => Model.Description)"
+                              Label="Description"
+                              Variant="Variant.Outlined"
+                              OnlyValidateIfDirty="true"
+                              Lines="4"
+                              Sizing="InputSizing.Auto" />
+
+                <MudSelect T="int"
+                           @bind-Value="Model.TypeId"
+                           Label="Type"
+                           Variant="Variant.Outlined">
+                    @foreach (var type in TicketTypes)
+                    {
+                        <MudSelectItem T="int"
+                                       Value="@type.Id">
+                            @type.Title
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+
+                <MudSelect T="int"
+                           @bind-Value="Model.PriorityId"
+                           Label="Priority"
+                           Variant="Variant.Outlined">
+                    @foreach (var priority in TicketPriorities)
+                    {
+                        <MudSelectItem T="int"
+                                       Value="@priority.Id">
+                            @priority.Title
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+
+                <MudSelect T="int"
+                           @bind-Value="Model.StatusId"
+                           Label="Status"
+                           Variant="Variant.Outlined">
+                    @foreach (var status in TicketStatuses)
+                    {
+                        <MudSelectItem T="int"
+                                       Value="@status.Id">
+                            @status.Title
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+
+                @if (!string.IsNullOrWhiteSpace(_errorMessage))
+                {
+                    <MudAlert Severity="Severity.Error">
+                        @_errorMessage
+                    </MudAlert>
+                }
+            </MudStack>
+        </MudForm>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton Variant="Variant.Text"
+                   Disabled="@_saving"
+                   OnClick="Cancel">
+            Cancel
+        </MudButton>
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Disabled="@_saving"
+                   OnClick="CreateAsync">
+            @(_saving ? "Creating..." : "Create")
+        </MudButton>
+    </DialogActions>
+</MudDialog>

@@ -2,6 +2,7 @@
 using PegasusApi.Abstractions.Tickets;
 using Taurus.Application.PegasusApi;
 using PegasusUpdateTicketRequest = PegasusApi.Abstractions.Tickets.UpdateTicketRequest;
+using PegasusCreateTicketRequest = PegasusApi.Abstractions.Tickets.CreateTicketRequest;
 
 namespace Taurus.Application.Tickets;
 
@@ -9,6 +10,7 @@ public interface ITicketService
 {
     Task<IReadOnlyList<Ticket>> GetTicketsAsync(Guid? projectId = null);
     Task<ApplicationResult<TicketDetails>> GetTicketByRefAsync(string ticketRef);
+    Task<ApplicationResult<TicketDetails>> CreateTicketAsync(CreateTicketRequest request, Guid userId);
     Task<ApplicationResult> UpdateTicketAsync(UpdateTicketRequest request, Guid userId);
 }
 
@@ -86,6 +88,66 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
         }
     }
 
+    public async Task<ApplicationResult<TicketDetails>> CreateTicketAsync(CreateTicketRequest request, Guid userId)
+    {
+        logger.LogInformation("Creating ticket in PegasusApi for project {ProjectId}", request.ProjectId);
+
+        try
+        {
+            var apiRequest = new PegasusCreateTicketRequest
+            {
+                Title = request.Title,
+                Description = request.Description,
+                ProjectId = request.ProjectId,
+                StatusId = request.StatusId,
+                TypeId = request.TypeId,
+                PriorityId = request.PriorityId,
+                UserId = userId
+            };
+
+            using var response = await httpClient.PostAsJsonAsync("api/tickets", apiRequest);
+
+            if (response.StatusCode == HttpStatusCode.Created)
+            {
+                var ticketResponse = await response.Content.ReadFromJsonAsync<TicketResponse>();
+                if (ticketResponse is null)
+                {
+                    throw new InvalidOperationException(
+                        "PegasusApi returned an empty ticket response after ticket creation.");
+                }
+
+                var ticket = MapTicketDetails(ticketResponse);
+
+                logger.LogInformation("Created ticket {TicketRef} with id {TicketId} in PegasusApi", ticket.TicketRef, ticket.Id);
+
+                return ApplicationResult<TicketDetails>.Success(ticket);
+            }
+
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                var errorMessage = await PegasusApiFailureReader.ReadAsync(
+                    response,
+                    "The ticket could not be created because PegasusApi rejected the supplied details.");
+
+                logger.LogWarning(
+                    "PegasusApi rejected ticket creation for project {ProjectId} with status code {StatusCode}",
+                    request.ProjectId,
+                    (int)response.StatusCode);
+
+                return ApplicationResult<TicketDetails>.Failure(errorMessage);
+            }
+
+            response.EnsureSuccessStatusCode();
+
+            throw new InvalidOperationException("PegasusApi ticket creation failed unexpectedly.");
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(exception, "Failed to create ticket in PegasusApi for project {ProjectId}", request.ProjectId);
+            throw;
+        }
+    }
+    
     public async Task<ApplicationResult> UpdateTicketAsync(UpdateTicketRequest request, Guid userId)
     {
         logger.LogInformation("Updating ticket {TicketId} in PegasusApi", request.Id);

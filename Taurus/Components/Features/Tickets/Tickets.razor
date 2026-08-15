@@ -6,11 +6,35 @@
 
 <div class="tickets-page">
     <div class="tickets-listing">
-        <MudText Typo="Typo.h4"
-                 HtmlTag="h1"
-                 Class="p-3 tickets-heading">
-            Project: @SelectedProjectTitle
-        </MudText>
+        <div class="p-3 tickets-heading">
+            <MudText Typo="Typo.h4"
+                     HtmlTag="h1">
+                Project: @SelectedProjectTitle
+            </MudText>
+
+            @if (CanCreateTicket)
+            {
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.Add"
+                           OnClick="CreateTicketAsync">
+                    Create Ticket
+                </MudButton>
+            }
+            else
+            {
+                <MudTooltip Text="Select a project to create a ticket.">
+                    <span class="create-ticket-disabled">
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.Add"
+                                   Disabled>
+                            Create Ticket
+                        </MudButton>
+                    </span>
+                </MudTooltip>
+            }
+        </div>
 
         <MudPaper Elevation="1"
                   Class="tickets-table d-none d-sm-block">
