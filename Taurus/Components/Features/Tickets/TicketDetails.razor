@@ -22,7 +22,6 @@ else if (Editor is not null)
         <div class="ticket-details-page">
             <main class="ticket-details-main">
                 <header class="ticket-details-header">
-
                     <MudText Typo="Typo.h6"
                              HtmlTag="h1"
                              Class="ticket-details-ref">
@@ -43,7 +42,6 @@ else if (Editor is not null)
                                   Sizing="InputSizing.Auto"
                                   Class="ticket-details-title-editor"
                                   aria-label="Ticket title"/>
-                    
                 </header>
 
                 @if (!string.IsNullOrWhiteSpace(_updateError))
@@ -72,7 +70,122 @@ else if (Editor is not null)
                                   Sizing="InputSizing.Auto"
                                   Disabled="@_saving"
                                   Class="ticket-description-editor"
-                                  aria-label="Ticket description" />
+                                  aria-label="Ticket description"/>
+                </section>
+
+                <section class="ticket-comments"
+                         aria-labelledby="ticket-comments-heading">
+                    <MudText Typo="Typo.h6"
+                             HtmlTag="h2"
+                             Id="ticket-comments-heading"
+                             Class="ticket-comments-heading">
+                        Comments
+                    </MudText>
+
+                    @if (Comments.Count == 0)
+                    {
+                        <MudText Typo="Typo.body2"
+                                 Color="Color.Secondary"
+                                 Class="ticket-comments-empty">
+                            No comments
+                        </MudText>
+                    }
+                    else
+                    {
+                        <div class="ticket-comments-list">
+                            @foreach (var comment in Comments)
+                            {
+                                <article class="@GetCommentClass(comment)">
+                                    <div class="ticket-comment-header">
+                                        <MudText Typo="Typo.caption"
+                                                 Color="Color.Secondary"
+                                                 Class="ticket-comment-meta">
+                                            @FormatCommentAge(comment.LastModified) by @comment.DisplayName
+                                        </MudText>
+
+                                        <div class="ticket-comment-actions">
+                                            @if (comment.IsDeleted)
+                                            {
+                                                <MudTooltip Text="Undo delete">
+                                                    <MudIconButton Icon="@Icons.Material.Filled.Undo"
+                                                                   Size="Size.Small"
+                                                                   Disabled="@_saving"
+                                                                   OnClick="() => UndoDeleteComment(comment)"/>
+                                                </MudTooltip>
+                                            }
+                                            else
+                                            {
+                                                @if (comment.IsEditing)
+                                                {
+                                                    <MudTooltip Text="Undo edit">
+                                                        <MudIconButton Icon="@Icons.Material.Filled.Undo"
+                                                                       Size="Size.Small"
+                                                                       Disabled="@_saving"
+                                                                       OnClick="() => UndoEditComment(comment)"/>
+                                                    </MudTooltip>
+                                                }
+                                                else
+                                                {
+                                                    <MudTooltip Text="Edit comment">
+                                                        <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                                                       Size="Size.Small"
+                                                                       Disabled="@_saving"
+                                                                       OnClick="() => EditComment(comment)"/>
+                                                    </MudTooltip>
+                                                }
+
+                                                <MudTooltip Text="Delete comment">
+                                                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                                                   Size="Size.Small"
+                                                                   Color="Color.Error"
+                                                                   Disabled="@_saving"
+                                                                   OnClick="() => DeleteComment(comment)"/>
+                                                </MudTooltip>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    @if (comment.IsEditing && !comment.IsDeleted)
+                                    {
+                                        <MudTextField T="string"
+                                                      @bind-Value="comment.Content"
+                                                      Variant="Variant.Outlined"
+                                                      Lines="3"
+                                                      AutoGrow="true"
+                                                      Immediate="true"
+                                                      Disabled="@_saving"
+                                                      Class="ticket-comment-editor"
+                                                      aria-label="Edit comment"/>
+                                    }
+                                    else
+                                    {
+                                        <div class="ticket-comment-content">
+                                            @((MarkupString)SanitizeComment(comment.Content))
+                                        </div>
+                                    }
+                                </article>
+                            }
+                        </div>
+                    }
+
+                    <div class="ticket-add-comment">
+                        <MudText Typo="Typo.h6"
+                                 HtmlTag="h3"
+                                 Class="ticket-add-comment-heading">
+                            Add Comment
+                        </MudText>
+
+                        <MudTextField T="string"
+                                      @bind-Value="NewComment"
+                                      Variant="Variant.Outlined"
+                                      Lines="3"
+                                      AutoGrow="true"
+                                      Immediate="true"
+                                      Disabled="@_saving"
+                                      Placeholder="Add a comment"
+                                      Class="ticket-add-comment-editor"
+                                      aria-label="Add comment"/>
+                    </div>
                 </section>
 
                 <div class="ticket-details-actions">

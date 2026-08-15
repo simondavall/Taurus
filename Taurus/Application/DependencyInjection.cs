@@ -1,4 +1,5 @@
-﻿using Taurus.Application.Projects;
+﻿using Taurus.Application.Html;
+using Taurus.Application.Projects;
 using Taurus.Application.Tickets;
 using Taurus.Application.UserState;
 
@@ -13,8 +14,11 @@ public static class DependencyInjection
         services.AddHttpClient<IProjectService, ProjectService>(client => { client.BaseAddress = new Uri(baseAddress!); });
         services.AddHttpClient<ITicketService, TicketService>(client => { client.BaseAddress = new Uri(baseAddress!); });
         services.AddHttpClient<ITicketReferenceDataService, TicketReferenceDataService>(client => { client.BaseAddress = new Uri(baseAddress!); });
+        services.AddHttpClient<ITicketCommentService, TicketCommentService>(client => { client.BaseAddress = new Uri(baseAddress!); });
+        
+        services.AddSingleton<IHtmlContentSanitizer, HtmlContentSanitizer>();
         services.AddScoped<IUserStateService, UserStateService>();
-
+        
         return services;
     }
 }

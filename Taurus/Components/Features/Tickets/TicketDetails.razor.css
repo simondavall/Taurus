@@ -28,29 +28,6 @@
     margin-bottom: 0.5rem;
 }
 
-.ticket-details-title {
-    background: transparent;
-    border: 0;
-    color: var(--mud-palette-text-primary);
-    cursor: text;
-    display: block;
-    font: inherit;
-    font-size: 1.5rem;
-    font-weight: 500;
-    line-height: 1.334;
-    padding: 0;
-    text-align: left;
-    width: 100%;
-}
-
-.ticket-details-title:hover {
-    color: var(--mud-palette-primary);
-}
-
-.ticket-details-title:disabled {
-    cursor: default;
-}
-
 .ticket-details-header ::deep .ticket-details-title-editor {
     border: 1px solid transparent;
     border-radius: var(--mud-default-borderradius);
@@ -91,6 +68,90 @@
     padding-inline: 0.75rem;
 }
 
+.ticket-comments {
+    margin-top: 2rem;
+    width: 66.6667%;
+}
+
+.ticket-comments-heading {
+    margin-bottom: 1rem;
+}
+
+.ticket-comments-empty {
+    margin-bottom: 1.5rem;
+}
+
+.ticket-comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.ticket-comment {
+    min-width: 0;
+}
+
+.ticket-comment-header {
+    align-items: center;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: space-between;
+    margin-bottom: 0.25rem;
+}
+
+.ticket-comment-meta {
+    color: var(--mud-palette-text-secondary);
+}
+
+.ticket-comment-actions {
+    align-items: center;
+    display: flex;
+    flex: 0 0 auto;
+    gap: 0.125rem;
+}
+
+.ticket-comment-content {
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.ticket-comment-content ::deep p {
+    margin-block: 0 0.5rem;
+}
+
+.ticket-comment-content ::deep p:last-child {
+    margin-bottom: 0;
+}
+
+.ticket-comment-content ::deep a {
+    color: var(--mud-palette-primary);
+}
+
+.ticket-comment-deleted ::deep .ticket-comment-meta,
+.ticket-comment-deleted .ticket-comment-content {
+    color: var(--mud-palette-error) !important;
+    text-decoration: line-through;
+}
+
+.ticket-comment-deleted .ticket-comment-actions ::deep .mud-icon-root {
+    color: var(--mud-palette-text-primary);
+}
+.ticket-comment-editor {
+    width: 100%;
+}
+
+.ticket-add-comment {
+    margin-top: 2rem;
+}
+
+.ticket-add-comment-heading {
+    margin-bottom: 0.5rem;
+}
+
+.ticket-add-comment-editor {
+    width: 100%;
+}
+
 .ticket-details-actions {
     display: flex;
     gap: 0.75rem;
@@ -128,6 +189,10 @@
     .ticket-details-metadata {
         width: 100%;
     }
+
+    .ticket-comments {
+        width: 100%;
+    }
 }
 
 @media (max-width: 599.98px) {
@@ -142,6 +207,10 @@
 
     .ticket-details-header {
         margin-bottom: 1.5rem;
+    }
+
+    .ticket-comment-header {
+        align-items: flex-start;
     }
 
     .ticket-details-actions {
