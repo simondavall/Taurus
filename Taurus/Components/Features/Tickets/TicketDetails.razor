@@ -18,7 +18,9 @@ else if (!string.IsNullOrWhiteSpace(_loadError))
 }
 else if (Editor is not null)
 {
-    <MudForm @ref="_form">
+    <MudForm @ref="_form"
+             Model="@Editor"
+             Validation="@(_validator.ValidateValueAsync)">
         <div class="ticket-details-page">
             <main class="ticket-details-main">
                 <header class="ticket-details-header">
@@ -29,15 +31,13 @@ else if (Editor is not null)
                     </MudText>
 
                     <MudTextField T="string"
+                                  @bind-Value="Editor.Title"
+                                  For="@(() => Editor.Title)"
                                   Typo="Typo.h4"
-                                  Value="@Editor.Title"
-                                  ValueChanged="TitleChanged"
                                   Variant="Variant.Text"
                                   Underline="false"
                                   Margin="Margin.Dense"
                                   Immediate="true"
-                                  Error="@(!string.IsNullOrWhiteSpace(_titleError))"
-                                  ErrorText="@_titleError"
                                   Disabled="@_saving"
                                   Sizing="InputSizing.Auto"
                                   Class="ticket-details-title-editor"
@@ -64,6 +64,8 @@ else if (Editor is not null)
 
                     <MudTextField T="string"
                                   @bind-Value="Editor.Description"
+                                  For="@(() => Editor.Description)"
+                                  Immediate="true"
                                   Variant="Variant.Text"
                                   Underline="false"
                                   Lines="4"

@@ -165,7 +165,10 @@ Users can inspect, create and update tickets.
 
 ## Milestone 3.3 – Ticket Editing
 
-- Review and standardise editor validation.
+- ✓ Review and standardise editor validation.
+- Implement Sub Tasks
+- Enforce ticket completion restrictions
+- Enforce 'fixed in release'
 - Display related information.
 - Support navigation between tickets.
 - Assign tickets.

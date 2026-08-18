@@ -47,7 +47,6 @@ public partial class TicketDetails
     private bool _saving;
     private string? _loadError;
     private string? _updateError;
-    private string? _titleError;
     private string? NewComment { get; set; }
 
     private string ProjectTitle =>
@@ -61,7 +60,6 @@ public partial class TicketDetails
         _loading = true;
         _loadError = null;
         _updateError = null;
-        _titleError = null;
         NewComment = null;
 
         try
@@ -157,17 +155,6 @@ public partial class TicketDetails
             ParentTicketId = ticket.ParentTicketId,
             AssignedTo = ticket.AssignedTo
         };
-    }
-
-    private void TitleChanged(string? value)
-    {
-        if (Editor is null)
-        {
-            return;
-        }
-
-        Editor.Title = value ?? string.Empty;
-        _titleError = null;
     }
 
     private void EditComment(CommentEditorModel comment)
@@ -266,7 +253,9 @@ public partial class TicketDetails
 
         _updateError = null;
 
-        if (!await ValidateAsync())
+        await _form!.ValidateAsync();
+
+        if (!_form.IsValid)
         {
             return;
         }
@@ -355,22 +344,6 @@ public partial class TicketDetails
             NewComment!.Trim());
 
         return await TicketCommentService.CreateCommentAsync(request, userId);
-    }
-
-    private async Task<bool> ValidateAsync()
-    {
-        if (Editor is null)
-        {
-            return false;
-        }
-
-        var validationResult = await _validator.ValidateAsync(Editor);
-
-        _titleError = validationResult.Errors
-            .FirstOrDefault(error => error.PropertyName == nameof(TicketEditorModel.Title))
-            ?.ErrorMessage;
-
-        return validationResult.IsValid;
     }
 
     private async Task<Guid> GetCurrentUserIdAsync()

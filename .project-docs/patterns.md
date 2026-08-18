@@ -75,6 +75,21 @@
 - Place interaction logic in the corresponding `.razor.cs` file.
 - Simple components without behaviour may remain as a single Razor file.
 
+## Interactive Editor Validation
+
+- Use `MudForm` for interactive MudBlazor editor forms.
+- Use FluentValidation validators for editor-model validation.
+- Implement the shared `IMudValidator<T>` interface on validators used by MudBlazor editor forms.
+- Pass the editor model to `MudForm.Model`.
+- Pass `IMudValidator<T>.ValidateValueAsync` to `MudForm.Validation`.
+- Associate validated MudBlazor fields with their model properties using `For`.
+- Implement `ValidateValueAsync` by validating only the requested property through FluentValidation `IncludeProperties`.
+- Before persistence, explicitly call `MudForm.ValidateAsync()` and continue only when `MudForm.IsValid`.
+- Allow MudBlazor to present field-level validation errors rather than manually mapping FluentValidation errors into component-specific error state.
+- Keep validation rules in the feature-owned FluentValidation validator rather than in the Razor component or code-behind.
+- Keep validation rules specific to each editor; sharing the MudBlazor integration mechanism does not require sharing or generalising individual validation rules.
+- Do not introduce a common validator base class solely to remove the small `IMudValidator<T>` integration implementation from individual validators.
+
 ## Feature Listings
 
 - Use MudBlazor tables for tabular feature listings.
