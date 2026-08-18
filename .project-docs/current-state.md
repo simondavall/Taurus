@@ -13,10 +13,12 @@ where development should continue.
 
 # Current task
 
-- Review and standardise editor validation.
+- Implement Sub Tasks
 
 # Remaining milestone tasks
 
+- Enforce ticket completion restrictions
+- Enforce 'fixed in release'
 - Display related information.
 - Support navigation between tickets.
 - Assign tickets.
@@ -358,3 +360,13 @@ where development should continue.
 - Verified ticket creation across desktop, tablet and mobile layouts.
 - Completed Create tickets.
 - Completed Milestone 3.2 – Ticket Details.
+- Reviewed interactive editor validation across the Projects and Tickets features.
+- Standardised MudBlazor editor validation on the shared `IMudValidator<T>` FluentValidation integration.
+- Used `MudForm.Model` and `MudForm.Validation` to connect editor models to FluentValidation validators.
+- Standardised field-level validation through `IMudValidator<T>.ValidateValueAsync`.
+- Standardised explicit form validation before persistence using `MudForm.ValidateAsync()` and `MudForm.IsValid`.
+- Removed manual Ticket Details validation and field-error mapping.
+- Applied the shared validation pattern to Project Create/Edit, Ticket Create and Ticket Details/Edit.
+- Preserved the existing validation rules and user-visible validation behaviour.
+- Established the shared MudBlazor editor validation pattern.
+- Completed Standardise MudBlazor editor validation.

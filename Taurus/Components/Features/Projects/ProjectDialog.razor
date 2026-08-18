@@ -2,7 +2,7 @@
     <DialogContent>
         <MudForm @ref="_form"
                  Model="@Model"
-                 Validation="@(_validator.ValidateValue)">
+                 Validation="@(_validator.ValidateValueAsync)">
             <MudStack Spacing="3">
                 @if (IsEdit)
                 {
