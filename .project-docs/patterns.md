@@ -99,6 +99,21 @@
 - Use `MudTableSortLabel` for sortable columns.
 - Configure an explicit initial sort where the feature has a natural default ordering.
 
+## Ticket State Presentation
+
+- Resolve ticket behaviour from stable PegasusApi reference-data codes rather than numeric lookup identifiers or display titles.
+- Use `TicketReferenceIds` to resolve the known ticket status and priority codes into the current PegasusApi identifiers.
+- Keep the complete set of Taurus-owned ticket reference semantics together in `TicketReferenceIds`, even when an individual consumer uses only part of the set.
+- Use `TicketPresentation` for deterministic ticket presentation rules shared across multiple ticket views.
+- Use the shared age presentation for ticket listings, comments and sub-task listings.
+- Treat Completed and Obsolete tickets as inactive for presentation while preserving normal navigation and interaction.
+- Use `TicketStateIndicators` wherever the standard ticket priority and status indicators are required.
+- Display High and Critical priority using the established lightning indicator with fixed high-contrast amber and red colours.
+- Display In Progress and On Hold using the established status indicators with theme-based colours.
+- Allow priority and status indicators to appear simultaneously.
+- Keep the surrounding ticket-row layout within the owning presentation rather than introducing a generic ticket-row component.
+- Extract shared ticket presentation only where repeated implementations demonstrate identical behaviour; retain workflow and layout differences in their owning pages.
+
 ## Responsive Layout
 
 - Use `MudBreakpointProvider` to adapt the shared application shell to the current viewport.

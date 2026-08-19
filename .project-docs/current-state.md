@@ -13,11 +13,10 @@ where development should continue.
 
 # Current task
 
-- Implement Sub Tasks
+- Enforce ticket completion restrictions
 
 # Remaining milestone tasks
 
-- Enforce ticket completion restrictions
 - Enforce 'fixed in release'
 - Display related information.
 - Support navigation between tickets.
@@ -370,3 +369,22 @@ where development should continue.
 - Preserved the existing validation rules and user-visible validation behaviour.
 - Established the shared MudBlazor editor validation pattern.
 - Completed Standardise MudBlazor editor validation.
+- Implemented ticket sub-task relationships.
+- Extended ticket creation to support an optional parent ticket reference.
+- Added Add Sub Task to ticket details using the existing ticket creation dialog.
+- Automatically supplied the current ticket RefId as the parent when creating a sub-task.
+- Navigated directly to newly created sub-tasks after successful creation.
+- Extended ticket retrieval to support direct sub-task lookup using the PegasusApi ParentRef query option.
+- Loaded and displayed direct sub-tasks on the ticket details page.
+- Displayed sub-task RefId, title and last-updated age.
+- Added navigation from sub-task rows to their ticket details pages.
+- Displayed the parent ticket title when a ticket has a parent.
+- Added direct navigation from a sub-task to its parent ticket.
+- Applied the established ticket priority, status and inactive-state presentation to sub-task listings.
+- Preserved interaction with completed and obsolete sub-tasks while displaying them using muted inactive styling.
+- Refactored repeated ticket reference-data resolution into `TicketReferenceIds`.
+- Centralised shared ticket age and inactive-state presentation rules in `TicketPresentation`.
+- Extracted the repeated priority and status indicator presentation into `TicketStateIndicators`.
+- Reused the shared ticket state presentation across desktop ticket listings, mobile ticket listings and sub-task listings.
+- Verified ticket creation, sub-task creation, parent/sub-task navigation, ticket state presentation and existing ticket editing workflows.
+- Completed Implement Sub Tasks.
