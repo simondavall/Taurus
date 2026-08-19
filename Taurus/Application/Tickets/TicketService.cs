@@ -163,7 +163,7 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
                 TypeId = request.TypeId,
                 PriorityId = request.PriorityId,
                 FixedInRelease = request.FixedInRelease,
-                ParentTicketId = request.ParentTicketId,
+                ParentTicketRef = request.ParentTicketRef,
                 AssignedTo = request.AssignedTo,
                 UserId = userId
             };
@@ -224,7 +224,7 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
             ticket.TypeId,
             ticket.PriorityId,
             ticket.FixedInRelease,
-            ticket.ParentTicketId,
+            ticket.ParentTicketRef,
             ticket.AssignedTo);
     }
 }

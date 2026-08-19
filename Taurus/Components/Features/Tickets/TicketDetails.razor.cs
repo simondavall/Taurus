@@ -152,7 +152,7 @@ public partial class TicketDetails
             TypeId = ticket.TypeId,
             PriorityId = ticket.PriorityId,
             FixedInRelease = ticket.FixedInRelease,
-            ParentTicketId = ticket.ParentTicketId,
+            ParentTicketRef = ticket.ParentTicketRef,
             AssignedTo = ticket.AssignedTo
         };
     }
@@ -319,7 +319,7 @@ public partial class TicketDetails
             Editor.TypeId,
             Editor.PriorityId,
             Editor.FixedInRelease,
-            Editor.ParentTicketId,
+            Editor.ParentTicketRef,
             Editor.AssignedTo);
 
         return TicketService.UpdateTicketAsync(request, userId);

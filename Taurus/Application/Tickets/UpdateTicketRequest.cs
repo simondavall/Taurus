@@ -9,5 +9,5 @@ public sealed record UpdateTicketRequest(
     int TypeId,
     int PriorityId,
     string? FixedInRelease,
-    Guid? ParentTicketId,
+    string? ParentTicketRef,
     Guid? AssignedTo);

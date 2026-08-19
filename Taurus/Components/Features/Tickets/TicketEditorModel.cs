@@ -11,6 +11,6 @@ public sealed class TicketEditorModel
     public int TypeId { get; set; }
     public int PriorityId { get; set; }
     public string? FixedInRelease { get; set; }
-    public Guid? ParentTicketId { get; set; }
+    public string? ParentTicketRef { get; set; }
     public Guid? AssignedTo { get; set; }
 }
