@@ -9,6 +9,7 @@ namespace Taurus.Application.Tickets;
 public interface ITicketService
 {
     Task<IReadOnlyList<Ticket>> GetTicketsAsync(Guid? projectId = null);
+    Task<IReadOnlyList<Ticket>> GetSubTasksAsync(string parentTicketRef);
     Task<ApplicationResult<TicketDetails>> GetTicketByRefAsync(string ticketRef);
     Task<ApplicationResult<TicketDetails>> CreateTicketAsync(CreateTicketRequest request, Guid userId);
     Task<ApplicationResult> UpdateTicketAsync(UpdateTicketRequest request, Guid userId);
@@ -42,6 +43,43 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
         catch (Exception exception)
         {
             logger.LogError(exception, "Failed to retrieve tickets from PegasusApi for project {ProjectId}", projectId);
+            throw;
+        }
+    }
+
+    public async Task<IReadOnlyList<Ticket>> GetSubTasksAsync(string parentTicketRef)
+    {
+        logger.LogInformation("Retrieving sub tasks for ticket {ParentTicketRef} from PegasusApi", parentTicketRef);
+
+        try
+        {
+            var escapedParentTicketRef = Uri.EscapeDataString(parentTicketRef);
+            var response = await httpClient.GetFromJsonAsync<TicketsResponse>(
+                $"api/tickets?ParentRef={escapedParentTicketRef}");
+
+            if (response is null)
+            {
+                throw new InvalidOperationException("PegasusApi returned an empty sub tasks response.");
+            }
+
+            var tickets = response.Items
+                .Select(MapTicket)
+                .ToArray();
+
+            logger.LogInformation(
+                "Retrieved {TicketCount} sub tasks for ticket {ParentTicketRef} from PegasusApi",
+                tickets.Length,
+                parentTicketRef);
+
+            return tickets;
+        }
+        catch (Exception exception)
+        {
+            logger.LogError(
+                exception,
+                "Failed to retrieve sub tasks for ticket {ParentTicketRef} from PegasusApi",
+                parentTicketRef);
+
             throw;
         }
     }
@@ -102,6 +140,7 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
                 StatusId = request.StatusId,
                 TypeId = request.TypeId,
                 PriorityId = request.PriorityId,
+                ParentTicketRef = request.ParentTicketRef,
                 UserId = userId
             };
 
@@ -147,7 +186,7 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
             throw;
         }
     }
-    
+
     public async Task<ApplicationResult> UpdateTicketAsync(UpdateTicketRequest request, Guid userId)
     {
         logger.LogInformation("Updating ticket {TicketId} in PegasusApi", request.Id);
@@ -178,10 +217,12 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
 
             if (response.StatusCode is HttpStatusCode.BadRequest or HttpStatusCode.NotFound)
             {
-                var errorMessage = await PegasusApiFailureReader.ReadAsync(response,
+                var errorMessage = await PegasusApiFailureReader.ReadAsync(
+                    response,
                     "The ticket could not be updated because PegasusApi rejected the supplied details.");
 
-                logger.LogWarning("PegasusApi rejected update of ticket {TicketId} with status code {StatusCode}", 
+                logger.LogWarning(
+                    "PegasusApi rejected update of ticket {TicketId} with status code {StatusCode}",
                     request.Id,
                     (int)response.StatusCode);
 
@@ -195,7 +236,6 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
         catch (Exception exception)
         {
             logger.LogError(exception, "Failed to update ticket {TicketId} in PegasusApi", request.Id);
-
             throw;
         }
     }
@@ -209,7 +249,7 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
             ticket.StatusId,
             ticket.TypeId,
             ticket.PriorityId,
-            ticket.LastModified);
+            AsUtc(ticket.LastModified));
     }
 
     private static TicketDetails MapTicketDetails(TicketResponse ticket)
@@ -226,5 +266,12 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
             ticket.FixedInRelease,
             ticket.ParentTicketRef,
             ticket.AssignedTo);
+    }
+    
+    private static DateTimeOffset AsUtc(DateTimeOffset value)
+    {
+        return value.Offset == TimeSpan.Zero
+            ? value
+            : new DateTimeOffset(value.DateTime, TimeSpan.Zero);
     }
 }

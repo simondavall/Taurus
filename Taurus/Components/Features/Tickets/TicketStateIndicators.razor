@@ -1,0 +1,66 @@
+﻿@using Taurus.Application.Tickets
+
+<div class="ticket-indicator">
+    @if (Ticket.PriorityId == ReferenceIds.HighPriorityId ||
+         Ticket.PriorityId == ReferenceIds.CriticalPriorityId)
+    {
+        var priority = TicketPriorities.First(priority =>
+            priority.Id == Ticket.PriorityId);
+
+        <MudTooltip Text="@priority.Title">
+            <MudIcon Icon="@Icons.Material.Filled.Bolt"
+                     Size="Size.Small"
+                     Class="@GetPriorityClass()"/>
+        </MudTooltip>
+    }
+</div>
+
+<div class="ticket-indicator">
+    @if (Ticket.StatusId == ReferenceIds.InProgressStatusId ||
+         Ticket.StatusId == ReferenceIds.OnHoldStatusId)
+    {
+        var status = TicketStatuses.First(status =>
+            status.Id == Ticket.StatusId);
+
+        <MudTooltip Text="@status.Title">
+            <MudIcon Icon="@GetStatusIcon()"
+                     Size="Size.Small"
+                     Color="@GetStatusColor()"/>
+        </MudTooltip>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public Ticket Ticket { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public TicketReferenceIds ReferenceIds { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<TicketStatus> TicketStatuses { get; set; } = [];
+
+    [Parameter, EditorRequired]
+    public IReadOnlyList<TicketPriority> TicketPriorities { get; set; } = [];
+
+    private string GetPriorityClass()
+    {
+        return Ticket.PriorityId == ReferenceIds.CriticalPriorityId
+            ? "ticket-priority-critical"
+            : "ticket-priority-high";
+    }
+
+    private string GetStatusIcon()
+    {
+        return Ticket.StatusId == ReferenceIds.InProgressStatusId
+            ? Icons.Material.Filled.PlayArrow
+            : Icons.Material.Filled.Pause;
+    }
+
+    private Color GetStatusColor()
+    {
+        return Ticket.StatusId == ReferenceIds.InProgressStatusId
+            ? Color.Info
+            : Color.Warning;
+    }
+}

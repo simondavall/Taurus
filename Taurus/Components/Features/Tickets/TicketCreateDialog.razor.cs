@@ -30,6 +30,9 @@ public partial class TicketCreateDialog
     [Parameter, EditorRequired]
     public IReadOnlyList<TicketStatus> TicketStatuses { get; set; } = [];
 
+    [Parameter]
+    public string? ParentTicketRef { get; set; }
+
     private readonly TicketCreateEditorValidator _validator = new();
 
     private MudForm _form = default!;
@@ -93,7 +96,8 @@ public partial class TicketCreateDialog
                 Project.Id,
                 Model.StatusId,
                 Model.TypeId,
-                Model.PriorityId);
+                Model.PriorityId,
+                ParentTicketRef);
 
             var result = await TicketService.CreateTicketAsync(request, userId);
 

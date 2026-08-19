@@ -68,7 +68,8 @@
     padding-inline: 0.75rem;
 }
 
-.ticket-comments {
+.ticket-comments,
+.ticket-subtasks {
     margin-top: 2rem;
     width: 66.6667%;
 }
@@ -152,11 +153,76 @@
     width: 100%;
 }
 
+.ticket-subtasks-heading {
+    margin-bottom: 1rem;
+}
+
+.ticket-subtasks-list {
+    border: 1px solid var(--mud-palette-divider);
+    border-radius: var(--mud-default-borderradius);
+    overflow: hidden;
+}
+
+.ticket-subtask-row {
+    align-items: center;
+    border-bottom: 1px solid var(--mud-palette-divider);
+    cursor: pointer;
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: 4.5rem 1.5rem 1.5rem minmax(0, 1fr) 7rem;
+    min-height: 2.5rem;
+    padding: 0.5rem 0.75rem;
+}
+
+.ticket-inactive {
+    opacity: 0.38;
+}
+
+.ticket-parent {
+    padding: 0 0.75rem;
+}
+
+.ticket-subtask-row:last-child {
+    border-bottom: 0;
+}
+
+.ticket-subtask-row:hover {
+    background: var(--mud-palette-action-default-hover);
+}
+
+.ticket-subtask-row:focus-visible {
+    outline: 2px solid var(--mud-palette-primary);
+    outline-offset: -2px;
+}
+
+.ticket-subtask-ref,
+.ticket-subtask-age {
+    white-space: nowrap;
+}
+
+.ticket-subtask-title {
+    min-width: 0;
+}
+
+.ticket-subtask-age {
+    text-align: right;
+}
+
+.ticket-parent {
+    padding-inline: 0.75rem;
+}
+
 .ticket-details-actions {
+    align-items: center;
     display: flex;
     gap: 0.75rem;
-    justify-content: flex-end;
+    justify-content: space-between;
     margin-top: 1.5rem;
+}
+
+.ticket-details-save-actions {
+    display: flex;
+    gap: 0.75rem;
 }
 
 .ticket-details-metadata {
@@ -190,7 +256,8 @@
         width: 100%;
     }
 
-    .ticket-comments {
+    .ticket-comments,
+    .ticket-subtasks {
         width: 100%;
     }
 }
@@ -214,10 +281,31 @@
     }
 
     .ticket-details-actions {
-        justify-content: stretch;
+        align-items: stretch;
+        flex-direction: column;
     }
 
-    .ticket-details-actions ::deep .mud-button-root {
+    .ticket-details-save-actions {
+        display: flex;
+        width: 100%;
+    }
+
+    .ticket-details-save-actions ::deep .mud-button-root {
         flex: 1 1 0;
+    }
+
+    .ticket-subtask-row {
+        gap: 0.25rem;
+        grid-template-columns: auto 1.5rem 1.5rem minmax(0, 1fr);
+    }
+
+    .ticket-subtask-age {
+        grid-column: 4;
+        text-align: left;
+    }
+
+    .ticket-subtask-age {
+        grid-column: 2;
+        text-align: left;
     }
 }

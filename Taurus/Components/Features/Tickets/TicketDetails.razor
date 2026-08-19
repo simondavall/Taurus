@@ -42,6 +42,21 @@ else if (Editor is not null)
                                   Sizing="InputSizing.Auto"
                                   Class="ticket-details-title-editor"
                                   aria-label="Ticket title"/>
+                    
+                    @if (ParentTicket is not null)
+                    {
+                        <div class="ticket-parent">
+                            <MudText Typo="Typo.caption"
+                                     Color="Color.Secondary">
+                                Parent
+                            </MudText>
+
+                            <MudLink Href="@($"/tickets/{Uri.EscapeDataString(ParentTicket.TicketRef)}")"
+                                     Typo="Typo.body2">
+                                @ParentTicket.TicketRef - @ParentTicket.Title
+                            </MudLink>
+                        </div>
+                    }
                 </header>
 
                 @if (!string.IsNullOrWhiteSpace(_updateError))
@@ -77,23 +92,16 @@ else if (Editor is not null)
 
                 <section class="ticket-comments"
                          aria-labelledby="ticket-comments-heading">
-                    <MudText Typo="Typo.h6"
-                             HtmlTag="h2"
-                             id="ticket-comments-heading"
-                             Class="ticket-comments-heading">
-                        Comments
-                    </MudText>
-
-                    @if (Comments.Count == 0)
+                    
+                    @if (Comments.Count > 0)
                     {
-                        <MudText Typo="Typo.body2"
-                                 Color="Color.Secondary"
-                                 Class="ticket-comments-empty">
-                            No comments
+                        <MudText Typo="Typo.h6"
+                                 HtmlTag="h2"
+                                 id="ticket-comments-heading"
+                                 Class="ticket-comments-heading">
+                            Comments
                         </MudText>
-                    }
-                    else
-                    {
+                        
                         <div class="ticket-comments-list">
                             @foreach (var comment in Comments)
                             {
@@ -102,7 +110,7 @@ else if (Editor is not null)
                                         <MudText Typo="Typo.caption"
                                                  Color="Color.Secondary"
                                                  Class="ticket-comment-meta">
-                                            @FormatCommentAge(comment.LastModified) by @comment.DisplayName
+                                            @FormatAge(comment.LastModified) by @comment.DisplayName
                                         </MudText>
 
                                         <div class="ticket-comment-actions">
@@ -190,26 +198,83 @@ else if (Editor is not null)
                     </div>
                 </section>
 
+                @if (SubTasks.Count > 0)
+                {
+                    
+                    <section class="ticket-subtasks"
+                             aria-labelledby="ticket-subtasks-heading">
+                        <MudText Typo="Typo.h6"
+                                 HtmlTag="h2"
+                                 id="ticket-subtasks-heading"
+                                 Class="ticket-subtasks-heading">
+                            Sub Tasks
+                        </MudText>
+                    
+                        <div class="ticket-subtasks-list">
+                            @foreach (var subTask in SubTasks)
+                            {
+                                <div class="@GetSubTaskClass(subTask)"
+                                     role="link"
+                                     tabindex="0"
+                                     @onclick="() => OpenSubTask(subTask)"
+                                     @onkeydown="args => SubTaskKeyDown(args, subTask)">
+
+                                    <MudText Typo="Typo.body2"
+                                             Class="ticket-subtask-ref">
+                                        @subTask.TicketRef
+                                    </MudText>
+
+                                    <TicketStateIndicators Ticket="@subTask"
+                                                           ReferenceIds="@ReferenceIds"
+                                                           TicketStatuses="@TicketStatuses"
+                                                           TicketPriorities="@TicketPriorities"/>
+
+                                    <MudText Typo="Typo.body2"
+                                             Class="ticket-subtask-title">
+                                        @subTask.Title
+                                    </MudText>
+
+                                    <MudText Typo="Typo.caption"
+                                             Color="Color.Secondary"
+                                             Class="ticket-subtask-age">
+                                        @FormatAge(subTask.LastModified)
+                                    </MudText>
+                                </div>
+                            }
+                        </div>
+                    </section>
+                }
+
                 <div class="ticket-details-actions">
-                    <MudButton Variant="Variant.Text"
-                               Disabled="@_saving"
-                               OnClick="Cancel">
-                        Cancel
-                    </MudButton>
-
-                    <MudButton Variant="Variant.Filled"
+                    <MudButton Variant="Variant.Outlined"
                                Color="Color.Primary"
-                               Disabled="@_saving"
-                               OnClick="UpdateAsync">
-                        @if (_saving)
-                        {
-                            <MudProgressCircular Indeterminate="true"
-                                                 Size="Size.Small"
-                                                 Class="mr-2"/>
-                        }
-
-                        Update
+                               StartIcon="@Icons.Material.Filled.Add"
+                               Disabled="@(_saving || CurrentProject is null)"
+                               OnClick="AddSubTaskAsync">
+                        Add Sub Task
                     </MudButton>
+
+                    <div class="ticket-details-save-actions">
+                        <MudButton Variant="Variant.Text"
+                                   Disabled="@_saving"
+                                   OnClick="Cancel">
+                            Cancel
+                        </MudButton>
+
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   Disabled="@_saving"
+                                   OnClick="UpdateAsync">
+                            @if (_saving)
+                            {
+                                <MudProgressCircular Indeterminate="true"
+                                                     Size="Size.Small"
+                                                     Class="mr-2"/>
+                            }
+
+                            Update
+                        </MudButton>
+                    </div>
                 </div>
             </main>
 
@@ -226,6 +291,18 @@ else if (Editor is not null)
                               ReadOnly="true"
                               Variant="Variant.Outlined"
                               Margin="Margin.Dense"/>
+
+                @if (ParentTicket is not null)
+                {
+                    <MudText Typo="Typo.body2"
+                             Class="ticket-parent">
+                        Parent:
+                        <MudLink Href="@($"/tickets/{Uri.EscapeDataString(ParentTicket.TicketRef)}")"
+                                 Typo="Typo.body2">
+                            @ParentTicket.Title
+                        </MudLink>
+                    </MudText>
+                }
 
                 <MudSelect T="int"
                            Label="Type"

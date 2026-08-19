@@ -6,4 +6,5 @@ public sealed record CreateTicketRequest(
     Guid ProjectId,
     int StatusId,
     int TypeId,
-    int PriorityId);
+    int PriorityId,
+    string? ParentTicketRef = null);

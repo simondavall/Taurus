@@ -39,13 +39,7 @@ public partial class Tickets
     private Guid SelectedProjectListValue => SelectedProjectId ?? AllProjectsId;
     private TicketFilter SelectedTicketFilter { get; set; } = TicketFilter.Open;
 
-    private int CompletedStatusId { get; set; }
-    private int ObsoleteStatusId { get; set; }
-    private int BacklogStatusId { get; set; }
-    private int InProgressStatusId { get; set; }
-    private int OnHoldStatusId { get; set; }
-    private int HighPriorityId { get; set; }
-    private int CriticalPriorityId { get; set; }
+    private TicketReferenceIds ReferenceIds { get; set; } = default!;
 
     private string SelectedProjectTitle =>
         SelectedProjectId.HasValue
@@ -110,14 +104,7 @@ public partial class Tickets
         TicketPriorities = await TicketReferenceDataService.GetPrioritiesAsync();
         TicketTypes = await TicketReferenceDataService.GetTypesAsync();
 
-        CompletedStatusId = ResolveRequiredStatusId(TicketReferenceCodes.Status.Completed);
-        ObsoleteStatusId = ResolveRequiredStatusId(TicketReferenceCodes.Status.Obsolete);
-        BacklogStatusId = ResolveRequiredStatusId(TicketReferenceCodes.Status.Backlog);
-        InProgressStatusId = ResolveRequiredStatusId(TicketReferenceCodes.Status.InProgress);
-        OnHoldStatusId = ResolveRequiredStatusId(TicketReferenceCodes.Status.OnHold);
-
-        HighPriorityId = ResolveRequiredPriorityId(TicketReferenceCodes.Priority.High);
-        CriticalPriorityId = ResolveRequiredPriorityId(TicketReferenceCodes.Priority.Critical);
+        ReferenceIds = TicketReferenceIds.Resolve(TicketStatuses, TicketPriorities);
     }
 
     private async Task RestoreSelectedProjectAsync()
@@ -235,143 +222,39 @@ public partial class Tickets
         return SelectedTicketFilter switch
         {
             TicketFilter.Open => tickets.Where(ticket =>
-                ticket.StatusId != CompletedStatusId &&
-                ticket.StatusId != ObsoleteStatusId),
+                ticket.StatusId != ReferenceIds.CompletedStatusId &&
+                ticket.StatusId != ReferenceIds.ObsoleteStatusId),
 
             TicketFilter.Backlog => tickets.Where(ticket =>
-                ticket.StatusId == BacklogStatusId),
+                ticket.StatusId == ReferenceIds.BacklogStatusId),
 
             TicketFilter.HighPriority => tickets.Where(ticket =>
-                ticket.PriorityId == HighPriorityId ||
-                ticket.PriorityId == CriticalPriorityId),
+                ticket.PriorityId == ReferenceIds.HighPriorityId ||
+                ticket.PriorityId == ReferenceIds.CriticalPriorityId),
 
             TicketFilter.Obsolete => tickets.Where(ticket =>
-                ticket.StatusId == ObsoleteStatusId),
+                ticket.StatusId == ReferenceIds.ObsoleteStatusId),
 
             _ => tickets
         };
     }
 
-    private int ResolveRequiredStatusId(string code)
-    {
-        var status = TicketStatuses.FirstOrDefault(status =>
-            string.Equals(status.Code, code, StringComparison.OrdinalIgnoreCase));
-
-        if (status is null)
-        {
-            throw new InvalidOperationException(
-                $"PegasusApi ticket status '{code}' is required by Taurus but was not returned.");
-        }
-
-        return status.Id;
-    }
-
-    private int ResolveRequiredPriorityId(string code)
-    {
-        var priority = TicketPriorities.FirstOrDefault(priority =>
-            string.Equals(priority.Code, code, StringComparison.OrdinalIgnoreCase));
-
-        if (priority is null)
-        {
-            throw new InvalidOperationException(
-                $"PegasusApi ticket priority '{code}' is required by Taurus but was not returned.");
-        }
-
-        return priority.Id;
-    }
-
     private string GetTicketClass(Ticket ticket)
     {
-        return IsInactiveTicket(ticket)
+        return TicketPresentation.IsInactive(ticket, ReferenceIds)
             ? "ticket-row ticket-inactive"
             : "ticket-row";
     }
 
     private string GetMobileTicketClass(Ticket ticket)
     {
-        return IsInactiveTicket(ticket)
+        return TicketPresentation.IsInactive(ticket, ReferenceIds)
             ? "mobile-ticket ticket-inactive"
             : "mobile-ticket";
     }
 
-    private bool IsInactiveTicket(Ticket ticket)
-    {
-        return ticket.StatusId == CompletedStatusId
-               || ticket.StatusId == ObsoleteStatusId;
-    }
-
-    private string? GetPriorityIndicatorIcon(Ticket ticket)
-    {
-        if (ticket.PriorityId == HighPriorityId ||
-            ticket.PriorityId == CriticalPriorityId)
-        {
-            return Icons.Material.Filled.Bolt;
-        }
-
-        return null;
-    }
-    
-    private string GetPriorityIndicatorClass(Ticket ticket)
-    {
-        return ticket.PriorityId == CriticalPriorityId
-            ? "ticket-priority-critical"
-            : "ticket-priority-high";
-    }
-
-    private string? GetStatusIndicatorIcon(Ticket ticket)
-    {
-        if (ticket.StatusId == InProgressStatusId)
-        {
-            return Icons.Material.Filled.PlayArrow;
-        }
-
-        if (ticket.StatusId == OnHoldStatusId)
-        {
-            return Icons.Material.Filled.Pause;
-        }
-
-        return null;
-    }
-
-    private Color GetStatusIndicatorColor(Ticket ticket)
-    {
-        return ticket.StatusId == InProgressStatusId
-            ? Color.Info
-            : Color.Warning;
-    }
-    
     private static string FormatLastUpdated(DateTimeOffset lastModified)
     {
-        var elapsed = DateTimeOffset.Now - lastModified.ToLocalTime();
-
-        if (elapsed < TimeSpan.Zero)
-        {
-            return "just now";
-        }
-
-        if (elapsed.TotalMinutes < 1)
-        {
-            return "just now";
-        }
-
-        if (elapsed.TotalHours < 1)
-        {
-            var minutes = Math.Max(1, (int)elapsed.TotalMinutes);
-            return $"{minutes} min{(minutes == 1 ? string.Empty : "s")} ago";
-        }
-
-        if (elapsed.TotalDays < 1)
-        {
-            var hours = Math.Max(1, (int)elapsed.TotalHours);
-            return $"{hours} hr{(hours == 1 ? string.Empty : "s")} ago";
-        }
-
-        if (elapsed.TotalDays < 7)
-        {
-            var days = Math.Max(1, (int)elapsed.TotalDays);
-            return $"{days} day{(days == 1 ? string.Empty : "s")} ago";
-        }
-
-        return lastModified.ToLocalTime().ToString("dd MMM yyyy");
+        return TicketPresentation.FormatAge(lastModified);
     }
 }
