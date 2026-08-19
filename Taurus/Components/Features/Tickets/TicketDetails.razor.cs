@@ -7,6 +7,7 @@ using Taurus.Application;
 using Taurus.Application.Markdown;
 using Taurus.Application.Projects;
 using Taurus.Application.Tickets;
+using Taurus.Components.Features.Shared;
 using Severity = MudBlazor.Severity;
 
 namespace Taurus.Components.Features.Tickets;
@@ -30,6 +31,8 @@ public partial class TicketDetails
     private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
     [Inject]
     private NavigationManager NavigationManager { get; set; } = default!;
+    [Inject]
+    private INavigationHistoryService NavigationHistoryService { get; set; } = default!;
     [Inject]
     private IDialogService DialogService { get; set; } = default!;
     [Inject]
@@ -432,6 +435,11 @@ public partial class TicketDetails
                 }
             }
 
+            if (IsClosedTicket() && NavigationHistoryService.TryNavigateBack())
+            {
+                return;
+            }
+
             await ReloadPageDataAsync();
 
             if (Editor is not null)
@@ -520,6 +528,13 @@ public partial class TicketDetails
         return userId;
     }
 
+    private bool IsClosedTicket()
+    {
+        return Editor is not null &&
+               (Editor.StatusId == ReferenceIds.CompletedStatusId ||
+                Editor.StatusId == ReferenceIds.ObsoleteStatusId);
+    }
+    
     private string GetSubTaskClass(Ticket ticket)
     {
         return TicketPresentation.IsInactive(ticket, ReferenceIds)
