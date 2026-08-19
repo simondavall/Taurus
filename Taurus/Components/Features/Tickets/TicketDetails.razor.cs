@@ -57,6 +57,7 @@ public partial class TicketDetails
     private bool _saving;
     private string? _loadError;
     private string? _updateError;
+    private bool _descriptionEditing;
     private string? NewComment { get; set; }
 
 
@@ -73,6 +74,7 @@ public partial class TicketDetails
         _loading = true;
         _loadError = null;
         _updateError = null;
+        _descriptionEditing = false;
         ValidationBannerMessages = [];
         NewComment = null;
 
@@ -222,6 +224,8 @@ public partial class TicketDetails
             ParentTicketRef = ticket.ParentTicketRef,
             AssignedTo = ticket.AssignedTo
         };
+        
+        _descriptionEditing = string.IsNullOrWhiteSpace(ticket.Description);
     }
 
     private void EditComment(CommentEditorModel comment)
@@ -274,6 +278,29 @@ public partial class TicketDetails
         return MarkdownRenderer.Render(content);
     }
 
+    private string RenderDescription()
+    {
+        return MarkdownRenderer.Render(Editor?.Description);
+    }
+
+    private void EditDescription()
+    {
+        if (_saving)
+        {
+            return;
+        }
+
+        _descriptionEditing = true;
+    }
+
+    private void DescriptionKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Key is "Enter" or " ")
+        {
+            EditDescription();
+        }
+    }
+    
     private static string GetCommentClass(CommentEditorModel comment)
     {
         return comment.IsDeleted

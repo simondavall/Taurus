@@ -75,6 +75,17 @@
 - Place interaction logic in the corresponding `.razor.cs` file.
 - Simple components without behaviour may remain as a single Razor file.
 
+## Markdown Content
+
+- Render user-authored Markdown through the shared `IMarkdownRenderer`.
+- Keep Markdown rendering and HTML sanitisation within the shared application Markdown/HTML boundary rather than performing conversion directly in feature components.
+- Treat the original Markdown source as the editable and persisted value.
+- Render the sanitised HTML only for display; never replace the editor model value with generated HTML.
+- Use plain-text editors for Markdown authoring unless a richer editing experience is explicitly introduced as a separate design decision.
+- Keep Markdown display and editing as distinct presentation states where content is editable in place.
+- Preserve normal editor validation against the original Markdown source.
+- Reuse consistent Markdown typography and link presentation across user-authored Markdown content where appropriate.
+
 ## Interactive Editor Validation
 
 - Use `MudForm` for interactive MudBlazor editor forms.

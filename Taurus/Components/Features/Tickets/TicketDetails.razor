@@ -92,17 +92,31 @@ else if (Editor is not null)
                         Description
                     </MudText>
 
-                    <MudTextField T="string"
-                                  @bind-Value="Editor.Description"
-                                  For="@(() => Editor.Description)"
-                                  Immediate="true"
-                                  Variant="Variant.Text"
-                                  Underline="false"
-                                  Lines="4"
-                                  Sizing="InputSizing.Auto"
-                                  Disabled="@_saving"
-                                  Class="ticket-description-editor"
-                                  aria-label="Ticket description"/>
+                    @if (_descriptionEditing)
+                    {
+                        <MudTextField T="string"
+                                      @bind-Value="Editor.Description"
+                                      For="@(() => Editor.Description)"
+                                      Immediate="true"
+                                      Variant="Variant.Text"
+                                      Underline="false"
+                                      Lines="4"
+                                      Sizing="InputSizing.Auto"
+                                      Disabled="@_saving"
+                                      Class="ticket-description-editor"
+                                      aria-label="Ticket description"/>
+                    }
+                    else
+                    {
+                        <div class="ticket-description-content"
+                             role="button"
+                             tabindex="0"
+                             aria-label="Edit ticket description"
+                             @onclick="EditDescription"
+                             @onkeydown="DescriptionKeyDown">
+                            @((MarkupString)RenderDescription())
+                        </div>
+                    }
                 </section>
 
                 <section class="ticket-comments"

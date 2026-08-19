@@ -13,11 +13,10 @@ where development should continue.
 
 # Current task
 
-- Display description as mark-down.
+- Return to referer after ticket closure.
 
 # Remaining milestone tasks
 
-- Return to referer after ticket closure.
 - Display related information.
 - Support navigation between tickets.
 - Assign tickets.
@@ -412,3 +411,21 @@ where development should continue.
 - Preserved the active-sub-task completion restriction when Fixed In Release enforcement is disabled.
 - Verified enabled, disabled and missing-configuration behaviour together with existing ticket validation and editing workflows.
 - Completed Enforce 'fixed in release'.
+- Added configurable enforcement of Fixed In Release when completing tickets.
+- Added `Tickets:RequireFixedInReleaseForCompletion` application configuration with enforcement enabled by default.
+- Prevented tickets from being completed without a Fixed In Release value when enforcement is enabled.
+- Presented the Fixed In Release completion restriction through the established editor-level validation banner.
+- Allowed independent completion restrictions to report simultaneously.
+- Verified enabled, disabled and missing-configuration behaviour.
+- Completed Enforce 'fixed in release'.
+- Added Markdown presentation for ticket descriptions.
+- Reused the existing `IMarkdownRenderer` and HTML sanitisation boundary established for ticket comments.
+- Displayed ticket descriptions as rendered Markdown when not being edited.
+- Switched rendered descriptions to the existing plain-text editor for editing.
+- Preserved the original Markdown source as the editable and persisted description value.
+- Preserved field-level Description validation.
+- Returned descriptions to rendered Markdown after successful ticket updates.
+- Kept empty descriptions directly editable so required-field validation remains accessible.
+- Added keyboard-accessible description editing from the rendered presentation.
+- Verified Markdown rendering, plain-text editing, sanitisation, validation and existing ticket workflows.
+- Completed Display description as mark-down.
