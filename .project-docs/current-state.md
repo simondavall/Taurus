@@ -13,11 +13,12 @@ where development should continue.
 
 # Current task
 
-- Enforce 'fixed in release'
+- Display description as mark-down.
 
 # Remaining milestone tasks
 
-- Display description as mark-down.
+- Return to referer after ticket closure.
+- Display related information.
 - Support navigation between tickets.
 - Assign tickets.
 - Verify existing Pegasus behaviour preserved.
@@ -400,3 +401,14 @@ where development should continue.
 - Preserved field-level validation messages for property-specific failures such as required Title and Description.
 - Verified ticket completion restrictions, field validation, banner validation, dismissal behaviour and existing ticket workflows.
 - Completed Enforce ticket completion restrictions.
+- Added configurable enforcement of Fixed In Release when completing tickets.
+- Added `Tickets:RequireFixedInReleaseForCompletion` application configuration with enforcement enabled by default.
+- Defaulted Fixed In Release completion enforcement to enabled when the configuration value is absent.
+- Prevented tickets from being updated as Completed without a Fixed In Release value when enforcement is enabled.
+- Kept Fixed In Release optional when updating tickets to Obsolete or other non-Completed statuses.
+- Added the Fixed In Release completion restriction to `TicketEditorValidator`.
+- Presented Fixed In Release completion failures through the established editor-level validation banner.
+- Allowed the Fixed In Release and active-sub-task completion restrictions to report independently and simultaneously.
+- Preserved the active-sub-task completion restriction when Fixed In Release enforcement is disabled.
+- Verified enabled, disabled and missing-configuration behaviour together with existing ticket validation and editing workflows.
+- Completed Enforce 'fixed in release'.

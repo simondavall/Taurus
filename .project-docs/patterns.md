@@ -90,6 +90,8 @@
 - Use full-model FluentValidation when validation depends on the wider editor or related domain state.
 - Mark editor-level validation failures requiring general user feedback using FluentValidation custom state rather than assigning them artificially to an individual field.
 - Present editor-level validation failures in a validation banner.
+- Allow multiple independent editor-level validation rules to contribute messages to the same validation banner.
+- Keep independent editor-level rules separate in the validator so each rule can succeed or fail independently and applicable failures can be presented simultaneously.
 - Allow the validation banner to be dismissed as a presentation action only; dismissal must not alter validation state or suppress the rule on subsequent validation.
 - Before persistence, explicitly call `MudForm.ValidateAsync()` and perform any required full-model validation.
 - Continue only when both field-level and full-model validation succeed.

@@ -6,10 +6,14 @@ namespace Taurus.Components.Features.Tickets;
 public sealed class TicketEditorValidator : AbstractValidator<TicketEditorModel>, IMudValidator<TicketEditorModel>
 {
     private readonly TicketReferenceIds _referenceIds;
+    private readonly bool _requireFixedInReleaseForCompletion;
 
-    public TicketEditorValidator(TicketReferenceIds referenceIds)
+    public TicketEditorValidator(
+        TicketReferenceIds referenceIds,
+        bool requireFixedInReleaseForCompletion)
     {
         _referenceIds = referenceIds;
+        _requireFixedInReleaseForCompletion = requireFixedInReleaseForCompletion;
 
         RuleFor(ticket => ticket.Title)
             .NotEmpty()
@@ -22,6 +26,11 @@ public sealed class TicketEditorValidator : AbstractValidator<TicketEditorModel>
         RuleFor(ticket => ticket)
             .Must(CanCloseTicket)
             .WithMessage("This ticket cannot be closed, it has active sub tasks.")
+            .WithState(_ => TicketValidationPresentation.Banner);
+
+        RuleFor(ticket => ticket)
+            .Must(CanCompleteTicket)
+            .WithMessage("This ticket cannot be completed, Fixed In Release is required.")
             .WithState(_ => TicketValidationPresentation.Banner);
     }
 
@@ -38,12 +47,30 @@ public sealed class TicketEditorValidator : AbstractValidator<TicketEditorModel>
                && ticket.StatusId != _referenceIds.ObsoleteStatusId;
     }
 
+    private bool CanCompleteTicket(TicketEditorModel ticket)
+    {
+        if (!_requireFixedInReleaseForCompletion)
+        {
+            return true;
+        }
+
+        if (ticket.StatusId != _referenceIds.CompletedStatusId)
+        {
+            return true;
+        }
+
+        return !string.IsNullOrWhiteSpace(ticket.FixedInRelease);
+    }
+
     private async Task<IEnumerable<string>> ValidatePropertyAsync(object model, string propertyName)
     {
         var context = ValidationContext<TicketEditorModel>
-            .CreateWithOptions((TicketEditorModel)model, options => options.IncludeProperties(propertyName));
+            .CreateWithOptions(
+                (TicketEditorModel)model,
+                options => options.IncludeProperties(propertyName));
 
         var result = await ValidateAsync(context);
+
         return result.Errors.Select(error => error.ErrorMessage);
     }
 }

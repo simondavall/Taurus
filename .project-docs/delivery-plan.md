@@ -168,8 +168,10 @@ Users can inspect, create and update tickets.
 - ✓ Review and standardise editor validation.
 - ✓ Implement Sub Tasks
 - ✓ Enforce ticket completion restrictions
-- Enforce 'fixed in release'
+- ✓ Enforce 'fixed in release'
 - Display description as mark-down.
+- Return to referer after ticket closure.
+- Display related information.
 - Support navigation between tickets.
 - Assign tickets.
 - Verify existing Pegasus behaviour preserved.

@@ -33,6 +33,8 @@ public partial class TicketDetails
     [Inject]
     private IDialogService DialogService { get; set; } = default!;
     [Inject]
+    private IConfiguration Configuration { get; set; } = default!;
+    [Inject]
     private ISnackbar Snackbar { get; set; } = default!;
 
     private TicketEditorValidator _validator = default!;
@@ -104,8 +106,9 @@ public partial class TicketDetails
         TicketPriorities = await prioritiesTask;
         TicketTypes = await typesTask;
 
+        var requireFixedInReleaseForCompletion = Configuration.GetValue("Tickets:RequireFixedInReleaseForCompletion", true);
         ReferenceIds = TicketReferenceIds.Resolve(TicketStatuses, TicketPriorities);
-        _validator = new TicketEditorValidator(ReferenceIds);
+        _validator = new TicketEditorValidator(ReferenceIds, requireFixedInReleaseForCompletion);
         
         var ticketResult = await ticketTask;
         if (!ticketResult.Succeeded || ticketResult.Value is null)
