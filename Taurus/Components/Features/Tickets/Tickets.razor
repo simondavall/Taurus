@@ -51,33 +51,10 @@
                         @ticket.TicketRef
                     </MudText>
 
-                    <div class="ticket-indicator"
-                         title="@(ticket.PriorityId == CriticalPriorityId
-                                    ? "Critical priority"
-                                    : ticket.PriorityId == HighPriorityId
-                                        ? "High priority"
-                                        : null)">
-                        @if (GetPriorityIndicatorIcon(ticket) is { } priorityIcon)
-                        {
-                            <MudIcon Icon="@priorityIcon"
-                                     Size="Size.Small"
-                                     Class="@GetPriorityIndicatorClass(ticket)"/>
-                        }
-                    </div>
-
-                    <div class="ticket-indicator"
-                         title="@(ticket.StatusId == InProgressStatusId
-                                    ? "In Progress"
-                                    : ticket.StatusId == OnHoldStatusId
-                                        ? "On Hold"
-                                        : null)">
-                        @if (GetStatusIndicatorIcon(ticket) is { } statusIcon)
-                        {
-                            <MudIcon Icon="@statusIcon"
-                                     Color="@GetStatusIndicatorColor(ticket)"
-                                     Size="Size.Small"/>
-                        }
-                    </div>
+                    <TicketStateIndicators Ticket="@ticket"
+                                           ReferenceIds="@ReferenceIds"
+                                           TicketStatuses="@TicketStatuses"
+                                           TicketPriorities="@TicketPriorities"/>
 
                     <MudText Typo="Typo.body2"
                              Class="ticket-title">
@@ -109,33 +86,10 @@
                                 @ticket.TicketRef
                             </MudText>
 
-                            <div class="ticket-indicator"
-                                 title="@(ticket.PriorityId == CriticalPriorityId
-                                            ? "Critical priority"
-                                            : ticket.PriorityId == HighPriorityId
-                                                ? "High priority"
-                                                : null)">
-                                @if (GetPriorityIndicatorIcon(ticket) is { } priorityIcon)
-                                {
-                                    <MudIcon Icon="@priorityIcon"
-                                             Size="Size.Small"
-                                             Class="@GetPriorityIndicatorClass(ticket)"/>
-                                }
-                            </div>
-
-                            <div class="ticket-indicator"
-                                 title="@(ticket.StatusId == InProgressStatusId
-                                            ? "In Progress"
-                                            : ticket.StatusId == OnHoldStatusId
-                                                ? "On Hold"
-                                                : null)">
-                                @if (GetStatusIndicatorIcon(ticket) is { } statusIcon)
-                                {
-                                    <MudIcon Icon="@statusIcon"
-                                             Color="@GetStatusIndicatorColor(ticket)"
-                                             Size="Size.Small"/>
-                                }
-                            </div>
+                            <TicketStateIndicators Ticket="@ticket"
+                                                   ReferenceIds="@ReferenceIds"
+                                                   TicketStatuses="@TicketStatuses"
+                                                   TicketPriorities="@TicketPriorities"/>
                         </div>
 
                         <MudText Typo="Typo.caption"

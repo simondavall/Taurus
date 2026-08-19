@@ -80,23 +80,6 @@
     opacity: 0.38;
 }
 
-.ticket-indicator {
-    align-items: center;
-    display: flex;
-    flex: 0 0 1.5rem;
-    height: 1.5rem;
-    justify-content: center;
-    width: 1.5rem;
-}
-
-::deep .ticket-priority-high {
-    color: #ffc107;
-}
-
-::deep .ticket-priority-critical {
-    color: #ff0000;
-}
-
 .mobile-ticket-list {
     overflow: hidden;
 }

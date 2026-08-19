@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using Taurus.Application;
 using Taurus.Application.Markdown;
@@ -30,6 +31,8 @@ public partial class TicketDetails
     [Inject]
     private NavigationManager NavigationManager { get; set; } = default!;
     [Inject]
+    private IDialogService DialogService { get; set; } = default!;
+    [Inject]
     private ISnackbar Snackbar { get; set; } = default!;
 
     private readonly TicketEditorValidator _validator = new();
@@ -41,8 +44,12 @@ public partial class TicketDetails
     private IReadOnlyList<TicketStatus> TicketStatuses { get; set; } = [];
     private IReadOnlyList<TicketPriority> TicketPriorities { get; set; } = [];
     private IReadOnlyList<TicketType> TicketTypes { get; set; } = [];
+    private IReadOnlyList<Ticket> SubTasks { get; set; } = [];
     private List<CommentEditorModel> Comments { get; set; } = [];
+    private Application.Tickets.TicketDetails? ParentTicket { get; set; }
 
+    private TicketReferenceIds ReferenceIds { get; set; } = default!;
+    
     private bool _loading;
     private bool _saving;
     private string? _loadError;
@@ -50,10 +57,12 @@ public partial class TicketDetails
     private string? NewComment { get; set; }
 
     private string ProjectTitle =>
+        CurrentProject?.Title ?? "Unknown project";
+
+    private Project? CurrentProject =>
         Editor is null
-            ? string.Empty
-            : Projects.FirstOrDefault(project => project.Id == Editor.ProjectId)?.Title
-              ?? "Unknown project";
+            ? null
+            : Projects.FirstOrDefault(project => project.Id == Editor.ProjectId);
 
     protected override async Task OnParametersSetAsync()
     {
@@ -92,17 +101,18 @@ public partial class TicketDetails
         TicketPriorities = await prioritiesTask;
         TicketTypes = await typesTask;
 
+        ReferenceIds = TicketReferenceIds.Resolve(TicketStatuses, TicketPriorities);
+        
         var ticketResult = await ticketTask;
         if (!ticketResult.Succeeded || ticketResult.Value is null)
         {
-            Editor = null;
-            Comments = [];
+            ClearTicketData();
             _loadError = ticketResult.ErrorMessage ?? "The ticket could not be loaded.";
             return;
         }
 
         SetEditor(ticketResult.Value);
-        await LoadCommentsAsync(ticketResult.Value.Id);
+        await LoadRelatedTicketDataAsync(ticketResult.Value);
     }
 
     private async Task ReloadPageDataAsync()
@@ -110,15 +120,52 @@ public partial class TicketDetails
         var ticketResult = await TicketService.GetTicketByRefAsync(TicketRef);
         if (!ticketResult.Succeeded || ticketResult.Value is null)
         {
-            Editor = null;
-            Comments = [];
+            ClearTicketData();
             _loadError = ticketResult.ErrorMessage ?? "The ticket could not be reloaded.";
             return;
         }
 
         SetEditor(ticketResult.Value);
-        await LoadCommentsAsync(ticketResult.Value.Id);
+        await LoadRelatedTicketDataAsync(ticketResult.Value);
         NewComment = null;
+    }
+
+    private async Task LoadRelatedTicketDataAsync(Application.Tickets.TicketDetails ticket)
+    {
+        var commentsTask = LoadCommentsAsync(ticket.Id);
+        var subTasksTask = TicketService.GetSubTasksAsync(ticket.TicketRef);
+
+        Task<ApplicationResult<Application.Tickets.TicketDetails>>? parentTask = null;
+
+        if (!string.IsNullOrWhiteSpace(ticket.ParentTicketRef))
+        {
+            parentTask = TicketService.GetTicketByRefAsync(ticket.ParentTicketRef);
+        }
+
+        if (parentTask is null)
+        {
+            await Task.WhenAll(commentsTask, subTasksTask);
+        }
+        else
+        {
+            await Task.WhenAll(commentsTask, subTasksTask, parentTask);
+        }
+
+        SubTasks = (await subTasksTask)
+            .OrderByDescending(subTask => subTask.LastModified)
+            .ToArray();
+
+        ParentTicket = null;
+
+        if (parentTask is not null)
+        {
+            var parentResult = await parentTask;
+
+            if (parentResult.Succeeded && parentResult.Value is not null)
+            {
+                ParentTicket = parentResult.Value;
+            }
+        }
     }
 
     private async Task LoadCommentsAsync(Guid ticketId)
@@ -139,6 +186,14 @@ public partial class TicketDetails
             .ToList();
     }
 
+    private void ClearTicketData()
+    {
+        Editor = null;
+        ParentTicket = null;
+        SubTasks = [];
+        Comments = [];
+    }
+
     private void SetEditor(Application.Tickets.TicketDetails ticket)
     {
         Editor = new TicketEditorModel
@@ -152,7 +207,7 @@ public partial class TicketDetails
             TypeId = ticket.TypeId,
             PriorityId = ticket.PriorityId,
             FixedInRelease = ticket.FixedInRelease,
-            ParentTicketId = ticket.ParentTicketId,
+            ParentTicketRef = ticket.ParentTicketRef,
             AssignedTo = ticket.AssignedTo
         };
     }
@@ -214,34 +269,80 @@ public partial class TicketDetails
             : "ticket-comment";
     }
 
-    private static string FormatCommentAge(DateTimeOffset lastModified)
+    private static string FormatAge(DateTimeOffset lastModified)
     {
-        var elapsed = DateTimeOffset.UtcNow - lastModified.ToUniversalTime();
+        return TicketPresentation.FormatAge(lastModified);
+    }
 
-        if (elapsed < TimeSpan.Zero || elapsed.TotalMinutes < 1)
+    private async Task AddSubTaskAsync()
+    {
+        if (Editor is null || CurrentProject is null || _saving)
         {
-            return "just now";
+            return;
         }
 
-        if (elapsed.TotalHours < 1)
+        var parameters = new DialogParameters
         {
-            var minutes = Math.Max(1, (int)elapsed.TotalMinutes);
-            return $"{minutes} min{(minutes == 1 ? string.Empty : "s")} ago";
+            [nameof(TicketCreateDialog.Project)] = CurrentProject,
+            [nameof(TicketCreateDialog.TicketTypes)] = TicketTypes,
+            [nameof(TicketCreateDialog.TicketPriorities)] = TicketPriorities,
+            [nameof(TicketCreateDialog.TicketStatuses)] = TicketStatuses,
+            [nameof(TicketCreateDialog.ParentTicketRef)] = Editor.TicketRef
+        };
+
+        var dialog = await DialogService.ShowAsync<TicketCreateDialog>(
+            $"Create Sub Task — {CurrentProject.Title}",
+            parameters,
+            CreateTicketDialogOptions());
+
+        var result = await dialog.Result;
+
+        if (result is null ||
+            result.Canceled ||
+            result.Data is not Application.Tickets.TicketDetails ticket)
+        {
+            return;
         }
 
-        if (elapsed.TotalDays < 1)
-        {
-            var hours = Math.Max(1, (int)elapsed.TotalHours);
-            return $"{hours} hr{(hours == 1 ? string.Empty : "s")} ago";
-        }
+        Snackbar.Add($"Ticket {ticket.TicketRef} created successfully.", Severity.Success);
+        NavigateToTicket(ticket.TicketRef);
+    }
 
-        if (elapsed.TotalDays < 7)
+    private static DialogOptions CreateTicketDialogOptions()
+    {
+        return new DialogOptions
         {
-            var days = Math.Max(1, (int)elapsed.TotalDays);
-            return $"{days} day{(days == 1 ? string.Empty : "s")} ago";
-        }
+            FullWidth = true,
+            MaxWidth = MaxWidth.Small,
+            CloseOnEscapeKey = true
+        };
+    }
 
-        return lastModified.ToLocalTime().ToString("dd MMM yyyy");
+    private void OpenSubTask(Ticket ticket)
+    {
+        NavigateToTicket(ticket.TicketRef);
+    }
+
+    private void SubTaskKeyDown(KeyboardEventArgs args, Ticket ticket)
+    {
+        if (args.Key is "Enter" or " ")
+        {
+            OpenSubTask(ticket);
+        }
+    }
+
+    private void NavigateToParent()
+    {
+        if (ParentTicket is not null)
+        {
+            NavigateToTicket(ParentTicket.TicketRef);
+        }
+    }
+
+    private void NavigateToTicket(string ticketRef)
+    {
+        NavigationManager.NavigateTo(
+            $"/tickets/{Uri.EscapeDataString(ticketRef)}");
     }
 
     private async Task UpdateAsync()
@@ -319,7 +420,7 @@ public partial class TicketDetails
             Editor.TypeId,
             Editor.PriorityId,
             Editor.FixedInRelease,
-            Editor.ParentTicketId,
+            Editor.ParentTicketRef,
             Editor.AssignedTo);
 
         return TicketService.UpdateTicketAsync(request, userId);
@@ -361,6 +462,13 @@ public partial class TicketDetails
         return userId;
     }
 
+    private string GetSubTaskClass(Ticket ticket)
+    {
+        return TicketPresentation.IsInactive(ticket, ReferenceIds)
+            ? "ticket-subtask-row ticket-inactive"
+            : "ticket-subtask-row";
+    }
+    
     private void Cancel()
     {
         NavigationManager.NavigateTo("/tickets");
