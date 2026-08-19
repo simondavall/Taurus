@@ -5,7 +5,11 @@
 # Features
 
 # Enhancements
+Set up releases for projects and replace the fixed in release text with drop down
 
 # Technical Debt
+- Move configuiration references to their own class. Verify all settings exist. 
+E.g replace "Configuration.GetValue("Tickets:RequireFixedInReleaseForCompletion", true);" 
+with something like Configuration.GetValue(Constants.Config.Tickets.RequireFixedInReleaseForCompletion, true);
 
 # Nice-to-have
