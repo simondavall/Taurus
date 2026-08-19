@@ -13,11 +13,10 @@ where development should continue.
 
 # Current task
 
-- Return to referer after ticket closure.
+- Display related information.
 
 # Remaining milestone tasks
 
-- Display related information.
 - Support navigation between tickets.
 - Assign tickets.
 - Verify existing Pegasus behaviour preserved.
@@ -429,3 +428,15 @@ where development should continue.
 - Added keyboard-accessible description editing from the rendered presentation.
 - Verified Markdown rendering, plain-text editing, sanitisation, validation and existing ticket workflows.
 - Completed Display description as mark-down.
+- Added Taurus-owned internal navigation history for the current Interactive Server circuit.
+- Added a scoped `INavigationHistoryService` and `NavigationHistoryService`.
+- Initialised navigation tracking at the application routing level.
+- Tracked Taurus routes independently of HTTP referrer and browser-history state.
+- Implemented logical navigation-stack behaviour so returning to a previous Taurus page removes the closed page from application navigation history.
+- Returned successfully Completed and Obsolete tickets to the immediately preceding Taurus page when one is available.
+- Returned tickets opened from the ticket listing to the ticket listing after closure.
+- Returned sub-tasks opened from parent tickets to the originating parent ticket after closure.
+- Preserved the existing Ticket Details behaviour when no previous Taurus route is available.
+- Preserved the existing update workflow for non-closing ticket updates.
+- Verified nested ticket navigation, direct navigation, validation failures, persistence failures and existing ticket workflows.
+- Completed Return to referer after ticket closure.

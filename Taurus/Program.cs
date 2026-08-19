@@ -10,6 +10,7 @@ using MudBlazor.Services;
 using Serilog;
 using Taurus.Application;
 using Taurus.Components;
+using Taurus.Components.Features.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -101,6 +102,8 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddMudServices();
+builder.Services.AddScoped<INavigationHistoryService, NavigationHistoryService>();
+
 builder.Services.AddTaurusApplication(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
 

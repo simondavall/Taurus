@@ -170,7 +170,7 @@ Users can inspect, create and update tickets.
 - ✓ Enforce ticket completion restrictions
 - ✓ Enforce 'fixed in release'
 - ✓ Display description as mark-down.
-- Return to referer after ticket closure.
+- ✓ Return to referer after ticket closure.
 - Display related information.
 - Support navigation between tickets.
 - Assign tickets.
