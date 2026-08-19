@@ -35,8 +35,9 @@ public partial class TicketDetails
     [Inject]
     private ISnackbar Snackbar { get; set; } = default!;
 
-    private readonly TicketEditorValidator _validator = new();
-
+    private TicketEditorValidator _validator = default!;
+    private IReadOnlyList<string> ValidationBannerMessages { get; set; } = [];
+    
     private MudForm? _form;
     private TicketEditorModel? Editor { get; set; }
 
@@ -56,6 +57,7 @@ public partial class TicketDetails
     private string? _updateError;
     private string? NewComment { get; set; }
 
+
     private string ProjectTitle =>
         CurrentProject?.Title ?? "Unknown project";
 
@@ -69,6 +71,7 @@ public partial class TicketDetails
         _loading = true;
         _loadError = null;
         _updateError = null;
+        ValidationBannerMessages = [];
         NewComment = null;
 
         try
@@ -102,6 +105,7 @@ public partial class TicketDetails
         TicketTypes = await typesTask;
 
         ReferenceIds = TicketReferenceIds.Resolve(TicketStatuses, TicketPriorities);
+        _validator = new TicketEditorValidator(ReferenceIds);
         
         var ticketResult = await ticketTask;
         if (!ticketResult.Succeeded || ticketResult.Value is null)
@@ -127,7 +131,9 @@ public partial class TicketDetails
 
         SetEditor(ticketResult.Value);
         await LoadRelatedTicketDataAsync(ticketResult.Value);
+
         NewComment = null;
+        ValidationBannerMessages = [];
     }
 
     private async Task LoadRelatedTicketDataAsync(Application.Tickets.TicketDetails ticket)
@@ -154,6 +160,8 @@ public partial class TicketDetails
         SubTasks = (await subTasksTask)
             .OrderByDescending(subTask => subTask.LastModified)
             .ToArray();
+
+        Editor?.HasActiveSubTasks = SubTasks.Any(subTask => !TicketPresentation.IsInactive(subTask, ReferenceIds));
 
         ParentTicket = null;
 
@@ -192,6 +200,7 @@ public partial class TicketDetails
         ParentTicket = null;
         SubTasks = [];
         Comments = [];
+        ValidationBannerMessages = [];
     }
 
     private void SetEditor(Application.Tickets.TicketDetails ticket)
@@ -353,10 +362,9 @@ public partial class TicketDetails
         }
 
         _updateError = null;
+        ValidationBannerMessages = [];
 
-        await _form!.ValidateAsync();
-
-        if (!_form.IsValid)
+        if (!await ValidateEditorAsync())
         {
             return;
         }
@@ -438,6 +446,26 @@ public partial class TicketDetails
         return TicketCommentService.UpdateCommentsAsync(comments);
     }
 
+    private async Task<bool> ValidateEditorAsync()
+    {
+        await _form!.ValidateAsync();
+
+        var validationResult = await _validator.ValidateAsync(Editor!);
+
+        ValidationBannerMessages = validationResult.Errors
+            .Where(error => error.CustomState is TicketValidationPresentation.Banner)
+            .Select(error => error.ErrorMessage)
+            .Distinct()
+            .ToArray();
+
+        return _form.IsValid && validationResult.IsValid;
+    }
+    
+    private void DismissValidationBanner()
+    {
+        ValidationBannerMessages = [];
+    }
+    
     private async Task<ApplicationResult<TicketComment>> CreateCommentAsync(Guid userId)
     {
         var request = new CreateTicketCommentRequest(

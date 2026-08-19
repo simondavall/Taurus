@@ -84,11 +84,21 @@
 - Pass `IMudValidator<T>.ValidateValueAsync` to `MudForm.Validation`.
 - Associate validated MudBlazor fields with their model properties using `For`.
 - Implement `ValidateValueAsync` by validating only the requested property through FluentValidation `IncludeProperties`.
-- Before persistence, explicitly call `MudForm.ValidateAsync()` and continue only when `MudForm.IsValid`.
-- Allow MudBlazor to present field-level validation errors rather than manually mapping FluentValidation errors into component-specific error state.
 - Keep validation rules in the feature-owned FluentValidation validator rather than in the Razor component or code-behind.
-- Keep validation rules specific to each editor; sharing the MudBlazor integration mechanism does not require sharing or generalising individual validation rules.
+- Use property rules for validation failures that belong to a specific field.
+- Allow MudBlazor to present field-level validation errors rather than manually mapping FluentValidation errors into component-specific error state.
+- Use full-model FluentValidation when validation depends on the wider editor or related domain state.
+- Mark editor-level validation failures requiring general user feedback using FluentValidation custom state rather than assigning them artificially to an individual field.
+- Present editor-level validation failures in a validation banner.
+- Allow the validation banner to be dismissed as a presentation action only; dismissal must not alter validation state or suppress the rule on subsequent validation.
+- Before persistence, explicitly call `MudForm.ValidateAsync()` and perform any required full-model validation.
+- Continue only when both field-level and full-model validation succeed.
+- Re-run full-model validation before persistence so unresolved banner-level failures prevent the operation and are redisplayed when necessary.
+- Keep operational and API failures separate from validation failures even when both are presented prominently in the editor.
+- Validation-only context may be carried by the editor model when required to make the validator deterministic, but must not be included in persistence requests unless it represents genuine persisted state.
+- Keep validation rules specific to each editor; sharing the MudBlazor integration and validation-presentation mechanisms does not require sharing or generalising individual validation rules.
 - Do not introduce a common validator base class solely to remove the small `IMudValidator<T>` integration implementation from individual validators.
+- Reuse the established field-level and editor-level validation mechanisms for subsequent rules rather than introducing page-specific validation approaches.
 
 ## Feature Listings
 

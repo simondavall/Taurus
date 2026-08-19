@@ -13,4 +13,6 @@ public sealed class TicketEditorModel
     public string? FixedInRelease { get; set; }
     public string? ParentTicketRef { get; set; }
     public Guid? AssignedTo { get; set; }
+
+    public bool HasActiveSubTasks { get; set; }
 }
