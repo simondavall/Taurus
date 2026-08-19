@@ -244,6 +244,10 @@
     min-height: 20rem;
 }
 
+.ticket-validation-banner {
+    margin-bottom: 1.5rem;
+}
+
 @media (max-width: 959.98px) {
     .ticket-details-page {
         display: flex;

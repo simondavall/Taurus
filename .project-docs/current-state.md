@@ -13,12 +13,11 @@ where development should continue.
 
 # Current task
 
-- Enforce ticket completion restrictions
+- Enforce 'fixed in release'
 
 # Remaining milestone tasks
 
-- Enforce 'fixed in release'
-- Display related information.
+- Display description as mark-down.
 - Support navigation between tickets.
 - Assign tickets.
 - Verify existing Pegasus behaviour preserved.
@@ -388,3 +387,16 @@ where development should continue.
 - Reused the shared ticket state presentation across desktop ticket listings, mobile ticket listings and sub-task listings.
 - Verified ticket creation, sub-task creation, parent/sub-task navigation, ticket state presentation and existing ticket editing workflows.
 - Completed Implement Sub Tasks.
+- Enforced the existing Pegasus ticket completion restriction for active sub-tasks.
+- Defined active sub-tasks as direct sub-tasks whose status is neither Completed nor Obsolete.
+- Prevented tickets with active sub-tasks from being updated as Completed or Obsolete.
+- Kept completion restrictions within `TicketEditorValidator` rather than disabling status choices in the editor.
+- Extended ticket editor validation to distinguish field-level validation failures from editor-level validation failures.
+- Added banner validation presentation metadata using FluentValidation custom state.
+- Added non-editable validation context to `TicketEditorModel` for active sub-task state.
+- Added a validation failure banner to the ticket header for editor-level validation failures.
+- Made the validation banner dismissible without suppressing or changing the underlying validation rule.
+- Re-ran full editor validation on each update so dismissed validation failures are redisplayed when still applicable.
+- Preserved field-level validation messages for property-specific failures such as required Title and Description.
+- Verified ticket completion restrictions, field validation, banner validation, dismissal behaviour and existing ticket workflows.
+- Completed Enforce ticket completion restrictions.
