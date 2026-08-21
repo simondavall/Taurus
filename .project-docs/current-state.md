@@ -13,11 +13,10 @@ where development should continue.
 
 # Current task
 
-- Display related information.
+- Detect ticket links in description and comments.
 
 # Remaining milestone tasks
 
-- Support navigation between tickets.
 - Assign tickets.
 - Verify existing Pegasus behaviour preserved.
 
