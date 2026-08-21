@@ -15,7 +15,10 @@ public interface ITicketService
     Task<ApplicationResult> UpdateTicketAsync(UpdateTicketRequest request, Guid userId);
 }
 
-public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> logger) : ITicketService
+public sealed class TicketService(
+    HttpClient httpClient,
+    ILogger<TicketService> logger,
+    ITicketReferenceLinker ticketReferenceLinker) : ITicketService
 {
     public async Task<IReadOnlyList<Ticket>> GetTicketsAsync(Guid? projectId = null)
     {
@@ -129,13 +132,15 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
     public async Task<ApplicationResult<TicketDetails>> CreateTicketAsync(CreateTicketRequest request, Guid userId)
     {
         logger.LogInformation("Creating ticket in PegasusApi for project {ProjectId}", request.ProjectId);
-
+        
+        var description = await ticketReferenceLinker.LinkTicketReferencesAsync(request.Description);
+        
         try
         {
             var apiRequest = new PegasusCreateTicketRequest
             {
                 Title = request.Title,
-                Description = request.Description,
+                Description = description,
                 ProjectId = request.ProjectId,
                 StatusId = request.StatusId,
                 TypeId = request.TypeId,
@@ -191,12 +196,14 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
     {
         logger.LogInformation("Updating ticket {TicketId} in PegasusApi", request.Id);
 
+        var description = await ticketReferenceLinker.LinkTicketReferencesAsync(request.Description);
+        
         try
         {
             var apiRequest = new PegasusUpdateTicketRequest
             {
                 Title = request.Title,
-                Description = request.Description,
+                Description = description,
                 ProjectId = request.ProjectId,
                 StatusId = request.StatusId,
                 TypeId = request.TypeId,

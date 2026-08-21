@@ -14,7 +14,10 @@ public interface ITicketCommentService
     Task<ApplicationResult<TicketComment>> CreateCommentAsync(CreateTicketCommentRequest request, Guid userId);
 }
 
-public sealed class TicketCommentService(HttpClient httpClient, ILogger<TicketCommentService> logger) : ITicketCommentService
+public sealed class TicketCommentService(
+    HttpClient httpClient,
+    ILogger<TicketCommentService> logger,
+    ITicketReferenceLinker ticketReferenceLinker) : ITicketCommentService
 {
     public async Task<IReadOnlyList<TicketComment>> GetCommentsAsync(Guid ticketId)
     {
@@ -52,16 +55,23 @@ public sealed class TicketCommentService(HttpClient httpClient, ILogger<TicketCo
 
         try
         {
+            var apiComments = new List<PegasusUpdateCommentRequest>(comments.Count);
+
+            foreach (var comment in comments)
+            {
+                var content = await ticketReferenceLinker.LinkTicketReferencesAsync(comment.Content);
+
+                apiComments.Add(new PegasusUpdateCommentRequest
+                {
+                    Id = comment.Id,
+                    Content = content!,
+                    IsDeleted = comment.IsDeleted
+                });
+            }
+
             var apiRequest = new PegasusUpdateCommentsRequest
             {
-                Comments = comments
-                    .Select(comment => new PegasusUpdateCommentRequest
-                    {
-                        Id = comment.Id,
-                        Content = comment.Content,
-                        IsDeleted = comment.IsDeleted
-                    })
-                    .ToList()
+                Comments = apiComments
             };
 
             using var response = await httpClient.PutAsJsonAsync("api/comments", apiRequest);
@@ -100,10 +110,12 @@ public sealed class TicketCommentService(HttpClient httpClient, ILogger<TicketCo
 
         try
         {
+            var content = await ticketReferenceLinker.LinkTicketReferencesAsync(request.Content);
+            
             var apiRequest = new PegasusCreateCommentRequest
             {
                 TicketId = request.TicketId,
-                Content = request.Content,
+                Content = content!,
                 UserId = userId
             };
 

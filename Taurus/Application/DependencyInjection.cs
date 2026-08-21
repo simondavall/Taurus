@@ -16,6 +16,7 @@ public static class DependencyInjection
         services.AddHttpClient<ITicketService, TicketService>(client => { client.BaseAddress = new Uri(baseAddress!); });
         services.AddHttpClient<ITicketReferenceDataService, TicketReferenceDataService>(client => { client.BaseAddress = new Uri(baseAddress!); });
         services.AddHttpClient<ITicketCommentService, TicketCommentService>(client => { client.BaseAddress = new Uri(baseAddress!); });
+        services.AddHttpClient<ITicketReferenceLinker, TicketReferenceLinker>(client => { client.BaseAddress = new Uri(baseAddress!); });
         
         services.AddSingleton<IHtmlContentSanitizer, HtmlContentSanitizer>();
         services.AddSingleton<IMarkdownRenderer, MarkdownRenderer>();

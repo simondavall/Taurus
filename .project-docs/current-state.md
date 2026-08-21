@@ -13,12 +13,10 @@ where development should continue.
 
 # Current task
 
-- Display related information.
+- Assign tickets.
 
 # Remaining milestone tasks
 
-- Support navigation between tickets.
-- Assign tickets.
 - Verify existing Pegasus behaviour preserved.
 
 # Completed
@@ -410,13 +408,6 @@ where development should continue.
 - Preserved the active-sub-task completion restriction when Fixed In Release enforcement is disabled.
 - Verified enabled, disabled and missing-configuration behaviour together with existing ticket validation and editing workflows.
 - Completed Enforce 'fixed in release'.
-- Added configurable enforcement of Fixed In Release when completing tickets.
-- Added `Tickets:RequireFixedInReleaseForCompletion` application configuration with enforcement enabled by default.
-- Prevented tickets from being completed without a Fixed In Release value when enforcement is enabled.
-- Presented the Fixed In Release completion restriction through the established editor-level validation banner.
-- Allowed independent completion restrictions to report simultaneously.
-- Verified enabled, disabled and missing-configuration behaviour.
-- Completed Enforce 'fixed in release'.
 - Added Markdown presentation for ticket descriptions.
 - Reused the existing `IMarkdownRenderer` and HTML sanitisation boundary established for ticket comments.
 - Displayed ticket descriptions as rendered Markdown when not being edited.
@@ -440,3 +431,17 @@ where development should continue.
 - Preserved the existing update workflow for non-closing ticket updates.
 - Verified nested ticket navigation, direct navigation, validation failures, persistence failures and existing ticket workflows.
 - Completed Return to referer after ticket closure.
+- Added automatic ticket-reference linking for ticket descriptions and comments.
+- Established `[XYZ-123]` as shorthand for referencing another ticket in Markdown content.
+- Added the shared `ITicketReferenceLinker` application service for ticket-reference detection, verification and conversion.
+- Verified candidate ticket references against PegasusApi before creating links.
+- Converted valid references to Taurus-relative Markdown links using `[XYZ-123](/tickets/XYZ-123)`.
+- Left references that do not identify existing tickets unchanged.
+- Prevented existing Markdown links from being reprocessed.
+- Deduplicated repeated ticket-reference lookups within individual content values.
+- Applied ticket-reference linking to ticket descriptions on creation and update.
+- Applied ticket-reference linking to new and updated comments.
+- Preserved unexpected PegasusApi reference-verification failures as persistence failures.
+- Preserved the existing Markdown rendering and HTML sanitisation boundary.
+- Verified valid, invalid, repeated and previously linked references together with existing ticket and comment workflows.
+- Completed Detect ticket links in description and comments.

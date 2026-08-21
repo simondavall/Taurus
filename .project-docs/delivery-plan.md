@@ -171,10 +171,14 @@ Users can inspect, create and update tickets.
 - ✓ Enforce 'fixed in release'
 - ✓ Display description as mark-down.
 - ✓ Return to referer after ticket closure.
-- Display related information.
-- Support navigation between tickets.
+- ✓ Display related information.
+- ✓ Detect ticket links in description and comments.
 - Assign tickets.
 - Verify existing Pegasus behaviour preserved.
+
+**Deliverable**
+
+Users can inspect and update existing tickets.
 
 ---
 
