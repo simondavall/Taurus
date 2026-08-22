@@ -125,8 +125,8 @@
 ## Ticket State Presentation
 
 - Resolve ticket behaviour from stable PegasusApi reference-data codes rather than numeric lookup identifiers or display titles.
-- Use `TicketReferenceIds` to resolve the known ticket status and priority codes into the current PegasusApi identifiers.
-- Keep the complete set of Taurus-owned ticket reference semantics together in `TicketReferenceIds`, even when an individual consumer uses only part of the set.
+- Use `TicketLookupIds` to resolve the known ticket status and priority codes into the current PegasusApi identifiers.
+- Keep the complete set of Taurus-owned ticket reference semantics together in `TicketLookupIds`, even when an individual consumer uses only part of the set.
 - Use `TicketPresentation` for deterministic ticket presentation rules shared across multiple ticket views.
 - Use the shared age presentation for ticket listings, comments and sub-task listings.
 - Treat Completed and Obsolete tickets as inactive for presentation while preserving normal navigation and interaction.

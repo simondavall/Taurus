@@ -298,7 +298,7 @@ where development should continue.
 - Retained theme-based colours for status indicators.
 - Added indicator tooltips describing their meaning.
 - Added state indicators to the responsive mobile ticket listing.
-- Centralised known PegasusApi ticket reference codes in `TicketReferenceCodes`.
+- Centralised known PegasusApi ticket reference codes in `TicketLookupCodes`.
 - Replaced ticket feature lookup-code literals with the centralised reference-code vocabulary.
 - Preserved existing filtering, ordering, pagination, persisted context and inactive-ticket presentation.
 - Verified ticket listing state indicators across desktop and mobile layouts.
@@ -380,7 +380,7 @@ where development should continue.
 - Added direct navigation from a sub-task to its parent ticket.
 - Applied the established ticket priority, status and inactive-state presentation to sub-task listings.
 - Preserved interaction with completed and obsolete sub-tasks while displaying them using muted inactive styling.
-- Refactored repeated ticket reference-data resolution into `TicketReferenceIds`.
+- Refactored repeated ticket reference-data resolution into `TicketLookupIds`.
 - Centralised shared ticket age and inactive-state presentation rules in `TicketPresentation`.
 - Extracted the repeated priority and status indicator presentation into `TicketStateIndicators`.
 - Reused the shared ticket state presentation across desktop ticket listings, mobile ticket listings and sub-task listings.
@@ -435,7 +435,7 @@ where development should continue.
 - Completed Return to referer after ticket closure.
 - Added automatic ticket-reference linking for ticket descriptions and comments.
 - Established `[XYZ-123]` as shorthand for referencing another ticket in Markdown content.
-- Added the shared `ITicketReferenceLinker` application service for ticket-reference detection, verification and conversion.
+- Added the shared `ITicketRefLinker` application service for ticket-reference detection, verification and conversion.
 - Verified candidate ticket references against PegasusApi before creating links.
 - Converted valid references to Taurus-relative Markdown links using `[XYZ-123](/tickets/XYZ-123)`.
 - Left references that do not identify existing tickets unchanged.
