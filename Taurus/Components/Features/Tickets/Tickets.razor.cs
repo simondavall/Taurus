@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using Taurus.Application.Projects;
 using Taurus.Application.Tickets;
+using Taurus.Application.Tickets.Lookups;
 using Taurus.Application.UserState;
 
 namespace Taurus.Components.Features.Tickets;
@@ -22,7 +23,7 @@ public partial class Tickets
     [Inject]
     private ITicketService TicketService { get; set; } = default!;
     [Inject]
-    private ITicketReferenceDataService TicketReferenceDataService { get; set; } = default!;
+    private ITicketLookupDataService TicketLookupDataService { get; set; } = default!;
     [Inject]
     private IUserStateService UserStateService { get; set; } = default!;
     [Inject]
@@ -39,7 +40,7 @@ public partial class Tickets
     private Guid SelectedProjectListValue => SelectedProjectId ?? AllProjectsId;
     private TicketFilter SelectedTicketFilter { get; set; } = TicketFilter.Open;
 
-    private TicketReferenceIds ReferenceIds { get; set; } = default!;
+    private TicketLookupIds LookupIds { get; set; } = default!;
 
     private string SelectedProjectTitle =>
         SelectedProjectId.HasValue
@@ -80,7 +81,7 @@ public partial class Tickets
         }
 
         await LoadProjectsAsync();
-        await LoadTicketReferenceDataAsync();
+        await LoadTicketLookupDataAsync();
         await RestoreSelectedProjectAsync();
         await RestoreSelectedTicketFilterAsync();
         await LoadTicketsAsync();
@@ -98,13 +99,13 @@ public partial class Tickets
             .ToArray();
     }
 
-    private async Task LoadTicketReferenceDataAsync()
+    private async Task LoadTicketLookupDataAsync()
     {
-        TicketStatuses = await TicketReferenceDataService.GetStatusesAsync();
-        TicketPriorities = await TicketReferenceDataService.GetPrioritiesAsync();
-        TicketTypes = await TicketReferenceDataService.GetTypesAsync();
+        TicketStatuses = await TicketLookupDataService.GetStatusesAsync();
+        TicketPriorities = await TicketLookupDataService.GetPrioritiesAsync();
+        TicketTypes = await TicketLookupDataService.GetTypesAsync();
 
-        ReferenceIds = TicketReferenceIds.Resolve(TicketStatuses, TicketPriorities);
+        LookupIds = TicketLookupIds.Resolve(TicketStatuses, TicketPriorities);
     }
 
     private async Task RestoreSelectedProjectAsync()
@@ -222,18 +223,18 @@ public partial class Tickets
         return SelectedTicketFilter switch
         {
             TicketFilter.Open => tickets.Where(ticket =>
-                ticket.StatusId != ReferenceIds.CompletedStatusId &&
-                ticket.StatusId != ReferenceIds.ObsoleteStatusId),
+                ticket.StatusId != LookupIds.CompletedStatusId &&
+                ticket.StatusId != LookupIds.ObsoleteStatusId),
 
             TicketFilter.Backlog => tickets.Where(ticket =>
-                ticket.StatusId == ReferenceIds.BacklogStatusId),
+                ticket.StatusId == LookupIds.BacklogStatusId),
 
             TicketFilter.HighPriority => tickets.Where(ticket =>
-                ticket.PriorityId == ReferenceIds.HighPriorityId ||
-                ticket.PriorityId == ReferenceIds.CriticalPriorityId),
+                ticket.PriorityId == LookupIds.HighPriorityId ||
+                ticket.PriorityId == LookupIds.CriticalPriorityId),
 
             TicketFilter.Obsolete => tickets.Where(ticket =>
-                ticket.StatusId == ReferenceIds.ObsoleteStatusId),
+                ticket.StatusId == LookupIds.ObsoleteStatusId),
 
             _ => tickets
         };
@@ -241,14 +242,14 @@ public partial class Tickets
 
     private string GetTicketClass(Ticket ticket)
     {
-        return TicketPresentation.IsInactive(ticket, ReferenceIds)
+        return TicketPresentation.IsInactive(ticket, LookupIds)
             ? "ticket-row ticket-inactive"
             : "ticket-row";
     }
 
     private string GetMobileTicketClass(Ticket ticket)
     {
-        return TicketPresentation.IsInactive(ticket, ReferenceIds)
+        return TicketPresentation.IsInactive(ticket, LookupIds)
             ? "mobile-ticket ticket-inactive"
             : "mobile-ticket";
     }

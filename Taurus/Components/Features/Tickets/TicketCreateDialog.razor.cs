@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 using Taurus.Application.Projects;
 using Taurus.Application.Tickets;
+using Taurus.Application.Tickets.Lookups;
 
 namespace Taurus.Components.Features.Tickets;
 

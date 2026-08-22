@@ -5,7 +5,7 @@ using PegasusCreateCommentRequest = PegasusApi.Abstractions.Comments.CreateComme
 using PegasusUpdateCommentRequest = PegasusApi.Abstractions.Comments.UpdateCommentRequest;
 using PegasusUpdateCommentsRequest = PegasusApi.Abstractions.Comments.UpdateCommentsRequest;
 
-namespace Taurus.Application.Tickets;
+namespace Taurus.Application.Tickets.Comments;
 
 public interface ITicketCommentService
 {
@@ -17,7 +17,7 @@ public interface ITicketCommentService
 public sealed class TicketCommentService(
     HttpClient httpClient,
     ILogger<TicketCommentService> logger,
-    ITicketReferenceLinker ticketReferenceLinker) : ITicketCommentService
+    ITicketRefLinker ticketRefLinker) : ITicketCommentService
 {
     public async Task<IReadOnlyList<TicketComment>> GetCommentsAsync(Guid ticketId)
     {
@@ -59,7 +59,7 @@ public sealed class TicketCommentService(
 
             foreach (var comment in comments)
             {
-                var content = await ticketReferenceLinker.LinkTicketReferencesAsync(comment.Content);
+                var content = await ticketRefLinker.LinkTicketRefsAsync(comment.Content);
 
                 apiComments.Add(new PegasusUpdateCommentRequest
                 {
@@ -110,7 +110,7 @@ public sealed class TicketCommentService(
 
         try
         {
-            var content = await ticketReferenceLinker.LinkTicketReferencesAsync(request.Content);
+            var content = await ticketRefLinker.LinkTicketRefsAsync(request.Content);
             
             var apiRequest = new PegasusCreateCommentRequest
             {

@@ -4,21 +4,21 @@ using PegasusApi.Abstractions.Tickets;
 
 namespace Taurus.Application.Tickets;
 
-public interface ITicketReferenceLinker
+public interface ITicketRefLinker
 {
-    Task<string?> LinkTicketReferencesAsync(string? content);
+    Task<string?> LinkTicketRefsAsync(string? content);
 }
 
-public sealed partial class TicketReferenceLinker(HttpClient httpClient, ILogger<TicketReferenceLinker> logger) : ITicketReferenceLinker
+public sealed partial class TicketRefLinker(HttpClient httpClient, ILogger<TicketRefLinker> logger) : ITicketRefLinker
 {
-    public async Task<string?> LinkTicketReferencesAsync(string? content)
+    public async Task<string?> LinkTicketRefsAsync(string? content)
     {
         if (string.IsNullOrEmpty(content))
         {
             return content;
         }
 
-        var matches = TicketReferenceRegex().Matches(content);
+        var matches = TicketRefRegex().Matches(content);
         if (matches.Count == 0)
         {
             return content;
@@ -45,7 +45,7 @@ public sealed partial class TicketReferenceLinker(HttpClient httpClient, ILogger
             return content;
         }
 
-        return TicketReferenceRegex().Replace(
+        return TicketRefRegex().Replace(
             content,
             match =>
             {
@@ -88,5 +88,5 @@ public sealed partial class TicketReferenceLinker(HttpClient httpClient, ILogger
     }
 
     [GeneratedRegex(@"\[(?<ticketRef>[A-Za-z][A-Za-z0-9]*-\d+)\](?!\()", RegexOptions.CultureInvariant)]
-    private static partial Regex TicketReferenceRegex();
+    private static partial Regex TicketRefRegex();
 }
