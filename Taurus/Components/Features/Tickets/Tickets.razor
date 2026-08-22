@@ -1,0 +1,189 @@
+﻿@page "/"
+@page "/tickets"
+@using Taurus.Application.Tickets
+
+<PageTitle>Tickets</PageTitle>
+
+<div class="tickets-page">
+    <div class="tickets-listing">
+        <div class="p-3 tickets-heading">
+            <MudText Typo="Typo.h4"
+                     HtmlTag="h1">
+                Project: @SelectedProjectTitle
+            </MudText>
+
+            @if (CanCreateTicket)
+            {
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.Add"
+                           OnClick="CreateTicketAsync">
+                    Create Ticket
+                </MudButton>
+            }
+            else
+            {
+                <MudTooltip Text="Select a project to create a ticket.">
+                    <span class="create-ticket-disabled">
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.Add"
+                                   Disabled>
+                            Create Ticket
+                        </MudButton>
+                    </span>
+                </MudTooltip>
+            }
+        </div>
+
+        <MudPaper Elevation="1"
+                  Class="tickets-table d-none d-sm-block">
+            @foreach (var ticket in PagedTicketItems)
+            {
+                <div class="@GetTicketClass(ticket)"
+                     role="link"
+                     tabindex="0"
+                     @onclick="() => OpenTicket(ticket)"
+                     @onkeydown="args => TicketKeyDown(args, ticket)">
+                    
+                    <MudText Typo="Typo.body2"
+                             Class="ticket-ref">
+                        @ticket.TicketRef
+                    </MudText>
+
+                    <TicketStateIndicators Ticket="@ticket"
+                                           ReferenceIds="@ReferenceIds"
+                                           TicketStatuses="@TicketStatuses"
+                                           TicketPriorities="@TicketPriorities"/>
+
+                    <MudText Typo="Typo.body2"
+                             Class="ticket-title">
+                        @ticket.Title
+                    </MudText>
+
+                    <MudText Typo="Typo.body2"
+                             Class="ticket-updated">
+                        @FormatLastUpdated(ticket.LastModified)
+                    </MudText>
+                </div>
+            }
+        </MudPaper>
+
+        <MudPaper Elevation="1"
+                  Class="mobile-ticket-list d-block d-sm-none">
+            @foreach (var ticket in PagedTicketItems)
+            {
+                <div class="@GetMobileTicketClass(ticket)"
+                     role="link"
+                     tabindex="0"
+                     @onclick="() => OpenTicket(ticket)"
+                     @onkeydown="args => TicketKeyDown(args, ticket)">
+                    
+                    <div class="mobile-ticket-header">
+                        <div class="mobile-ticket-identity">
+                            <MudText Typo="Typo.body2"
+                                     Class="ticket-ref">
+                                @ticket.TicketRef
+                            </MudText>
+
+                            <TicketStateIndicators Ticket="@ticket"
+                                                   ReferenceIds="@ReferenceIds"
+                                                   TicketStatuses="@TicketStatuses"
+                                                   TicketPriorities="@TicketPriorities"/>
+                        </div>
+
+                        <MudText Typo="Typo.caption"
+                                 Class="ticket-updated">
+                            @FormatLastUpdated(ticket.LastModified)
+                        </MudText>
+                    </div>
+
+                    <MudText Typo="Typo.body2"
+                             Class="ticket-title">
+                        @ticket.Title
+                    </MudText>
+                </div>
+            }
+        </MudPaper>
+
+        @if (PageCount > 1)
+        {
+            <div class="tickets-pagination">
+                <MudPagination Count="@PageCount"
+                               @bind-Selected="CurrentPage"
+                               Color="Color.Primary" />
+            </div>
+        }
+    </div>
+
+    <aside class="tickets-filters d-none d-md-block pt-5 pl-3"
+           aria-label="Ticket filters">
+        <div class="filter-widget">
+            <MudText Typo="Typo.h6"
+                     Class="filter-widget-heading">
+                Projects
+            </MudText>
+
+            <MudList T="Guid"
+                     Dense="true"
+                     SelectionMode="SelectionMode.SingleSelection"
+                     SelectedValue="SelectedProjectListValue"
+                     SelectedValueChanged="SelectedProjectChangedAsync"
+                     Color="Color.Primary"
+                     Class="filter-widget-list">
+
+                <MudListItem T="Guid"
+                             Value="@AllProjectsId">
+                    All
+                </MudListItem>
+
+                @foreach (var project in ProjectItems)
+                {
+                    <MudListItem T="Guid"
+                                 Value="@project.Id">
+                        @project.Title
+                    </MudListItem>
+                }
+            </MudList>
+        </div>
+        <div class="filter-widget">
+            <MudText Typo="Typo.h6"
+                     Class="filter-widget-heading">
+                Filters
+            </MudText>
+
+            <MudList T="TicketFilter"
+                     Dense="true"
+                     SelectionMode="SelectionMode.SingleSelection"
+                     SelectedValue="SelectedTicketFilter"
+                     SelectedValueChanged="SelectedTicketFilterChangedAsync"
+                     Color="Color.Primary"
+                     Class="filter-widget-list">
+                <MudListItem T="TicketFilter"
+                             Value="TicketFilter.All">
+                    All Tickets
+                </MudListItem>
+
+                <MudListItem T="TicketFilter"
+                             Value="TicketFilter.Open">
+                    Open Tickets
+                </MudListItem>
+
+                <MudListItem T="TicketFilter"
+                             Value="TicketFilter.Backlog">
+                    Backlog Tickets
+                </MudListItem>
+
+                <MudListItem T="TicketFilter"
+                             Value="TicketFilter.HighPriority">
+                    High Priority
+                </MudListItem>
+
+                <MudListItem T="TicketFilter"
+                             Value="TicketFilter.Obsolete">
+                    Obsolete
+                </MudListItem>
+            </MudList>
+        </div>
+    </aside>
+</div>

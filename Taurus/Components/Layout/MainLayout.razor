@@ -1,0 +1,64 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inherits LayoutComponentBase
+
+<MudThemeProvider Theme="@TaurusTheme.Default" 
+                  IsDarkMode="true" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+<MudBreakpointProvider OnBreakpointChanged="BreakpointChanged" />
+
+<MudLayout>
+    <MudAppBar Elevation="1">
+
+        <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                       Color="Color.Inherit"
+                       Edge="Edge.Start"
+                       aria-label="Toggle navigation"
+                       OnClick="@ToggleNavigation" />
+
+        <MudText Typo="Typo.h5"
+                 Class="taurus-app-title">
+            Taurus
+        </MudText>
+
+        <MudSpacer />
+
+        <AuthorizeView>
+            <Authorized>
+                <MudLink Href="https://soteria.local/Account/Manage"
+                         Target="_blank"
+                         rel="noopener noreferrer"
+                         Typo="Typo.body2"
+                         Color="Color.Primary"
+                         Class="taurus-user-name">
+                    @DisplayName(context.User)
+                </MudLink>
+
+                <MudButton Color="Color.Inherit"
+                           Variant="Variant.Text"
+                           Href="/authentication/logout">
+                    Log Out
+                </MudButton>
+            </Authorized>
+        </AuthorizeView>
+
+    </MudAppBar>
+
+    <MudDrawer @bind-Open="_navigationOpen"
+               Breakpoint="Breakpoint.Sm"
+               Variant="@_drawerVariant"
+               ClipMode="DrawerClipMode.Always"
+               Elevation="1">
+
+        <NavMenu />
+
+    </MudDrawer>
+
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge"
+                      Class="taurus-main-content">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>

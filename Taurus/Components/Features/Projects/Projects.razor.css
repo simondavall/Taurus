@@ -1,0 +1,75 @@
+﻿.projects-listing {
+    width: 66.6667%;
+}
+
+.projects-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.projects-header ::deep .mud-button-root {
+    flex-shrink: 0;
+}
+
+.projects-table ::deep .mud-table-row {
+    cursor: pointer;
+}
+
+.mobile-sort {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.mobile-sort ::deep .mud-input-control {
+    flex: 1;
+}
+
+.mobile-project-list {
+    overflow: hidden;
+}
+
+.mobile-project {
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid var(--mud-palette-divider);
+    cursor: pointer;
+}
+
+.mobile-project:last-child {
+    border-bottom: 0;
+}
+
+.mobile-project-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.projects-pagination {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+@media (max-width: 959.98px) {
+    .projects-listing {
+        width: 100%;
+    }
+}
+
+@media (max-width: 599.98px) {
+    .mobile-project-header {
+        align-items: flex-start;
+    }
+
+    .projects-pagination {
+        justify-content: center;
+    }
+}

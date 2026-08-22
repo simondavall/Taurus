@@ -1,0 +1,21 @@
+.mud-drawer {
+    width: 260px;
+}
+
+.mud-drawer-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.taurus-app-title {
+    font-weight: 500;
+    letter-spacing: 0.02rem;
+}
+
+.taurus-main-content {
+    padding: 1rem;
+}
+
+.taurus-user-name {
+    margin-right: 0.75rem;
+}

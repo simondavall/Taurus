@@ -1,0 +1,151 @@
+﻿@page "/projects"
+
+<PageTitle>Projects</PageTitle>
+
+<div class="projects-listing">
+    <div class="projects-header">
+        <MudText Typo="Typo.h4"
+                 Class="p-3"
+                 HtmlTag="h1">
+            Projects
+        </MudText>
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   StartIcon="@Icons.Material.Filled.Add"
+                   OnClick="CreateProjectAsync">
+            Create Project
+        </MudButton>
+    </div>
+
+    <div class="d-none d-sm-block">
+        <MudTable T="Project"
+                  Items="@PagedProjectItems"
+                  OnRowClick="ProjectRowClickedAsync"
+                  Hover
+                  Elevation="1"
+                  Class="projects-table">
+            <HeaderContent>
+                <MudTh>
+                    <MudButton Variant="Variant.Text"
+                               OnClick="@(() => SortBy(nameof(Project.Id)))">
+                        Id
+                        @if (SortField == nameof(Project.Id))
+                        {
+                            <MudIcon Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
+                                     Size="Size.Small" />
+                        }
+                    </MudButton>
+                </MudTh>
+
+                <MudTh>
+                    <MudButton Variant="Variant.Text"
+                               OnClick="@(() => SortBy(nameof(Project.Title)))">
+                        Title
+                        @if (SortField == nameof(Project.Title))
+                        {
+                            <MudIcon Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
+                                     Size="Size.Small" />
+                        }
+                    </MudButton>
+                </MudTh>
+
+                <MudTh>
+                    <MudButton Variant="Variant.Text"
+                               OnClick="@(() => SortBy(nameof(Project.Prefix)))">
+                        Prefix
+                        @if (SortField == nameof(Project.Prefix))
+                        {
+                            <MudIcon Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
+                                     Size="Size.Small" />
+                        }
+                    </MudButton>
+                </MudTh>
+
+                <MudTh>
+                    <MudButton Variant="Variant.Text"
+                               OnClick="@(() => SortBy(nameof(Project.IsActive)))">
+                        Active
+                        @if (SortField == nameof(Project.IsActive))
+                        {
+                            <MudIcon Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
+                                     Size="Size.Small" />
+                        }
+                    </MudButton>
+                </MudTh>
+            </HeaderContent>
+
+            <RowTemplate>
+                <MudTd>@DisplayId(context.Id)</MudTd>
+                <MudTd>@context.Title</MudTd>
+                <MudTd>@context.Prefix</MudTd>
+                <MudTd>
+                    <MudChip T="string"
+                             Color="@(context.IsActive ? Color.Success : Color.Default)"
+                             Variant="Variant.Filled"
+                             Size="Size.Small">
+                        @(context.IsActive ? "Active" : "Inactive")
+                    </MudChip>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </div>
+
+    <div class="d-block d-sm-none">
+        <div class="mobile-sort">
+            <MudSelect T="string"
+                       Label="Sort"
+                       Value="@SortField"
+                       ValueChanged="SortFieldChanged"
+                       Dense
+                       Margin="Margin.Dense">
+                <MudSelectItem Value="@nameof(Project.Title)">Title</MudSelectItem>
+                <MudSelectItem Value="@nameof(Project.Prefix)">Prefix</MudSelectItem>
+                <MudSelectItem Value="@nameof(Project.Id)">Id</MudSelectItem>
+                <MudSelectItem Value="@nameof(Project.IsActive)">Active</MudSelectItem>
+            </MudSelect>
+
+            <MudIconButton Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
+                           OnClick="ToggleSortDirection"
+                           Color="Color.Primary"
+                           aria-label="Toggle sort direction" />
+        </div>
+
+        <MudPaper Elevation="1"
+                  Class="mobile-project-list">
+            @foreach (var project in PagedProjectItems)
+            {
+                <div class="mobile-project"
+                     @onclick="@(() => EditProjectAsync(project))">
+                    
+                    <div class="mobile-project-header">
+                        <MudText Typo="Typo.subtitle1">
+                            @project.Title
+                        </MudText>
+
+                        <MudChip T="string"
+                                 Color="@(project.IsActive ? Color.Success : Color.Default)"
+                                 Variant="Variant.Filled"
+                                 Size="Size.Small">
+                            @(project.IsActive ? "Active" : "Inactive")
+                        </MudChip>
+                    </div>
+
+                    <MudText Typo="Typo.body2"
+                             Color="Color.Secondary">
+                        @project.Prefix · @DisplayId(project.Id)
+                    </MudText>
+                </div>
+            }
+        </MudPaper>
+    </div>
+
+    @if (PageCount > 1)
+    {
+        <div class="projects-pagination">
+            <MudPagination Count="@PageCount"
+                           @bind-Selected="CurrentPage"
+                           Color="Color.Primary" />
+        </div>
+    }
+</div>

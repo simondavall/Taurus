@@ -1,0 +1,43 @@
+﻿<PageTitle>Home</PageTitle>
+
+<MudStack Spacing="4">
+    <div>
+        <MudText Typo="Typo.h4"
+                 GutterBottom="true">
+            Taurus
+        </MudText>
+
+        <MudText Typo="Typo.body1"
+                 Color="Color.Secondary">
+            The Taurus application foundation is ready.
+        </MudText>
+    </div>
+
+    <MudPaper Elevation="1"
+              Class="pa-6">
+        <MudStack Spacing="3">
+            <MudText Typo="Typo.h5">
+                Shared application layout
+            </MudText>
+
+            <MudText Typo="Typo.body1">
+                This page is rendered inside the common Taurus header, navigation, and content area.
+            </MudText>
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       StartIcon="@TaurusIcons.Feedback.Success"
+                       OnClick="VerifyLayoutAsync">
+                Verify layout
+            </MudButton>
+
+            @if (_isVerified)
+            {
+                <MudAlert Severity="Severity.Success"
+                          Variant="Variant.Outlined">
+                    The shared layout and Interactive Server behaviour are working.
+                </MudAlert>
+            }
+        </MudStack>
+    </MudPaper>
+</MudStack>

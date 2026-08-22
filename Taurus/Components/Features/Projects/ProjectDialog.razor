@@ -1,0 +1,74 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudForm @ref="_form"
+                 Model="@Model"
+                 Validation="@(_validator.ValidateValueAsync)">
+            <MudStack Spacing="3">
+                @if (IsEdit)
+                {
+                    <MudTextField T="string"
+                                  Value="@Model.Id?.ToString()"
+                                  Label="Id"
+                                  Variant="Variant.Outlined"
+                                  ReadOnly />
+                }
+
+                <MudTextField T="string"
+                              @bind-Value="Model.Title"
+                              For="@(() => Model.Title)"
+                              Label="Title"
+                              Variant="Variant.Outlined"
+                              AutoFocus />
+
+                <MudTextField T="string"
+                              @bind-Value="Model.Prefix"
+                              For="@(() => Model.Prefix)"
+                              Label="Prefix"
+                              Variant="Variant.Outlined" />
+
+                @if (IsEdit)
+                {
+                    <MudSwitch T="bool"
+                               @bind-Value="Model.IsActive"
+                               Color="Color.Primary"
+                               Label="Active" />
+                }
+
+                @if (!string.IsNullOrWhiteSpace(_errorMessage))
+                {
+                    <MudAlert Severity="Severity.Error">
+                        @_errorMessage
+                    </MudAlert>
+                }
+            </MudStack>
+        </MudForm>
+    </DialogContent>
+
+    <DialogActions>
+        @if (IsEdit)
+        {
+            <MudButton Variant="Variant.Text"
+                       Color="Color.Error"
+                       StartIcon="@Icons.Material.Filled.Delete"
+                       Disabled="@IsBusy"
+                       OnClick="DeleteAsync">
+                @(_deleting ? "Deleting..." : "Delete")
+            </MudButton>
+        }
+
+        <MudSpacer />
+
+        <MudButton Variant="Variant.Text"
+                   Disabled="@IsBusy"
+                   OnClick="Cancel">
+            Cancel
+        </MudButton>
+
+        <MudButton Variant="Variant.Filled"
+                   Color="Color.Primary"
+                   Disabled="@IsBusy"
+                   OnClick="SaveAsync">
+            @(_saving ? "Saving..." : "Save")
+        </MudButton>
+    </DialogActions>
+</MudDialog>

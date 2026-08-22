@@ -1,0 +1,466 @@
+﻿@page "/tickets/{TicketRef}"
+
+<PageTitle>@TicketRef</PageTitle>
+
+@if (_loading)
+{
+    <div class="ticket-details-loading">
+        <MudProgressCircular Indeterminate="true"
+                             Color="Color.Primary"/>
+    </div>
+}
+else if (!string.IsNullOrWhiteSpace(_loadError))
+{
+    <MudAlert Severity="Severity.Error"
+              Variant="Variant.Outlined">
+        @_loadError
+    </MudAlert>
+}
+else if (Editor is not null)
+{
+    <MudForm @ref="_form"
+             Model="@Editor"
+             Validation="@(_validator.ValidateValueAsync)">
+        <div class="ticket-details-page">
+            <main class="ticket-details-main">
+                <header class="ticket-details-header">
+                    <MudText Typo="Typo.h6"
+                             HtmlTag="h1"
+                             Class="ticket-details-ref">
+                        @Editor.TicketRef
+                    </MudText>
+
+                    <MudTextField T="string"
+                                  @bind-Value="Editor.Title"
+                                  For="@(() => Editor.Title)"
+                                  Typo="Typo.h4"
+                                  Variant="Variant.Text"
+                                  Underline="false"
+                                  Margin="Margin.Dense"
+                                  Immediate="true"
+                                  Disabled="@_saving"
+                                  Sizing="InputSizing.Auto"
+                                  Class="ticket-details-title-editor"
+                                  aria-label="Ticket title"/>
+
+                    @if (ParentTicket is not null)
+                    {
+                        <div class="ticket-parent">
+                            <MudText Typo="Typo.caption"
+                                     Color="Color.Secondary">
+                                Parent
+                            </MudText>
+
+                            <MudLink Href="@($"/tickets/{Uri.EscapeDataString(ParentTicket.TicketRef)}")"
+                                     Typo="Typo.body2">
+                                @ParentTicket.TicketRef - @ParentTicket.Title
+                            </MudLink>
+                        </div>
+                    }
+
+                    @if (ValidationBannerMessages.Count > 0)
+                    {
+                        <MudAlert Severity="Severity.Error"
+                                  Variant="Variant.Outlined"
+                                  CloseIcon="@Icons.Material.Filled.Close"
+                                  CloseIconClicked="DismissValidationBanner"
+                                  ShowCloseIcon="true"
+                                  Class="ticket-validation-banner">
+                            @foreach (var message in ValidationBannerMessages)
+                            {
+                                <div>@message</div>
+                            }
+                        </MudAlert>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(_updateError))
+                    {
+                        <MudAlert Severity="Severity.Error"
+                                  Variant="Variant.Outlined"
+                                  Class="mb-4">
+                            @_updateError
+                        </MudAlert>
+                    }
+                </header>
+
+                <section class="ticket-description"
+                         aria-labelledby="ticket-description-heading">
+                    <MudText Typo="Typo.h6"
+                             HtmlTag="h2"
+                             id="ticket-description-heading"
+                             Class="mb-2">
+                        Description
+                    </MudText>
+
+                    @if (_descriptionEditing)
+                    {
+                        <MudTextField T="string"
+                                      @bind-Value="Editor.Description"
+                                      For="@(() => Editor.Description)"
+                                      Immediate="true"
+                                      Variant="Variant.Text"
+                                      Underline="false"
+                                      Lines="4"
+                                      Sizing="InputSizing.Auto"
+                                      Disabled="@_saving"
+                                      Class="ticket-description-editor"
+                                      aria-label="Ticket description"/>
+                    }
+                    else
+                    {
+                        <div class="ticket-description-content"
+                             role="button"
+                             tabindex="0"
+                             aria-label="Edit ticket description"
+                             @onclick="EditDescription"
+                             @onkeydown="DescriptionKeyDown">
+                            @((MarkupString)RenderDescription())
+                        </div>
+                    }
+                </section>
+
+                <section class="ticket-comments"
+                         aria-labelledby="ticket-comments-heading">
+
+                    @if (Comments.Count > 0)
+                    {
+                        <MudText Typo="Typo.h6"
+                                 HtmlTag="h2"
+                                 id="ticket-comments-heading"
+                                 Class="ticket-comments-heading">
+                            Comments
+                        </MudText>
+
+                        <div class="ticket-comments-list">
+                            @foreach (var comment in Comments)
+                            {
+                                <article class="@GetCommentClass(comment)">
+                                    <div class="ticket-comment-header">
+                                        <MudText Typo="Typo.caption"
+                                                 Color="Color.Secondary"
+                                                 Class="ticket-comment-meta">
+                                            @FormatAge(comment.LastModified) by @comment.DisplayName
+                                        </MudText>
+
+                                        <div class="ticket-comment-actions">
+                                            @if (comment.IsDeleted)
+                                            {
+                                                <MudTooltip Text="Undo delete">
+                                                    <MudIconButton Icon="@Icons.Material.Filled.Undo"
+                                                                   Size="Size.Small"
+                                                                   Disabled="@_saving"
+                                                                   OnClick="() => UndoDeleteComment(comment)"/>
+                                                </MudTooltip>
+                                            }
+                                            else
+                                            {
+                                                @if (comment.IsEditing)
+                                                {
+                                                    <MudTooltip Text="Undo edit">
+                                                        <MudIconButton Icon="@Icons.Material.Filled.Undo"
+                                                                       Size="Size.Small"
+                                                                       Disabled="@_saving"
+                                                                       OnClick="() => UndoEditComment(comment)"/>
+                                                    </MudTooltip>
+                                                }
+                                                else
+                                                {
+                                                    <MudTooltip Text="Edit comment">
+                                                        <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                                                       Size="Size.Small"
+                                                                       Disabled="@_saving"
+                                                                       OnClick="() => EditComment(comment)"/>
+                                                    </MudTooltip>
+                                                }
+
+                                                <MudTooltip Text="Delete comment">
+                                                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                                                   Size="Size.Small"
+                                                                   Color="Color.Error"
+                                                                   Disabled="@_saving"
+                                                                   OnClick="() => DeleteComment(comment)"/>
+                                                </MudTooltip>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    @if (comment.IsEditing && !comment.IsDeleted)
+                                    {
+                                        <MudTextField T="string"
+                                                      @bind-Value="comment.Content"
+                                                      Variant="Variant.Outlined"
+                                                      Lines="3"
+                                                      Sizing="InputSizing.Auto"
+                                                      Immediate="true"
+                                                      Disabled="@_saving"
+                                                      Class="ticket-comment-editor"
+                                                      aria-label="Edit comment"/>
+                                    }
+                                    else
+                                    {
+                                        <div class="ticket-comment-content">
+                                            @((MarkupString)RenderComment(comment.Content))
+                                        </div>
+                                    }
+                                </article>
+                            }
+                        </div>
+                    }
+
+                    <div class="ticket-add-comment">
+                        <MudText Typo="Typo.h6"
+                                 HtmlTag="h3"
+                                 Class="ticket-add-comment-heading">
+                            Add Comment
+                        </MudText>
+
+                        <MudTextField T="string"
+                                      @bind-Value="NewComment"
+                                      Variant="Variant.Outlined"
+                                      Lines="3"
+                                      Sizing="InputSizing.Auto"
+                                      Immediate="true"
+                                      Disabled="@_saving"
+                                      Placeholder="Add a comment"
+                                      Class="ticket-add-comment-editor"
+                                      aria-label="Add comment"/>
+                    </div>
+                </section>
+
+                @if (SubTasks.Count > 0)
+                {
+                    <section class="ticket-subtasks"
+                             aria-labelledby="ticket-subtasks-heading">
+                        <MudText Typo="Typo.h6"
+                                 HtmlTag="h2"
+                                 id="ticket-subtasks-heading"
+                                 Class="ticket-subtasks-heading">
+                            Sub Tasks
+                        </MudText>
+
+                        <div class="ticket-subtasks-list">
+                            @foreach (var subTask in SubTasks)
+                            {
+                                <div class="@GetSubTaskClass(subTask)"
+                                     role="link"
+                                     tabindex="0"
+                                     @onclick="() => OpenSubTask(subTask)"
+                                     @onkeydown="args => SubTaskKeyDown(args, subTask)">
+
+                                    <MudText Typo="Typo.body2"
+                                             Class="ticket-subtask-ref">
+                                        @subTask.TicketRef
+                                    </MudText>
+
+                                    <TicketStateIndicators Ticket="@subTask"
+                                                           ReferenceIds="@ReferenceIds"
+                                                           TicketStatuses="@TicketStatuses"
+                                                           TicketPriorities="@TicketPriorities"/>
+
+                                    <MudText Typo="Typo.body2"
+                                             Class="ticket-subtask-title">
+                                        @subTask.Title
+                                    </MudText>
+
+                                    <MudText Typo="Typo.caption"
+                                             Color="Color.Secondary"
+                                             Class="ticket-subtask-age">
+                                        @FormatAge(subTask.LastModified)
+                                    </MudText>
+                                </div>
+                            }
+                        </div>
+                    </section>
+                }
+
+                <div class="ticket-details-actions">
+                    <MudButton Variant="Variant.Outlined"
+                               Color="Color.Primary"
+                               StartIcon="@Icons.Material.Filled.Add"
+                               Disabled="@(_saving || CurrentProject is null)"
+                               OnClick="AddSubTaskAsync">
+                        Add Sub Task
+                    </MudButton>
+
+                    <div class="ticket-details-save-actions">
+                        <MudButton Variant="Variant.Text"
+                                   Disabled="@_saving"
+                                   OnClick="Cancel">
+                            Cancel
+                        </MudButton>
+
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   Disabled="@_saving"
+                                   OnClick="UpdateAsync">
+                            @if (_saving)
+                            {
+                                <MudProgressCircular Indeterminate="true"
+                                                     Size="Size.Small"
+                                                     Class="mr-2"/>
+                            }
+
+                            Update
+                        </MudButton>
+                    </div>
+                </div>
+            </main>
+
+            <aside class="ticket-details-sidebar"
+                   aria-label="Ticket metadata">
+                <section class="ticket-details-metadata"
+                         aria-labelledby="ticket-details-heading">
+                    <MudText Typo="Typo.h6"
+                             HtmlTag="h2"
+                             id="ticket-details-heading"
+                             Class="ticket-metadata-heading">
+                        Details
+                    </MudText>
+
+                    <MudTextField T="string"
+                                  Label="Project"
+                                  Value="@ProjectTitle"
+                                  ReadOnly="true"
+                                  Variant="Variant.Outlined"
+                                  Margin="Margin.Dense"/>
+
+                    @if (ParentTicket is not null)
+                    {
+                        <MudText Typo="Typo.body2"
+                                 Class="ticket-parent">
+                            Parent:
+                            <MudLink Href="@($"/tickets/{Uri.EscapeDataString(ParentTicket.TicketRef)}")"
+                                     Typo="Typo.body2">
+                                @ParentTicket.Title
+                            </MudLink>
+                        </MudText>
+                    }
+
+                    <MudSelect T="int"
+                               Label="Type"
+                               @bind-Value="Editor.TypeId"
+                               Variant="Variant.Outlined"
+                               Margin="Margin.Dense"
+                               Disabled="@_saving">
+                        @foreach (var type in TicketTypes)
+                        {
+                            <MudSelectItem T="int"
+                                           Value="@type.Id">
+                                @type.Title
+                            </MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudSelect T="int"
+                               Label="Priority"
+                               @bind-Value="Editor.PriorityId"
+                               Variant="Variant.Outlined"
+                               Margin="Margin.Dense"
+                               Disabled="@_saving">
+                        @foreach (var priority in TicketPriorities)
+                        {
+                            <MudSelectItem T="int"
+                                           Value="@priority.Id">
+                                @priority.Title
+                            </MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudSelect T="int"
+                               Label="Status"
+                               @bind-Value="Editor.StatusId"
+                               Variant="Variant.Outlined"
+                               Margin="Margin.Dense"
+                               Disabled="@_saving">
+                        @foreach (var status in TicketStatuses)
+                        {
+                            <MudSelectItem T="int"
+                                           Value="@status.Id">
+                                @status.Title
+                            </MudSelectItem>
+                        }
+                    </MudSelect>
+
+                    <MudTextField T="string"
+                                  Label="Fixed In Release"
+                                  @bind-Value="Editor.FixedInRelease"
+                                  Variant="Variant.Outlined"
+                                  Margin="Margin.Dense"
+                                  Disabled="@_saving"/>
+                </section>
+
+                @if (LoadedTicket is not null)
+                {
+                    <section class="ticket-details-metadata"
+                             aria-labelledby="ticket-activity-heading">
+                        <MudText Typo="Typo.h6"
+                                 HtmlTag="h2"
+                                 id="ticket-activity-heading"
+                                 Class="ticket-metadata-heading">
+                            People &amp; Activity
+                        </MudText>
+
+                        <MudSelect T="Guid?"
+                                   Label="Assigned To"
+                                   @bind-Value="Editor.AssignedTo"
+                                   Variant="Variant.Outlined"
+                                   Margin="Margin.Dense"
+                                   Disabled="@_saving">
+
+                            <MudSelectItem T="Guid?"
+                                           Value="@(null)">
+                                &lt;Unassigned&gt;
+                            </MudSelectItem>
+
+                            @if (Editor.AssignedTo is not null &&
+                                 !HasResolvedAssignedUser)
+                            {
+                                <MudSelectItem T="Guid?"
+                                               Value="@Editor.AssignedTo"
+                                               Disabled="true">
+                                    Unknown user
+                                </MudSelectItem>
+                            }
+
+                            @foreach (var user in Users)
+                            {
+                                <MudSelectItem T="Guid?"
+                                               Value="@((Guid?)user.Id)">
+                                    @user.DisplayName
+                                </MudSelectItem>
+                            }
+                        </MudSelect>
+
+                        <MudTextField T="string"
+                                      Label="Created By"
+                                      Value="@ResolveUserDisplayName(LoadedTicket.CreatedBy)"
+                                      ReadOnly="true"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"/>
+
+                        <MudTextField T="string"
+                                      Label="Created"
+                                      Value="@FormatAuditDate(LoadedTicket.CreatedDate)"
+                                      ReadOnly="true"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"/>
+
+                        <MudTextField T="string"
+                                      Label="Last Modified By"
+                                      Value="@ResolveUserDisplayName(LoadedTicket.LastModifiedBy)"
+                                      ReadOnly="true"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"/>
+
+                        <MudTextField T="string"
+                                      Label="Last Modified"
+                                      Value="@FormatAuditDate(LoadedTicket.LastModified)"
+                                      ReadOnly="true"
+                                      Variant="Variant.Outlined"
+                                      Margin="Margin.Dense"/>
+                    </section>
+                }
+            </aside>
+        </div>
+    </MudForm>
+}
