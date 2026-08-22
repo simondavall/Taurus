@@ -4,10 +4,10 @@ namespace Taurus.Components.Features.Tickets;
 
 public static class TicketPresentation
 {
-    public static bool IsInactive(Ticket ticket, TicketReferenceIds referenceIds)
+    public static bool IsInactive(Ticket ticket, TicketLookupIds lookupIds)
     {
-        return ticket.StatusId == referenceIds.CompletedStatusId
-               || ticket.StatusId == referenceIds.ObsoleteStatusId;
+        return ticket.StatusId == lookupIds.CompletedStatusId
+               || ticket.StatusId == lookupIds.ObsoleteStatusId;
     }
 
     public static string FormatAge(DateTimeOffset lastModified)

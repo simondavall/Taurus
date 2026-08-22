@@ -1,6 +1,6 @@
-﻿namespace Taurus.Application.Tickets;
+﻿namespace Taurus.Application.Tickets.Lookups;
 
-public static class TicketReferenceCodes
+public static class TicketLookupCodes
 {
     public static class Status
     {

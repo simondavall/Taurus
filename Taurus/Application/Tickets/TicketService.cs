@@ -18,7 +18,7 @@ public interface ITicketService
 public sealed class TicketService(
     HttpClient httpClient,
     ILogger<TicketService> logger,
-    ITicketReferenceLinker ticketReferenceLinker) : ITicketService
+    ITicketRefLinker ticketRefLinker) : ITicketService
 {
     public async Task<IReadOnlyList<Ticket>> GetTicketsAsync(Guid? projectId = null)
     {
@@ -133,7 +133,7 @@ public sealed class TicketService(
     {
         logger.LogInformation("Creating ticket in PegasusApi for project {ProjectId}", request.ProjectId);
         
-        var description = await ticketReferenceLinker.LinkTicketReferencesAsync(request.Description);
+        var description = await ticketRefLinker.LinkTicketRefsAsync(request.Description);
         
         try
         {
@@ -196,7 +196,7 @@ public sealed class TicketService(
     {
         logger.LogInformation("Updating ticket {TicketId} in PegasusApi", request.Id);
 
-        var description = await ticketReferenceLinker.LinkTicketReferencesAsync(request.Description);
+        var description = await ticketRefLinker.LinkTicketRefsAsync(request.Description);
         
         try
         {

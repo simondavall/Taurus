@@ -1,4 +1,4 @@
-﻿namespace Taurus.Application.Tickets;
+﻿namespace Taurus.Application.Tickets.Comments;
 
 public sealed record UpdateTicketComment(
     Guid Id,

@@ -2,6 +2,8 @@
 using Taurus.Application.Markdown;
 using Taurus.Application.Projects;
 using Taurus.Application.Tickets;
+using Taurus.Application.Tickets.Comments;
+using Taurus.Application.Tickets.Lookups;
 using Taurus.Application.Users;
 using Taurus.Application.UserState;
 
@@ -17,9 +19,9 @@ public static class DependencyInjection
         
         services.AddHttpClient<IProjectService, ProjectService>(client);
         services.AddHttpClient<ITicketService, TicketService>(client);
-        services.AddHttpClient<ITicketReferenceDataService, TicketReferenceDataService>(client);
+        services.AddHttpClient<ITicketLookupDataService, TicketLookupDataService>(client);
         services.AddHttpClient<ITicketCommentService, TicketCommentService>(client);
-        services.AddHttpClient<ITicketReferenceLinker, TicketReferenceLinker>(client);
+        services.AddHttpClient<ITicketRefLinker, TicketRefLinker>(client);
         services.AddHttpClient<IUserService, UserService>(client);
         
         services.AddSingleton<IHtmlContentSanitizer, HtmlContentSanitizer>();
