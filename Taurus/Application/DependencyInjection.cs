@@ -2,6 +2,7 @@
 using Taurus.Application.Markdown;
 using Taurus.Application.Projects;
 using Taurus.Application.Tickets;
+using Taurus.Application.Users;
 using Taurus.Application.UserState;
 
 namespace Taurus.Application;
@@ -12,11 +13,14 @@ public static class DependencyInjection
     {
         var baseAddress = configuration["PegasusApi:BaseAddress"];
 
-        services.AddHttpClient<IProjectService, ProjectService>(client => { client.BaseAddress = new Uri(baseAddress!); });
-        services.AddHttpClient<ITicketService, TicketService>(client => { client.BaseAddress = new Uri(baseAddress!); });
-        services.AddHttpClient<ITicketReferenceDataService, TicketReferenceDataService>(client => { client.BaseAddress = new Uri(baseAddress!); });
-        services.AddHttpClient<ITicketCommentService, TicketCommentService>(client => { client.BaseAddress = new Uri(baseAddress!); });
-        services.AddHttpClient<ITicketReferenceLinker, TicketReferenceLinker>(client => { client.BaseAddress = new Uri(baseAddress!); });
+        Action<HttpClient> client = c => { c.BaseAddress = new Uri(baseAddress!); };
+        
+        services.AddHttpClient<IProjectService, ProjectService>(client);
+        services.AddHttpClient<ITicketService, TicketService>(client);
+        services.AddHttpClient<ITicketReferenceDataService, TicketReferenceDataService>(client);
+        services.AddHttpClient<ITicketCommentService, TicketCommentService>(client);
+        services.AddHttpClient<ITicketReferenceLinker, TicketReferenceLinker>(client);
+        services.AddHttpClient<IUserService, UserService>(client);
         
         services.AddSingleton<IHtmlContentSanitizer, HtmlContentSanitizer>();
         services.AddSingleton<IMarkdownRenderer, MarkdownRenderer>();

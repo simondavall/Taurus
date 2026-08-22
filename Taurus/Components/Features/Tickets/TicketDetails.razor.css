@@ -210,10 +210,6 @@
     opacity: 0.38;
 }
 
-.ticket-parent {
-    padding: 0 0.75rem;
-}
-
 .ticket-subtask-row:last-child {
     border-bottom: 0;
 }
@@ -257,6 +253,13 @@
     gap: 0.75rem;
 }
 
+.ticket-details-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 0;
+}
+
 .ticket-details-metadata {
     display: flex;
     flex-direction: column;
@@ -288,6 +291,7 @@
     }
 
     .ticket-details-main,
+    .ticket-details-sidebar,
     .ticket-details-metadata {
         width: 100%;
     }
@@ -337,11 +341,6 @@
 
     .ticket-subtask-age {
         grid-column: 4;
-        text-align: left;
-    }
-
-    .ticket-subtask-age {
-        grid-column: 2;
         text-align: left;
     }
 }

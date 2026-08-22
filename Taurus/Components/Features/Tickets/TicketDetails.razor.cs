@@ -7,6 +7,7 @@ using Taurus.Application;
 using Taurus.Application.Markdown;
 using Taurus.Application.Projects;
 using Taurus.Application.Tickets;
+using Taurus.Application.Users;
 using Taurus.Components.Features.Shared;
 using Severity = MudBlazor.Severity;
 
@@ -38,6 +39,8 @@ public partial class TicketDetails
     [Inject]
     private IConfiguration Configuration { get; set; } = default!;
     [Inject]
+    private IUserService UserService { get; set; } = default!;
+    [Inject]
     private ISnackbar Snackbar { get; set; } = default!;
 
     private TicketEditorValidator _validator = default!;
@@ -53,6 +56,8 @@ public partial class TicketDetails
     private IReadOnlyList<Ticket> SubTasks { get; set; } = [];
     private List<CommentEditorModel> Comments { get; set; } = [];
     private Application.Tickets.TicketDetails? ParentTicket { get; set; }
+    private IReadOnlyList<User> Users { get; set; } = [];
+    private Application.Tickets.TicketDetails? LoadedTicket { get; set; }
 
     private TicketReferenceIds ReferenceIds { get; set; } = default!;
     
@@ -98,18 +103,21 @@ public partial class TicketDetails
         var prioritiesTask = TicketReferenceDataService.GetPrioritiesAsync();
         var typesTask = TicketReferenceDataService.GetTypesAsync();
         var ticketTask = TicketService.GetTicketByRefAsync(TicketRef);
+        var usersTask = UserService.GetUsersAsync();
 
         await Task.WhenAll(
             projectsTask,
             statusesTask,
             prioritiesTask,
             typesTask,
+            usersTask,
             ticketTask);
 
         Projects = await projectsTask;
         TicketStatuses = await statusesTask;
         TicketPriorities = await prioritiesTask;
         TicketTypes = await typesTask;
+        Users = await usersTask;
 
         var requireFixedInReleaseForCompletion = Configuration.GetValue("Tickets:RequireFixedInReleaseForCompletion", true);
         ReferenceIds = TicketReferenceIds.Resolve(TicketStatuses, TicketPriorities);
@@ -205,6 +213,7 @@ public partial class TicketDetails
     private void ClearTicketData()
     {
         Editor = null;
+        LoadedTicket = null;
         ParentTicket = null;
         SubTasks = [];
         Comments = [];
@@ -213,6 +222,8 @@ public partial class TicketDetails
 
     private void SetEditor(Application.Tickets.TicketDetails ticket)
     {
+        LoadedTicket = ticket;
+
         Editor = new TicketEditorModel
         {
             Id = ticket.Id,
@@ -227,7 +238,7 @@ public partial class TicketDetails
             ParentTicketRef = ticket.ParentTicketRef,
             AssignedTo = ticket.AssignedTo
         };
-        
+
         _descriptionEditing = string.IsNullOrWhiteSpace(ticket.Description);
     }
 
@@ -373,6 +384,23 @@ public partial class TicketDetails
         }
     }
 
+    private string ResolveUserDisplayName(Guid userId)
+    {
+        return Users.FirstOrDefault(user => user.Id == userId)?.DisplayName
+               ?? "Unknown user";
+    }
+
+    private bool HasResolvedAssignedUser =>
+        Editor?.AssignedTo is not null &&
+        Users.Any(user => user.Id == Editor.AssignedTo.Value);
+
+    private static string FormatAuditDate(DateTimeOffset date)
+    {
+        return date
+            .ToLocalTime()
+            .ToString("dd/MM/yyyy HH:mm");
+    }
+    
     private void NavigateToParent()
     {
         if (ParentTicket is not null)
