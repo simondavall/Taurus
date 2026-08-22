@@ -272,7 +272,11 @@ public sealed class TicketService(
             ticket.PriorityId,
             ticket.FixedInRelease,
             ticket.ParentTicketRef,
-            ticket.AssignedTo);
+            ticket.AssignedTo,
+            ticket.CreatedBy,
+            AsUtc(ticket.CreatedDate),
+            ticket.LastModifiedBy,
+            AsUtc(ticket.LastModified));
     }
     
     private static DateTimeOffset AsUtc(DateTimeOffset value)

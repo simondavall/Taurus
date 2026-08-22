@@ -11,4 +11,8 @@ public sealed record TicketDetails(
     int PriorityId,
     string? FixedInRelease,
     string? ParentTicketRef,
-    Guid? AssignedTo);
+    Guid? AssignedTo,
+    Guid CreatedBy,
+    DateTimeOffset CreatedDate,
+    Guid LastModifiedBy,
+    DateTimeOffset LastModified);

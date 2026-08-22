@@ -5,19 +5,21 @@ where development should continue.
 
 # Current phase
 
-# Phase 3 – Ticket Management
+# Phase 4 – User Experience
 
 # Current milestone
 
-- Milestone 3.3 – Ticket Editing
+- Milestone 4.1 – Responsive Experience
 
 # Current task
 
-- Assign tickets.
+- Optimise desktop layouts.
 
 # Remaining milestone tasks
 
-- Verify existing Pegasus behaviour preserved.
+- Optimise tablet layouts.
+- Optimise mobile layouts.
+- Refine responsive navigation.
 
 # Completed
 
@@ -445,3 +447,20 @@ where development should continue.
 - Preserved the existing Markdown rendering and HTML sanitisation boundary.
 - Verified valid, invalid, repeated and previously linked references together with existing ticket and comment workflows.
 - Completed Detect ticket links in description and comments.
+- Added ticket assignment to Ticket Details.
+- Added the Taurus-owned user application model and `IUserService` PegasusApi integration.
+- Loaded PegasusApi users and presented them alphabetically by display name.
+- Added the People & Activity section to the Ticket Details sidebar.
+- Added an editable Assigned To user selector.
+- Displayed `<Unassigned>` for tickets without an assignee and as the first assignment option.
+- Supported assigning, reassigning and unassigning tickets through the existing ticket update workflow.
+- Extended the Taurus ticket-details model with Created By, Created, Last Modified By and Last Modified audit information.
+- Resolved assignment and audit user identifiers to PegasusApi display names.
+- Displayed unresolved audit users as `Unknown user`.
+- Displayed Created and Last Modified using `dd/MM/yyyy HH:mm`.
+- Preserved audit information as read-only application state rather than editable ticket state.
+- Preserved responsive Ticket Details presentation with the additional sidebar section.
+- Completed Assign tickets.
+- Verified existing Pegasus ticket behaviour is preserved in Taurus.
+- Verified the application builds and starts successfully with the completed Ticket Editing functionality.
+- Completed Milestone 3.3 – Ticket Editing.

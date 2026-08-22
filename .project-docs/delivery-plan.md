@@ -173,12 +173,12 @@ Users can inspect, create and update tickets.
 - ✓ Return to referer after ticket closure.
 - ✓ Display related information.
 - ✓ Detect ticket links in description and comments.
-- Assign tickets.
-- Verify existing Pegasus behaviour preserved.
+- ✓ Assign tickets.
+- ✓ Verify existing Pegasus behaviour preserved.
 
 **Deliverable**
 
-Users can inspect and update existing tickets.
+Users can perform the existing Pegasus ticket-management workflows in Taurus with improved ticket editing, relationships, validation and navigation.
 
 ---
 
