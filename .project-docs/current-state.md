@@ -13,11 +13,10 @@ where development should continue.
 
 # Current task
 
-- Ticket Details page Cancel refreshes original ticket info.
+- Restructure project into abstracted layers.
 
 # Remaining milestone tasks
 
-- Restructure project into abstracted layers.
 - Introduce caching
 
 # Completed
@@ -32,3 +31,4 @@ where development should continue.
     - Added Fixed In Release support to ticket creation.
 - Verified the application builds, starts and affected project and ticket workflows operate successfully.
 - Added 'No tickets' text if filter returns no tickets for a project.
+- Changed Ticket Details Cancel behaviour to discard unsaved changes and refresh the current ticket from persisted data without leaving the page.
