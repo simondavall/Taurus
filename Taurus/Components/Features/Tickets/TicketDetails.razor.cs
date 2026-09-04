@@ -71,8 +71,20 @@ public partial class TicketDetails
     private string? NewComment { get; set; }
 
 
-    private string ProjectTitle =>
-        CurrentProject?.Title ?? "Unknown project";
+    private string ProjectTitle
+    {
+        get
+        {
+            if (CurrentProject is null)
+            {
+                return "Unknown project";
+            }
+
+            return string.IsNullOrWhiteSpace(CurrentProject.LatestVersion)
+                ? CurrentProject.Title
+                : $"{CurrentProject.Title} ({CurrentProject.LatestVersion})";
+        }
+    }
 
     private Project? CurrentProject =>
         Editor is null

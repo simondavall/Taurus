@@ -28,6 +28,11 @@
 
                 @if (IsEdit)
                 {
+                    <MudTextField T="string"
+                                  @bind-Value="Model.LatestVersion"
+                                  Label="Latest Version"
+                                  Variant="Variant.Outlined" />
+
                     <MudSwitch T="bool"
                                @bind-Value="Model.IsActive"
                                Color="Color.Primary"
