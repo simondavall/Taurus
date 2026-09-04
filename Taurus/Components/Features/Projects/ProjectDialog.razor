@@ -18,13 +18,15 @@
                               For="@(() => Model.Title)"
                               Label="Title"
                               Variant="Variant.Outlined"
+                              OnlyValidateIfDirty="true"
                               AutoFocus />
 
                 <MudTextField T="string"
                               @bind-Value="Model.Prefix"
                               For="@(() => Model.Prefix)"
                               Label="Prefix"
-                              Variant="Variant.Outlined" />
+                              Variant="Variant.Outlined"
+                              OnlyValidateIfDirty="true" />
 
                 @if (IsEdit)
                 {
@@ -32,6 +34,11 @@
                                   @bind-Value="Model.LatestVersion"
                                   Label="Latest Version"
                                   Variant="Variant.Outlined" />
+
+                    <MudSwitch T="bool"
+                               @bind-Value="Model.RequireFixedInRelease"
+                               Color="Color.Primary"
+                               Label="Require Fixed In Release" />
 
                     <MudSwitch T="bool"
                                @bind-Value="Model.IsActive"

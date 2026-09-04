@@ -39,8 +39,6 @@ public partial class TicketDetails
     [Inject]
     private IDialogService DialogService { get; set; } = default!;
     [Inject]
-    private IConfiguration Configuration { get; set; } = default!;
-    [Inject]
     private IUserService UserService { get; set; } = default!;
     [Inject]
     private ISnackbar Snackbar { get; set; } = default!;
@@ -133,9 +131,7 @@ public partial class TicketDetails
         TicketTypes = await typesTask;
         Users = await usersTask;
 
-        var requireFixedInReleaseForCompletion = Configuration.GetValue("Tickets:RequireFixedInReleaseForCompletion", true);
         LookupIds = TicketLookupIds.Resolve(TicketStatuses, TicketPriorities);
-        _validator = new TicketEditorValidator(LookupIds, requireFixedInReleaseForCompletion);
         
         var ticketResult = await ticketTask;
         if (!ticketResult.Succeeded || ticketResult.Value is null)
@@ -146,6 +142,9 @@ public partial class TicketDetails
         }
 
         SetEditor(ticketResult.Value);
+        
+        _validator = new TicketEditorValidator(LookupIds, CurrentProject?.RequireFixedInRelease ?? false);
+        
         await LoadRelatedTicketDataAsync(ticketResult.Value);
     }
 

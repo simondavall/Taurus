@@ -5,4 +5,5 @@ public sealed record Project(
     string Title,
     string Prefix,
     string? LatestVersion,
+    bool RequireFixedInRelease,
     bool IsActive);

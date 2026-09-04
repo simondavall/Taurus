@@ -107,7 +107,7 @@ public sealed class ProjectService(HttpClient httpClient, ILogger<ProjectService
                 IsActive = request.IsActive,
                 IsDeleted = false,
                 LatestVersion = request.LatestVersion,
-                RequireFixedInRelease = false
+                RequireFixedInRelease = request.RequireFixedInRelease
             };
 
             using var response = await httpClient.PutAsJsonAsync($"api/projects/{request.Id}", apiRequest);
@@ -187,6 +187,7 @@ public sealed class ProjectService(HttpClient httpClient, ILogger<ProjectService
             project.Title,
             project.Prefix,
             project.LatestVersion,
+            project.RequireFixedInRelease,
             project.IsActive);
     }
 }

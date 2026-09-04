@@ -240,9 +240,11 @@ Existing application settings are fully available in Taurus.
 
 ## Enhancements
 
-- Implement Latest Version and Require Fixed In Release.
+- ✓ Implement project Latest Version.
+- ✓ Replace global Fixed In Release requirement with per-project Require Fixed In Release.
 - Only include Active projects in All selection.
 - Add "No Tickets" dcisplay when no tickets are returned from selection.
+- Ticket Details page Cancel refreshes original ticket info.
 - Restructure project into abstracted layers.
 - Introduce caching
 
