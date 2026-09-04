@@ -583,8 +583,16 @@ public partial class TicketDetails
             : "ticket-subtask-row";
     }
     
-    private void Cancel()
+    private async Task CancelAsync()
     {
-        NavigationManager.NavigateTo("/tickets");
+        if (_saving)
+        {
+            return;
+        }
+
+        _updateError = null;
+        ValidationBannerMessages = [];
+
+        await ReloadPageDataAsync();
     }
 }
