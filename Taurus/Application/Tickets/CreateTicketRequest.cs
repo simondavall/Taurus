@@ -7,4 +7,5 @@ public sealed record CreateTicketRequest(
     int StatusId,
     int TypeId,
     int PriorityId,
+    string? FixedInRelease,
     string? ParentTicketRef = null);

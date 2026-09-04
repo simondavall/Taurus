@@ -7,4 +7,5 @@ public sealed class TicketCreateEditorModel
     public int TypeId { get; set; }
     public int PriorityId { get; set; }
     public int StatusId { get; set; }
+    public string? FixedInRelease { get; set; }
 }

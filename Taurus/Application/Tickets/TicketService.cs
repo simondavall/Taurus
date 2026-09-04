@@ -145,6 +145,7 @@ public sealed class TicketService(
                 StatusId = request.StatusId,
                 TypeId = request.TypeId,
                 PriorityId = request.PriorityId,
+                FixedInRelease = request.FixedInRelease,
                 ParentTicketRef = request.ParentTicketRef,
                 UserId = userId
             };

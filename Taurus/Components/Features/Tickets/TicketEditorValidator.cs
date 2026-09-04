@@ -8,9 +8,7 @@ public sealed class TicketEditorValidator : AbstractValidator<TicketEditorModel>
     private readonly TicketLookupIds _lookupIds;
     private readonly bool _requireFixedInReleaseForCompletion;
 
-    public TicketEditorValidator(
-        TicketLookupIds lookupIds,
-        bool requireFixedInReleaseForCompletion)
+    public TicketEditorValidator(TicketLookupIds lookupIds, bool requireFixedInReleaseForCompletion)
     {
         _lookupIds = lookupIds;
         _requireFixedInReleaseForCompletion = requireFixedInReleaseForCompletion;

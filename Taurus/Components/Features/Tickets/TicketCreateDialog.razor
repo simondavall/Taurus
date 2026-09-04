@@ -60,6 +60,13 @@
                     }
                 </MudSelect>
 
+                <MudTextField T="string"
+                              @bind-Value="Model.FixedInRelease"
+                              For="@(() => Model.FixedInRelease)"
+                              Label="Fixed In Release"
+                              Variant="Variant.Outlined"
+                              OnlyValidateIfDirty="true" />
+                
                 @if (!string.IsNullOrWhiteSpace(_errorMessage))
                 {
                     <MudAlert Severity="Severity.Error">
