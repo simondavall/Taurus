@@ -44,6 +44,7 @@ public partial class ProjectDialog
         Model.Id = ProjectToEdit.Id;
         Model.Title = ProjectToEdit.Title;
         Model.Prefix = ProjectToEdit.Prefix;
+        Model.LatestVersion = ProjectToEdit.LatestVersion;
         Model.IsActive = ProjectToEdit.IsActive;
     }
 
@@ -146,6 +147,7 @@ public partial class ProjectDialog
             Model.Id.Value,
             Model.Title.Trim(),
             Model.Prefix.Trim(),
+            string.IsNullOrWhiteSpace(Model.LatestVersion) ? null : Model.LatestVersion.Trim(),
             Model.IsActive);
 
         var result = await ProjectService.UpdateProjectAsync(request);

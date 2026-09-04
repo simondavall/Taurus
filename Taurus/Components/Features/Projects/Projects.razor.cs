@@ -40,6 +40,7 @@ public partial class Projects
             {
                 nameof(Project.Id) => Sort(ProjectItems, project => project.Id),
                 nameof(Project.Prefix) => Sort(ProjectItems, project => project.Prefix),
+                nameof(Project.LatestVersion) => Sort(ProjectItems, project => project.LatestVersion),
                 nameof(Project.IsActive) => Sort(ProjectItems, project => project.IsActive),
                 _ => Sort(ProjectItems, project => project.Title)
             };
