@@ -25,5 +25,6 @@ public static class TicketLookupCodes
     {
         public const string Task = "task";
         public const string Bug = "bug";
+        public const string Feature = "feature";
     }
 }
