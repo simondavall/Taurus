@@ -5,7 +5,7 @@ where development should continue.
 
 # Current phase
 
-# Enhancements
+- Enhancements
 
 # Current milestone
 
@@ -13,7 +13,7 @@ where development should continue.
 
 # Current task
 
-- Add "No Tickets" dcisplay when no tickets are returned from selection.
+- Add "No Tickets" display when no tickets are returned from selection.
 
 # Remaining milestone tasks
 
