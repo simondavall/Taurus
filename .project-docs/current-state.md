@@ -5,7 +5,7 @@ where development should continue.
 
 # Current phase
 
-# Enhancements
+- Enhancements
 
 # Current milestone
 
@@ -13,11 +13,10 @@ where development should continue.
 
 # Current task
 
-- Add "No Tickets" dcisplay when no tickets are returned from selection.
+- Ticket Details page Cancel refreshes original ticket info.
 
 # Remaining milestone tasks
 
-- Only include Active projects in All selection.
 - Restructure project into abstracted layers.
 - Introduce caching
 
@@ -32,3 +31,4 @@ where development should continue.
     - Applied the project-specific requirement consistently to ticket creation and editing.
     - Added Fixed In Release support to ticket creation.
 - Verified the application builds, starts and affected project and ticket workflows operate successfully.
+- Added 'No tickets' text if filter returns no tickets for a project.

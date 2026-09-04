@@ -9,6 +9,10 @@
     width: 100%;
 }
 
+.ticket-empty {
+    margin-bottom: 1.5rem;
+}
+
 .tickets-listing {
     min-width: 0;
 }
