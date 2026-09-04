@@ -1,6 +1,6 @@
-﻿namespace Taurus.Application.Tickets;
+﻿namespace Taurus.Application.Tickets.Lookups;
 
-public static class TicketReferenceCodes
+public static class TicketLookupCodes
 {
     public static class Status
     {
@@ -25,5 +25,6 @@ public static class TicketReferenceCodes
     {
         public const string Task = "task";
         public const string Bug = "bug";
+        public const string Feature = "feature";
     }
 }

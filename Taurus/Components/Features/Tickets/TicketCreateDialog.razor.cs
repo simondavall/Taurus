@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 using Taurus.Application.Projects;
 using Taurus.Application.Tickets;
+using Taurus.Application.Tickets.Lookups;
 
 namespace Taurus.Components.Features.Tickets;
 
@@ -33,7 +34,7 @@ public partial class TicketCreateDialog
     [Parameter]
     public string? ParentTicketRef { get; set; }
 
-    private readonly TicketCreateEditorValidator _validator = new();
+    private TicketCreateEditorValidator _validator = default!;
 
     private MudForm _form = default!;
 
@@ -62,6 +63,9 @@ public partial class TicketCreateDialog
             throw new InvalidOperationException(
                 "Ticket status reference data is required when creating a ticket.");
         }
+
+        var lookupIds = TicketLookupIds.Resolve(TicketStatuses, TicketPriorities);
+        _validator = new TicketCreateEditorValidator(lookupIds.CompletedStatusId, Project.RequireFixedInRelease);
 
         Model.TypeId = TicketTypes[0].Id;
         Model.PriorityId = TicketPriorities[0].Id;
@@ -97,6 +101,7 @@ public partial class TicketCreateDialog
                 Model.StatusId,
                 Model.TypeId,
                 Model.PriorityId,
+                string.IsNullOrWhiteSpace(Model.FixedInRelease) ? null : Model.FixedInRelease.Trim(),
                 ParentTicketRef);
 
             var result = await TicketService.CreateTicketAsync(request, userId);

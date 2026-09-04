@@ -64,6 +64,30 @@
 
                 <MudTh>
                     <MudButton Variant="Variant.Text"
+                               OnClick="@(() => SortBy(nameof(Project.LatestVersion)))">
+                        Latest Version
+                        @if (SortField == nameof(Project.LatestVersion))
+                        {
+                            <MudIcon Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
+                                     Size="Size.Small" />
+                        }
+                    </MudButton>
+                </MudTh>
+                
+                <MudTh>
+                    <MudButton Variant="Variant.Text"
+                               OnClick="@(() => SortBy(nameof(Project.RequireFixedInRelease)))">
+                        Fixed In Release
+                        @if (SortField == nameof(Project.RequireFixedInRelease))
+                        {
+                            <MudIcon Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
+                                     Size="Size.Small" />
+                        }
+                    </MudButton>
+                </MudTh>
+                
+                <MudTh>
+                    <MudButton Variant="Variant.Text"
                                OnClick="@(() => SortBy(nameof(Project.IsActive)))">
                         Active
                         @if (SortField == nameof(Project.IsActive))
@@ -79,6 +103,15 @@
                 <MudTd>@DisplayId(context.Id)</MudTd>
                 <MudTd>@context.Title</MudTd>
                 <MudTd>@context.Prefix</MudTd>
+                <MudTd>@context.LatestVersion</MudTd>
+                <MudTd>
+                    <MudChip T="string"
+                             Color="@(context.RequireFixedInRelease ? Color.Success : Color.Default)"
+                             Variant="Variant.Filled"
+                             Size="Size.Small">
+                        @(context.RequireFixedInRelease ? "Required" : "Not Required")
+                    </MudChip>
+                </MudTd>
                 <MudTd>
                     <MudChip T="string"
                              Color="@(context.IsActive ? Color.Success : Color.Default)"
@@ -101,6 +134,8 @@
                        Margin="Margin.Dense">
                 <MudSelectItem Value="@nameof(Project.Title)">Title</MudSelectItem>
                 <MudSelectItem Value="@nameof(Project.Prefix)">Prefix</MudSelectItem>
+                <MudSelectItem Value="@nameof(Project.LatestVersion)">Latest Version</MudSelectItem>
+                <MudSelectItem Value="@nameof(Project.RequireFixedInRelease)">Fixed In Release</MudSelectItem>
                 <MudSelectItem Value="@nameof(Project.Id)">Id</MudSelectItem>
                 <MudSelectItem Value="@nameof(Project.IsActive)">Active</MudSelectItem>
             </MudSelect>
@@ -133,8 +168,23 @@
 
                     <MudText Typo="Typo.body2"
                              Color="Color.Secondary">
-                        @project.Prefix · @DisplayId(project.Id)
+                        @project.Prefix
+                        @if (!string.IsNullOrWhiteSpace(project.LatestVersion))
+                        {
+                            <text> · @project.LatestVersion</text>
+                        }
+                        <text> · @DisplayId(project.Id)</text>
                     </MudText>
+                    
+                    <MudChip T="string"
+                             Color="@(project.RequireFixedInRelease ? Color.Success : Color.Default)"
+                             Variant="Variant.Filled"
+                             Size="Size.Small"
+                             Class="mt-2">
+                        @(project.RequireFixedInRelease
+                            ? "Fixed In Release Required"
+                            : "Fixed In Release Not Required")
+                    </MudChip>
                 </div>
             }
         </MudPaper>

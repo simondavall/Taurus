@@ -1,6 +1,5 @@
 ﻿@page "/"
 @page "/tickets"
-@using Taurus.Application.Tickets
 
 <PageTitle>Tickets</PageTitle>
 
@@ -9,7 +8,7 @@
         <div class="p-3 tickets-heading">
             <MudText Typo="Typo.h4"
                      HtmlTag="h1">
-                Project: @SelectedProjectTitle
+                @SelectedProjectTitle
             </MudText>
 
             @if (CanCreateTicket)
@@ -36,82 +35,92 @@
             }
         </div>
 
-        <MudPaper Elevation="1"
-                  Class="tickets-table d-none d-sm-block">
-            @foreach (var ticket in PagedTicketItems)
-            {
-                <div class="@GetTicketClass(ticket)"
-                     role="link"
-                     tabindex="0"
-                     @onclick="() => OpenTicket(ticket)"
-                     @onkeydown="args => TicketKeyDown(args, ticket)">
-                    
-                    <MudText Typo="Typo.body2"
-                             Class="ticket-ref">
-                        @ticket.TicketRef
-                    </MudText>
+        @if (!PagedTicketItems.Any())
+        {
+            <MudText Typo="Typo.body1"
+                     Color="Color.Secondary"
+                     Class="ticket-empty">
+                No tickets
+            </MudText>
+        }
+        else
+        {
+            <MudPaper Elevation="1"
+                      Class="tickets-table d-none d-sm-block">
+                @foreach (var ticket in PagedTicketItems)
+                {
+                    <div class="@GetTicketClass(ticket)"
+                         role="link"
+                         tabindex="0"
+                         @onclick="() => OpenTicket(ticket)"
+                         @onkeydown="args => TicketKeyDown(args, ticket)">
 
-                    <TicketStateIndicators Ticket="@ticket"
-                                           ReferenceIds="@ReferenceIds"
-                                           TicketStatuses="@TicketStatuses"
-                                           TicketPriorities="@TicketPriorities"/>
+                        <MudText Typo="Typo.body2"
+                                 Class="ticket-ref">
+                            @ticket.TicketRef
+                        </MudText>
 
-                    <MudText Typo="Typo.body2"
-                             Class="ticket-title">
-                        @ticket.Title
-                    </MudText>
+                        <TicketStateIndicators Ticket="@ticket"
+                                               LookupIds="@LookupIds"
+                                               TicketStatuses="@TicketStatuses"
+                                               TicketPriorities="@TicketPriorities"/>
 
-                    <MudText Typo="Typo.body2"
-                             Class="ticket-updated">
-                        @FormatLastUpdated(ticket.LastModified)
-                    </MudText>
-                </div>
-            }
-        </MudPaper>
+                        <MudText Typo="Typo.body2"
+                                 Class="ticket-title">
+                            @ticket.Title
+                        </MudText>
 
-        <MudPaper Elevation="1"
-                  Class="mobile-ticket-list d-block d-sm-none">
-            @foreach (var ticket in PagedTicketItems)
-            {
-                <div class="@GetMobileTicketClass(ticket)"
-                     role="link"
-                     tabindex="0"
-                     @onclick="() => OpenTicket(ticket)"
-                     @onkeydown="args => TicketKeyDown(args, ticket)">
-                    
-                    <div class="mobile-ticket-header">
-                        <div class="mobile-ticket-identity">
-                            <MudText Typo="Typo.body2"
-                                     Class="ticket-ref">
-                                @ticket.TicketRef
-                            </MudText>
-
-                            <TicketStateIndicators Ticket="@ticket"
-                                                   ReferenceIds="@ReferenceIds"
-                                                   TicketStatuses="@TicketStatuses"
-                                                   TicketPriorities="@TicketPriorities"/>
-                        </div>
-
-                        <MudText Typo="Typo.caption"
+                        <MudText Typo="Typo.body2"
                                  Class="ticket-updated">
                             @FormatLastUpdated(ticket.LastModified)
                         </MudText>
                     </div>
+                }
+            </MudPaper>
 
-                    <MudText Typo="Typo.body2"
-                             Class="ticket-title">
-                        @ticket.Title
-                    </MudText>
-                </div>
-            }
-        </MudPaper>
+            <MudPaper Elevation="1"
+                      Class="mobile-ticket-list d-block d-sm-none">
+                @foreach (var ticket in PagedTicketItems)
+                {
+                    <div class="@GetMobileTicketClass(ticket)"
+                         role="link"
+                         tabindex="0"
+                         @onclick="() => OpenTicket(ticket)"
+                         @onkeydown="args => TicketKeyDown(args, ticket)">
 
+                        <div class="mobile-ticket-header">
+                            <div class="mobile-ticket-identity">
+                                <MudText Typo="Typo.body2"
+                                         Class="ticket-ref">
+                                    @ticket.TicketRef
+                                </MudText>
+
+                                <TicketStateIndicators Ticket="@ticket"
+                                                       LookupIds="@LookupIds"
+                                                       TicketStatuses="@TicketStatuses"
+                                                       TicketPriorities="@TicketPriorities"/>
+                            </div>
+
+                            <MudText Typo="Typo.caption"
+                                     Class="ticket-updated">
+                                @FormatLastUpdated(ticket.LastModified)
+                            </MudText>
+                        </div>
+
+                        <MudText Typo="Typo.body2"
+                                 Class="ticket-title">
+                            @ticket.Title
+                        </MudText>
+                    </div>
+                }
+            </MudPaper>
+        }
         @if (PageCount > 1)
         {
             <div class="tickets-pagination">
                 <MudPagination Count="@PageCount"
                                @bind-Selected="CurrentPage"
-                               Color="Color.Primary" />
+                               Color="Color.Primary"/>
             </div>
         }
     </div>

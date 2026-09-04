@@ -5,14 +5,12 @@ namespace Taurus.Components.Features.Tickets;
 
 public sealed class TicketEditorValidator : AbstractValidator<TicketEditorModel>, IMudValidator<TicketEditorModel>
 {
-    private readonly TicketReferenceIds _referenceIds;
+    private readonly TicketLookupIds _lookupIds;
     private readonly bool _requireFixedInReleaseForCompletion;
 
-    public TicketEditorValidator(
-        TicketReferenceIds referenceIds,
-        bool requireFixedInReleaseForCompletion)
+    public TicketEditorValidator(TicketLookupIds lookupIds, bool requireFixedInReleaseForCompletion)
     {
-        _referenceIds = referenceIds;
+        _lookupIds = lookupIds;
         _requireFixedInReleaseForCompletion = requireFixedInReleaseForCompletion;
 
         RuleFor(ticket => ticket.Title)
@@ -43,8 +41,8 @@ public sealed class TicketEditorValidator : AbstractValidator<TicketEditorModel>
             return true;
         }
 
-        return ticket.StatusId != _referenceIds.CompletedStatusId
-               && ticket.StatusId != _referenceIds.ObsoleteStatusId;
+        return ticket.StatusId != _lookupIds.CompletedStatusId
+               && ticket.StatusId != _lookupIds.ObsoleteStatusId;
     }
 
     private bool CanCompleteTicket(TicketEditorModel ticket)
@@ -54,7 +52,7 @@ public sealed class TicketEditorValidator : AbstractValidator<TicketEditorModel>
             return true;
         }
 
-        if (ticket.StatusId != _referenceIds.CompletedStatusId)
+        if (ticket.StatusId != _lookupIds.CompletedStatusId)
         {
             return true;
         }

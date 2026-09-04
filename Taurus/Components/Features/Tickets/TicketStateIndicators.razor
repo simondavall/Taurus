@@ -1,8 +1,8 @@
-﻿@using Taurus.Application.Tickets
+﻿@using Taurus.Application.Tickets.Lookups
 
 <div class="ticket-indicator">
-    @if (Ticket.PriorityId == ReferenceIds.HighPriorityId ||
-         Ticket.PriorityId == ReferenceIds.CriticalPriorityId)
+    @if (Ticket.PriorityId == LookupIds.HighPriorityId ||
+         Ticket.PriorityId == LookupIds.CriticalPriorityId)
     {
         var priority = TicketPriorities.First(priority =>
             priority.Id == Ticket.PriorityId);
@@ -16,8 +16,8 @@
 </div>
 
 <div class="ticket-indicator">
-    @if (Ticket.StatusId == ReferenceIds.InProgressStatusId ||
-         Ticket.StatusId == ReferenceIds.OnHoldStatusId)
+    @if (Ticket.StatusId == LookupIds.InProgressStatusId ||
+         Ticket.StatusId == LookupIds.OnHoldStatusId)
     {
         var status = TicketStatuses.First(status =>
             status.Id == Ticket.StatusId);
@@ -35,7 +35,7 @@
     public Ticket Ticket { get; set; } = default!;
 
     [Parameter, EditorRequired]
-    public TicketReferenceIds ReferenceIds { get; set; } = default!;
+    public TicketLookupIds LookupIds { get; set; } = default!;
 
     [Parameter, EditorRequired]
     public IReadOnlyList<TicketStatus> TicketStatuses { get; set; } = [];
@@ -45,21 +45,21 @@
 
     private string GetPriorityClass()
     {
-        return Ticket.PriorityId == ReferenceIds.CriticalPriorityId
+        return Ticket.PriorityId == LookupIds.CriticalPriorityId
             ? "ticket-priority-critical"
             : "ticket-priority-high";
     }
 
     private string GetStatusIcon()
     {
-        return Ticket.StatusId == ReferenceIds.InProgressStatusId
+        return Ticket.StatusId == LookupIds.InProgressStatusId
             ? Icons.Material.Filled.PlayArrow
             : Icons.Material.Filled.Pause;
     }
 
     private Color GetStatusColor()
     {
-        return Ticket.StatusId == ReferenceIds.InProgressStatusId
+        return Ticket.StatusId == LookupIds.InProgressStatusId
             ? Color.Info
             : Color.Warning;
     }

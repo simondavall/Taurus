@@ -1,17 +1,15 @@
 ﻿using PegasusApi.Abstractions.Lookups;
 
-namespace Taurus.Application.Tickets;
+namespace Taurus.Application.Tickets.Lookups;
 
-public interface ITicketReferenceDataService
+public interface ITicketLookupDataService
 {
     Task<IReadOnlyList<TicketStatus>> GetStatusesAsync();
     Task<IReadOnlyList<TicketPriority>> GetPrioritiesAsync();
     Task<IReadOnlyList<TicketType>> GetTypesAsync();
 }
 
-public sealed class TicketReferenceDataService(
-    HttpClient httpClient,
-    ILogger<TicketReferenceDataService> logger) : ITicketReferenceDataService
+public sealed class TicketLookupDataService(HttpClient httpClient, ILogger<TicketLookupDataService> logger) : ITicketLookupDataService
 {
     public Task<IReadOnlyList<TicketStatus>> GetStatusesAsync()
     {
@@ -55,13 +53,11 @@ public sealed class TicketReferenceDataService(
                 .ToArray();
 
             logger.LogInformation("Retrieved {LookupCount} {LookupName} from PegasusApi", items.Length, lookupName);
-
             return items;
         }
         catch (Exception exception)
         {
             logger.LogError(exception, "Failed to retrieve {LookupName} from PegasusApi", lookupName);
-
             throw;
         }
     }

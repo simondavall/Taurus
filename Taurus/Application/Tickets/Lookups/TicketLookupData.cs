@@ -1,4 +1,4 @@
-﻿namespace Taurus.Application.Tickets;
+﻿namespace Taurus.Application.Tickets.Lookups;
 
 public sealed record TicketStatus(
     int Id,

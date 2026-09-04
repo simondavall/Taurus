@@ -7,6 +7,8 @@ using Taurus.Application;
 using Taurus.Application.Markdown;
 using Taurus.Application.Projects;
 using Taurus.Application.Tickets;
+using Taurus.Application.Tickets.Comments;
+using Taurus.Application.Tickets.Lookups;
 using Taurus.Application.Users;
 using Taurus.Components.Features.Shared;
 using Severity = MudBlazor.Severity;
@@ -23,7 +25,7 @@ public partial class TicketDetails
     [Inject]
     private ITicketCommentService TicketCommentService { get; set; } = default!;
     [Inject]
-    private ITicketReferenceDataService TicketReferenceDataService { get; set; } = default!;
+    private ITicketLookupDataService TicketLookupDataService { get; set; } = default!;
     [Inject]
     private IProjectService ProjectService { get; set; } = default!;
     [Inject]
@@ -36,8 +38,6 @@ public partial class TicketDetails
     private INavigationHistoryService NavigationHistoryService { get; set; } = default!;
     [Inject]
     private IDialogService DialogService { get; set; } = default!;
-    [Inject]
-    private IConfiguration Configuration { get; set; } = default!;
     [Inject]
     private IUserService UserService { get; set; } = default!;
     [Inject]
@@ -59,7 +59,7 @@ public partial class TicketDetails
     private IReadOnlyList<User> Users { get; set; } = [];
     private Application.Tickets.TicketDetails? LoadedTicket { get; set; }
 
-    private TicketReferenceIds ReferenceIds { get; set; } = default!;
+    private TicketLookupIds LookupIds { get; set; } = default!;
     
     private bool _loading;
     private bool _saving;
@@ -69,8 +69,20 @@ public partial class TicketDetails
     private string? NewComment { get; set; }
 
 
-    private string ProjectTitle =>
-        CurrentProject?.Title ?? "Unknown project";
+    private string ProjectTitle
+    {
+        get
+        {
+            if (CurrentProject is null)
+            {
+                return "Unknown project";
+            }
+
+            return string.IsNullOrWhiteSpace(CurrentProject.LatestVersion)
+                ? CurrentProject.Title
+                : $"{CurrentProject.Title} ({CurrentProject.LatestVersion})";
+        }
+    }
 
     private Project? CurrentProject =>
         Editor is null
@@ -99,9 +111,9 @@ public partial class TicketDetails
     private async Task LoadPageDataAsync()
     {
         var projectsTask = ProjectService.GetProjectsAsync();
-        var statusesTask = TicketReferenceDataService.GetStatusesAsync();
-        var prioritiesTask = TicketReferenceDataService.GetPrioritiesAsync();
-        var typesTask = TicketReferenceDataService.GetTypesAsync();
+        var statusesTask = TicketLookupDataService.GetStatusesAsync();
+        var prioritiesTask = TicketLookupDataService.GetPrioritiesAsync();
+        var typesTask = TicketLookupDataService.GetTypesAsync();
         var ticketTask = TicketService.GetTicketByRefAsync(TicketRef);
         var usersTask = UserService.GetUsersAsync();
 
@@ -119,9 +131,7 @@ public partial class TicketDetails
         TicketTypes = await typesTask;
         Users = await usersTask;
 
-        var requireFixedInReleaseForCompletion = Configuration.GetValue("Tickets:RequireFixedInReleaseForCompletion", true);
-        ReferenceIds = TicketReferenceIds.Resolve(TicketStatuses, TicketPriorities);
-        _validator = new TicketEditorValidator(ReferenceIds, requireFixedInReleaseForCompletion);
+        LookupIds = TicketLookupIds.Resolve(TicketStatuses, TicketPriorities);
         
         var ticketResult = await ticketTask;
         if (!ticketResult.Succeeded || ticketResult.Value is null)
@@ -132,6 +142,9 @@ public partial class TicketDetails
         }
 
         SetEditor(ticketResult.Value);
+        
+        _validator = new TicketEditorValidator(LookupIds, CurrentProject?.RequireFixedInRelease ?? false);
+        
         await LoadRelatedTicketDataAsync(ticketResult.Value);
     }
 
@@ -177,7 +190,7 @@ public partial class TicketDetails
             .OrderByDescending(subTask => subTask.LastModified)
             .ToArray();
 
-        Editor?.HasActiveSubTasks = SubTasks.Any(subTask => !TicketPresentation.IsInactive(subTask, ReferenceIds));
+        Editor?.HasActiveSubTasks = SubTasks.Any(subTask => !TicketPresentation.IsInactive(subTask, LookupIds));
 
         ParentTicket = null;
 
@@ -559,19 +572,27 @@ public partial class TicketDetails
     private bool IsClosedTicket()
     {
         return Editor is not null &&
-               (Editor.StatusId == ReferenceIds.CompletedStatusId ||
-                Editor.StatusId == ReferenceIds.ObsoleteStatusId);
+               (Editor.StatusId == LookupIds.CompletedStatusId ||
+                Editor.StatusId == LookupIds.ObsoleteStatusId);
     }
     
     private string GetSubTaskClass(Ticket ticket)
     {
-        return TicketPresentation.IsInactive(ticket, ReferenceIds)
+        return TicketPresentation.IsInactive(ticket, LookupIds)
             ? "ticket-subtask-row ticket-inactive"
             : "ticket-subtask-row";
     }
     
-    private void Cancel()
+    private async Task CancelAsync()
     {
-        NavigationManager.NavigateTo("/tickets");
+        if (_saving)
+        {
+            return;
+        }
+
+        _updateError = null;
+        ValidationBannerMessages = [];
+
+        await ReloadPageDataAsync();
     }
 }

@@ -184,7 +184,7 @@ else if (Editor is not null)
                                         </div>
                                     </div>
 
-                                    @if (comment.IsEditing && !comment.IsDeleted)
+                                    @if (comment is { IsEditing: true, IsDeleted: false })
                                     {
                                         <MudTextField T="string"
                                                       @bind-Value="comment.Content"
@@ -253,7 +253,7 @@ else if (Editor is not null)
                                     </MudText>
 
                                     <TicketStateIndicators Ticket="@subTask"
-                                                           ReferenceIds="@ReferenceIds"
+                                                           LookupIds="@LookupIds"
                                                            TicketStatuses="@TicketStatuses"
                                                            TicketPriorities="@TicketPriorities"/>
 
@@ -278,21 +278,21 @@ else if (Editor is not null)
                                Color="Color.Primary"
                                StartIcon="@Icons.Material.Filled.Add"
                                Disabled="@(_saving || CurrentProject is null)"
-                               OnClick="AddSubTaskAsync">
+                               OnClick="@AddSubTaskAsync">
                         Add Sub Task
                     </MudButton>
 
                     <div class="ticket-details-save-actions">
                         <MudButton Variant="Variant.Text"
                                    Disabled="@_saving"
-                                   OnClick="Cancel">
+                                   OnClick="@CancelAsync">
                             Cancel
                         </MudButton>
 
                         <MudButton Variant="Variant.Filled"
                                    Color="Color.Primary"
                                    Disabled="@_saving"
-                                   OnClick="UpdateAsync">
+                                   OnClick="@UpdateAsync">
                             @if (_saving)
                             {
                                 <MudProgressCircular Indeterminate="true"
@@ -425,7 +425,7 @@ else if (Editor is not null)
                             @foreach (var user in Users)
                             {
                                 <MudSelectItem T="Guid?"
-                                               Value="@((Guid?)user.Id)">
+                                               Value="@(user.Id)">
                                     @user.DisplayName
                                 </MudSelectItem>
                             }

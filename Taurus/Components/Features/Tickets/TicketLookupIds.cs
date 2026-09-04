@@ -1,8 +1,8 @@
-﻿using Taurus.Application.Tickets;
+﻿using Taurus.Application.Tickets.Lookups;
 
 namespace Taurus.Components.Features.Tickets;
 
-public sealed record TicketReferenceIds(
+public sealed record TicketLookupIds(
     int BacklogStatusId,
     int CompletedStatusId,
     int ObsoleteStatusId,
@@ -11,16 +11,16 @@ public sealed record TicketReferenceIds(
     int HighPriorityId,
     int CriticalPriorityId)
 {
-    public static TicketReferenceIds Resolve(IReadOnlyList<TicketStatus> statuses, IReadOnlyList<TicketPriority> priorities)
+    public static TicketLookupIds Resolve(IReadOnlyList<TicketStatus> statuses, IReadOnlyList<TicketPriority> priorities)
     {
-        return new TicketReferenceIds(
-            ResolveStatusId(statuses, TicketReferenceCodes.Status.Backlog),
-            ResolveStatusId(statuses, TicketReferenceCodes.Status.Completed),
-            ResolveStatusId(statuses, TicketReferenceCodes.Status.Obsolete),
-            ResolveStatusId(statuses, TicketReferenceCodes.Status.InProgress),
-            ResolveStatusId(statuses, TicketReferenceCodes.Status.OnHold),
-            ResolvePriorityId(priorities, TicketReferenceCodes.Priority.High),
-            ResolvePriorityId(priorities, TicketReferenceCodes.Priority.Critical));
+        return new TicketLookupIds(
+            ResolveStatusId(statuses, TicketLookupCodes.Status.Backlog),
+            ResolveStatusId(statuses, TicketLookupCodes.Status.Completed),
+            ResolveStatusId(statuses, TicketLookupCodes.Status.Obsolete),
+            ResolveStatusId(statuses, TicketLookupCodes.Status.InProgress),
+            ResolveStatusId(statuses, TicketLookupCodes.Status.OnHold),
+            ResolvePriorityId(priorities, TicketLookupCodes.Priority.High),
+            ResolvePriorityId(priorities, TicketLookupCodes.Priority.Critical));
     }
 
     private static int ResolveStatusId(IReadOnlyList<TicketStatus> statuses, string code)
