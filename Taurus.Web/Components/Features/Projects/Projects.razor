@@ -33,7 +33,7 @@
                         @if (SortField == nameof(Project.Id))
                         {
                             <MudIcon Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
-                                     Size="Size.Small" />
+                                     Size="Size.Small"/>
                         }
                     </MudButton>
                 </MudTh>
@@ -45,7 +45,7 @@
                         @if (SortField == nameof(Project.Title))
                         {
                             <MudIcon Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
-                                     Size="Size.Small" />
+                                     Size="Size.Small"/>
                         }
                     </MudButton>
                 </MudTh>
@@ -57,7 +57,7 @@
                         @if (SortField == nameof(Project.Prefix))
                         {
                             <MudIcon Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
-                                     Size="Size.Small" />
+                                     Size="Size.Small"/>
                         }
                     </MudButton>
                 </MudTh>
@@ -69,11 +69,11 @@
                         @if (SortField == nameof(Project.LatestVersion))
                         {
                             <MudIcon Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
-                                     Size="Size.Small" />
+                                     Size="Size.Small"/>
                         }
                     </MudButton>
                 </MudTh>
-                
+
                 <MudTh>
                     <MudButton Variant="Variant.Text"
                                OnClick="@(() => SortBy(nameof(Project.RequireFixedInRelease)))">
@@ -81,11 +81,11 @@
                         @if (SortField == nameof(Project.RequireFixedInRelease))
                         {
                             <MudIcon Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
-                                     Size="Size.Small" />
+                                     Size="Size.Small"/>
                         }
                     </MudButton>
                 </MudTh>
-                
+
                 <MudTh>
                     <MudButton Variant="Variant.Text"
                                OnClick="@(() => SortBy(nameof(Project.IsActive)))">
@@ -93,7 +93,7 @@
                         @if (SortField == nameof(Project.IsActive))
                         {
                             <MudIcon Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
-                                     Size="Size.Small" />
+                                     Size="Size.Small"/>
                         }
                     </MudButton>
                 </MudTh>
@@ -143,7 +143,7 @@
             <MudIconButton Icon="@(SortDescending ? Icons.Material.Filled.ArrowDownward : Icons.Material.Filled.ArrowUpward)"
                            OnClick="ToggleSortDirection"
                            Color="Color.Primary"
-                           aria-label="Toggle sort direction" />
+                           aria-label="Toggle sort direction"/>
         </div>
 
         <MudPaper Elevation="1"
@@ -152,7 +152,7 @@
             {
                 <div class="mobile-project"
                      @onclick="@(() => EditProjectAsync(project))">
-                    
+
                     <div class="mobile-project-header">
                         <MudText Typo="Typo.subtitle1">
                             @project.Title
@@ -175,7 +175,7 @@
                         }
                         <text> · @DisplayId(project.Id)</text>
                     </MudText>
-                    
+
                     <MudChip T="string"
                              Color="@(project.RequireFixedInRelease ? Color.Success : Color.Default)"
                              Variant="Variant.Filled"
@@ -195,7 +195,7 @@
         <div class="projects-pagination">
             <MudPagination Count="@PageCount"
                            @bind-Selected="CurrentPage"
-                           Color="Color.Primary" />
+                           Color="Color.Primary"/>
         </div>
     }
 </div>

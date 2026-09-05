@@ -18,9 +18,7 @@ public sealed class MarkdownRenderer(IHtmlContentSanitizer htmlContentSanitizer)
     public string Render(string? markdown)
     {
         if (string.IsNullOrWhiteSpace(markdown))
-        {
             return string.Empty;
-        }
 
         var html = Markdig.Markdown.ToHtml(markdown, Pipeline);
 

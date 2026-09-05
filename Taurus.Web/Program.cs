@@ -18,19 +18,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 var isLocalExecution = string.Equals(Environment.GetEnvironmentVariable("TAURUS_LOCAL_EXECUTION"), "true", StringComparison.OrdinalIgnoreCase);
 
-if (isLocalExecution)
-{
+if (isLocalExecution) {
     Env.NoClobber()
         .TraversePath()
         .Load();
 
     builder.Configuration.AddEnvironmentVariables();
-    
+
     builder.WebHost.UseStaticWebAssets();
 }
 
-builder.Services.AddSerilog((services, configuration) =>
-{
+builder.Services.AddSerilog((services, configuration) => {
     configuration
         .ReadFrom.Configuration(builder.Configuration)
         .ReadFrom.Services(services)
@@ -46,14 +44,12 @@ builder.Services
     .AddInteractiveServerComponents();
 
 builder.Services
-    .AddAuthentication(options =>
-    {
+    .AddAuthentication(options => {
         options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
     })
     .AddCookie()
-    .AddOpenIdConnect(options =>
-    {
+    .AddOpenIdConnect(options => {
         var configuration = builder.Configuration.GetSection("OpenIdConnect");
 
         options.Authority = configuration["Authority"];
@@ -75,20 +71,17 @@ builder.Services
         options.Scope.Add("email");
         options.Scope.Add("offline_access");
         options.Scope.Add("reference_api");
-        
-        options.Events.OnRemoteFailure = context =>
-        {
+
+        options.Events.OnRemoteFailure = context => {
             var error = context.Failure?.Data["error"]?.ToString();
-            
-            var reason = error switch
-            {
+
+            var reason = error switch {
                 "access_denied" => "unauthorized",
                 "unauthorized_client" => "disabled",
                 _ => null
             };
 
-            if (reason is not null)
-            {
+            if (reason is not null) {
                 context.Response.Redirect($"/access-denied?reason={reason}");
                 context.HandleResponse();
             }
@@ -97,10 +90,7 @@ builder.Services
         };
     });
 
-builder.Services.AddAuthorization(options =>
-{
-    options.FallbackPolicy = options.DefaultPolicy;
-});
+builder.Services.AddAuthorization(options => { options.FallbackPolicy = options.DefaultPolicy; });
 builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddMudServices();
@@ -116,9 +106,8 @@ builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Error", createScopeForErrors: true);
+if (!app.Environment.IsDevelopment()) {
+    app.UseExceptionHandler("/Error", true);
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
@@ -135,31 +124,27 @@ app.MapStaticAssets()
     .Add(endpointBuilder =>
         endpointBuilder.Metadata.Add(new AllowAnonymousAttribute()));
 
-app.MapGet("/authentication/login", (string? returnUrl) =>
-{
-    var properties = new AuthenticationProperties
-    {
+app.MapGet("/authentication/login", (string? returnUrl) => {
+    var properties = new AuthenticationProperties {
         RedirectUri = IsLocalReturnUrl(returnUrl) ? returnUrl! : "/"
     };
 
-    return Results.Challenge(properties, 
-        [
-            OpenIdConnectDefaults.AuthenticationScheme
-        ]);
+    return Results.Challenge(properties,
+    [
+        OpenIdConnectDefaults.AuthenticationScheme
+    ]);
 }).AllowAnonymous();
 
-app.MapGet("/authentication/logout", () =>
-{
-    var properties = new AuthenticationProperties
-    {
+app.MapGet("/authentication/logout", () => {
+    var properties = new AuthenticationProperties {
         RedirectUri = "/"
     };
 
-    return Results.SignOut(properties, 
-        [
-            CookieAuthenticationDefaults.AuthenticationScheme, 
-            OpenIdConnectDefaults.AuthenticationScheme
-        ]);
+    return Results.SignOut(properties,
+    [
+        CookieAuthenticationDefaults.AuthenticationScheme,
+        OpenIdConnectDefaults.AuthenticationScheme
+    ]);
 }).AllowAnonymous();
 
 app.MapRazorComponents<App>()
@@ -171,8 +156,7 @@ return;
 
 static void ValidateRequiredConfiguration(IConfiguration configuration)
 {
-    string[] keys =
-    [
+    string[] keys = [
         "OpenIdConnect:Authority",
         "OpenIdConnect:ClientId",
         "OpenIdConnect:ClientSecret",
@@ -181,15 +165,13 @@ static void ValidateRequiredConfiguration(IConfiguration configuration)
         "DataProtection:CertificatePath",
         "DataProtection:CertificatePassword"
     ];
-    
+
     var missing = keys
         .Where(key => string.IsNullOrWhiteSpace(configuration[key]))
         .ToArray();
 
     if (missing.Length == 0)
-    {
         return;
-    }
 
     throw new InvalidOperationException(
         "Missing required configuration values:" + Environment.NewLine +
@@ -199,9 +181,7 @@ static void ValidateRequiredConfiguration(IConfiguration configuration)
 static bool IsLocalReturnUrl(string? returnUrl)
 {
     if (string.IsNullOrWhiteSpace(returnUrl))
-    {
         return false;
-    }
 
     return returnUrl.StartsWith('/')
            && !returnUrl.StartsWith("//")

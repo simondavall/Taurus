@@ -14,22 +14,14 @@ public partial class Tickets
 
     private static readonly Guid AllProjectsId = Guid.Empty;
 
-    [Inject]
-    private IConfiguration Configuration { get; set; } = default!;
-    [Inject]
-    private NavigationManager NavigationManager { get; set; } = default!;
-    [Inject]
-    private IProjectService ProjectService { get; set; } = default!;
-    [Inject]
-    private ITicketService TicketService { get; set; } = default!;
-    [Inject]
-    private ITicketLookupDataService TicketLookupDataService { get; set; } = default!;
-    [Inject]
-    private IUserStateService UserStateService { get; set; } = default!;
-    [Inject]
-    private IDialogService DialogService { get; set; } = default!;
-    [Inject]
-    private ISnackbar Snackbar { get; set; } = default!;
+    [Inject] private IConfiguration Configuration { get; set; } = default!;
+    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
+    [Inject] private IProjectService ProjectService { get; set; } = default!;
+    [Inject] private ITicketService TicketService { get; set; } = default!;
+    [Inject] private ITicketLookupDataService TicketLookupDataService { get; set; } = default!;
+    [Inject] private IUserStateService UserStateService { get; set; } = default!;
+    [Inject] private IDialogService DialogService { get; set; } = default!;
+    [Inject] private ISnackbar Snackbar { get; set; } = default!;
 
     private IReadOnlyList<Project> ProjectItems { get; set; } = [];
     private IReadOnlyList<Ticket> TicketItems { get; set; } = [];
@@ -46,17 +38,20 @@ public partial class Tickets
         SelectedProjectId.HasValue
             ? ProjectItems.FirstOrDefault(project => project.Id == SelectedProjectId.Value)?.Title ?? "All"
             : "All";
+
     private Project? SelectedProject =>
         SelectedProjectId.HasValue
             ? ProjectItems.FirstOrDefault(project => project.Id == SelectedProjectId.Value)
             : null;
+
     private bool CanCreateTicket => SelectedProject is not null;
-    
+
     private int PageSize { get; set; }
     private int CurrentPage { get; set; } = 1;
     private IEnumerable<Ticket> FilteredTicketItems => ApplyTicketFilter(TicketItems);
     private int FilteredTicketCount => FilteredTicketItems.Count();
     private int PageCount => Math.Max(1, (int)Math.Ceiling(FilteredTicketCount / (double)PageSize));
+
     private IEnumerable<Ticket> PagedTicketItems =>
         FilteredTicketItems
             .OrderByDescending(ticket => ticket.LastModified)
@@ -68,17 +63,13 @@ public partial class Tickets
         PageSize = Configuration.GetValue("Tickets:PageSize", DefaultPageSize);
 
         if (PageSize <= 0)
-        {
             PageSize = DefaultPageSize;
-        }
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender)
-        {
             return;
-        }
 
         await LoadProjectsAsync();
         await LoadTicketLookupDataAsync();
@@ -111,14 +102,12 @@ public partial class Tickets
     private async Task RestoreSelectedProjectAsync()
     {
         var storedProjectId = await UserStateService.GetSelectedProjectIdAsync();
-        if (!storedProjectId.HasValue)
-        {
+        if (!storedProjectId.HasValue) {
             SelectedProjectId = null;
             return;
         }
 
-        if (ProjectItems.Any(project => project.Id == storedProjectId.Value))
-        {
+        if (ProjectItems.Any(project => project.Id == storedProjectId.Value)) {
             SelectedProjectId = storedProjectId;
             return;
         }
@@ -154,12 +143,9 @@ public partial class Tickets
     {
         var project = SelectedProject;
         if (project is null)
-        {
             return;
-        }
 
-        var parameters = new DialogParameters
-        {
+        var parameters = new DialogParameters {
             [nameof(TicketCreateDialog.Project)] = project,
             [nameof(TicketCreateDialog.TicketTypes)] = TicketTypes,
             [nameof(TicketCreateDialog.TicketPriorities)] = TicketPriorities,
@@ -176,9 +162,7 @@ public partial class Tickets
         if (result is null ||
             result.Canceled ||
             result.Data is not Application.Tickets.TicketDetails ticket)
-        {
             return;
-        }
 
         Snackbar.Add($"Ticket {ticket.TicketRef} created successfully.", Severity.Success);
         NavigationManager.NavigateTo($"/tickets/{Uri.EscapeDataString(ticket.TicketRef)}");
@@ -186,42 +170,35 @@ public partial class Tickets
 
     private static DialogOptions CreateTicketDialogOptions()
     {
-        return new DialogOptions
-        {
+        return new DialogOptions {
             FullWidth = true,
             MaxWidth = MaxWidth.Small,
             CloseOnEscapeKey = true
         };
     }
-    
+
     private async Task LoadTicketsAsync()
     {
         TicketItems = await TicketService.GetTicketsAsync(SelectedProjectId);
 
         if (CurrentPage > PageCount)
-        {
             CurrentPage = PageCount;
-        }
     }
 
     private void OpenTicket(Ticket ticket)
     {
-        NavigationManager.NavigateTo(
-            $"/tickets/{Uri.EscapeDataString(ticket.TicketRef)}");
+        NavigationManager.NavigateTo($"/tickets/{Uri.EscapeDataString(ticket.TicketRef)}");
     }
 
     private void TicketKeyDown(KeyboardEventArgs args, Ticket ticket)
     {
         if (args.Key is "Enter" or " ")
-        {
             OpenTicket(ticket);
-        }
     }
-    
+
     private IEnumerable<Ticket> ApplyTicketFilter(IEnumerable<Ticket> tickets)
     {
-        return SelectedTicketFilter switch
-        {
+        return SelectedTicketFilter switch {
             TicketFilter.Open => tickets.Where(ticket =>
                 ticket.StatusId != LookupIds.CompletedStatusId &&
                 ticket.StatusId != LookupIds.ObsoleteStatusId),

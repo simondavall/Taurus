@@ -6,21 +6,20 @@ namespace Taurus.Components.Features.Projects;
 
 public partial class ProjectDialog
 {
+    private readonly ProjectEditorValidator _validator = new();
+    private bool _deleting;
+    private string? _errorMessage;
+    private MudForm _form = default!;
+    private bool _saving;
+
     [CascadingParameter]
     private IMudDialogInstance MudDialog { get; set; } = default!;
-
     [Inject]
     private IDialogService DialogService { get; set; } = default!;
-
     [Inject]
     private IProjectService ProjectService { get; set; } = default!;
-
     [Parameter]
     public Project? ProjectToEdit { get; set; }
-
-    private readonly ProjectEditorValidator _validator = new();
-
-    private MudForm _form = default!;
 
     private ProjectEditorModel Model { get; } = new();
 
@@ -28,18 +27,10 @@ public partial class ProjectDialog
 
     private bool IsBusy => _saving || _deleting;
 
-    private string? _errorMessage;
-
-    private bool _saving;
-
-    private bool _deleting;
-
     protected override void OnInitialized()
     {
         if (ProjectToEdit is null)
-        {
             return;
-        }
 
         Model.Id = ProjectToEdit.Id;
         Model.Title = ProjectToEdit.Title;
@@ -61,25 +52,16 @@ public partial class ProjectDialog
         await _form.ValidateAsync();
 
         if (!_form.IsValid)
-        {
             return;
-        }
 
         _saving = true;
 
-        try
-        {
+        try {
             if (IsEdit)
-            {
                 await UpdateProjectAsync();
-            }
             else
-            {
                 await CreateProjectAsync();
-            }
-        }
-        finally
-        {
+        } finally {
             _saving = false;
         }
     }
@@ -87,9 +69,7 @@ public partial class ProjectDialog
     private async Task DeleteAsync()
     {
         if (Model.Id is null)
-        {
             throw new InvalidOperationException("A project identifier is required when deleting a project.");
-        }
 
         var confirmed = await DialogService.ShowMessageBoxAsync(
             "Delete Project",
@@ -98,27 +78,21 @@ public partial class ProjectDialog
             cancelText: "Cancel");
 
         if (confirmed != true)
-        {
             return;
-        }
 
         _errorMessage = null;
         _deleting = true;
 
-        try
-        {
+        try {
             var result = await ProjectService.DeleteProjectAsync(Model.Id.Value);
 
-            if (!result.Succeeded)
-            {
+            if (!result.Succeeded) {
                 _errorMessage = result.ErrorMessage;
                 return;
             }
 
             MudDialog.Close(DialogResult.Ok(ProjectDialogResult.Deleted));
-        }
-        finally
-        {
+        } finally {
             _deleting = false;
         }
     }
@@ -128,8 +102,7 @@ public partial class ProjectDialog
         var request = new CreateProjectRequest(Model.Title.Trim(), Model.Prefix.Trim());
         var result = await ProjectService.CreateProjectAsync(request);
 
-        if (!result.Succeeded)
-        {
+        if (!result.Succeeded) {
             _errorMessage = result.ErrorMessage;
             return;
         }
@@ -140,9 +113,7 @@ public partial class ProjectDialog
     private async Task UpdateProjectAsync()
     {
         if (Model.Id is null)
-        {
             throw new InvalidOperationException("A project identifier is required when editing a project.");
-        }
 
         var request = new UpdateProjectRequest(
             Model.Id.Value,
@@ -154,8 +125,7 @@ public partial class ProjectDialog
 
         var result = await ProjectService.UpdateProjectAsync(request);
 
-        if (!result.Succeeded)
-        {
+        if (!result.Succeeded) {
             _errorMessage = result.ErrorMessage;
             return;
         }

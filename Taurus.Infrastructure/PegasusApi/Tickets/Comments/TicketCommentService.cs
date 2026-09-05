@@ -22,7 +22,7 @@ public sealed class TicketCommentService(HttpClient httpClient, ILogger<TicketCo
             var requestUri = $"api/comments?TicketId={Uri.EscapeDataString(ticketId.ToString())}";
 
             var response = await httpClient.GetFromJsonAsync<CommentsResponse>(requestUri);
-            if (response is null) 
+            if (response is null)
                 throw new InvalidOperationException("PegasusApi returned an empty comments response.");
 
             var comments = response.Items

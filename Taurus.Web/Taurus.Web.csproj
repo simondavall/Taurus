@@ -1,24 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
-    <RootNamespace>Taurus</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+        <RootNamespace>Taurus</RootNamespace>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Taurus.Application\Taurus.Application.csproj" />
-    <ProjectReference Include="..\Taurus.Infrastructure\Taurus.Infrastructure.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Taurus.Application\Taurus.Application.csproj"/>
+        <ProjectReference Include="..\Taurus.Infrastructure\Taurus.Infrastructure.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="DotNetEnv" Version="3.1.1" />
-    <PackageReference Include="FluentValidation" Version="12.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.10" />
-    <PackageReference Include="MudBlazor" Version="9.6.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
-    <PackageReference Include="Serilog.Settings.Configuration" Version="10.0.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
-    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="DotNetEnv" Version="3.1.1"/>
+        <PackageReference Include="FluentValidation" Version="12.1.1"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.10"/>
+        <PackageReference Include="MudBlazor" Version="9.6.0"/>
+        <PackageReference Include="Serilog.AspNetCore" Version="10.0.0"/>
+        <PackageReference Include="Serilog.Settings.Configuration" Version="10.0.0"/>
+        <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1"/>
+        <PackageReference Include="Serilog.Sinks.File" Version="7.0.0"/>
+    </ItemGroup>
 
 </Project>
