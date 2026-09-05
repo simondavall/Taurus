@@ -244,7 +244,7 @@ Existing application settings are fully available in Taurus.
 - ✓ Replace global Fixed In Release requirement with per-project Require Fixed In Release.
 - ✓ Add "No Tickets" dcisplay when no tickets are returned from selection.
 - ✓ Ticket Details page Cancel refreshes original ticket info.
-- Restructure project into abstracted layers.
+- ✓ Restructure project into Web, Application and Infrastructure layers.
 - Introduce caching
 
 Future enhancements outside the planned implementation phases will be recorded here as the project evolves.

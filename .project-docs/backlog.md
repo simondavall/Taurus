@@ -5,7 +5,6 @@
 # Features
 
 # Enhancements
-Set up releases for projects and replace the fixed in release text with drop down
 
 # Technical Debt
 - Move configuiration references to their own class. Verify all settings exist. 

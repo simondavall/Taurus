@@ -73,42 +73,81 @@ This avoids coupling browser code to the API, avoids introducing browser-side AP
 
 ## Application structure
 
-Taurus will contain at least two logical layers.
+Taurus is structured as three projects with explicit dependency boundaries while preserving Vertical Slice Architecture within each project.
 
-### Web layer
+```text
+Taurus.Web
+  ├── Taurus.Application
+  └── Taurus.Infrastructure
+        └── Taurus.Application
+```
+Vertical feature slicing is retained within these project boundaries. The projects define responsibility and dependency boundaries; they do not replace feature-oriented organisation with horizontal technical layers.
 
-The Web layer owns:
+### Taurus.Web
 
-- Blazor pages.
-- Razor components.
+The Web project is the application host and composition root.
+
+It owns:
+
+- Blazor pages and Razor components.
 - MudBlazor presentation.
 - Form and editor models.
+- UI validation.
 - Navigation.
 - Interactive UI state.
+- Protected browser state.
 - Responsive behaviour.
-- Authentication UI.
+- Authentication and application hosting.
 - Display of validation and operation failures.
 
-The Web layer consumes Taurus application services and models.
+The Web project consumes Taurus application services and models.
 
-The Web layer must not consume PegasusApi request or response models directly.
+The Web project must not consume PegasusApi request or response models directly.
 
-### Application and integration layer
+### Taurus.Application
 
-The application and integration layer owns:
+The Application project defines Taurus-owned application contracts and models.
 
-- Taurus request models.
-- Taurus response models.
-- Application workflow services.
+It owns:
+
+- Taurus request and response models.
+- Application service interfaces.
+- Taurus-owned result types.
+- Shared application behaviour that is independent of Web and external infrastructure.
+- Shared content-processing abstractions such as Markdown rendering and HTML sanitisation.
+
+The Application project does not depend on the Web or Infrastructure projects.
+
+The Application project must not depend on MudBlazor, Blazor presentation infrastructure or PegasusApi transport models.
+
+### Taurus.Infrastructure
+
+The Infrastructure project implements external integration concerns required by Taurus.
+
+It owns:
+
 - PegasusApi HTTP communication.
+- PegasusApi service implementations.
 - Mapping Taurus requests to PegasusApi requests.
 - Mapping PegasusApi responses to Taurus responses.
-- Interpreting API validation and failure responses.
-- Supplying authenticated user information to API operations where required.
+- Interpreting PegasusApi validation and failure responses.
+- Infrastructure-specific dependency registration.
 
-PegasusApi abstraction types terminate at this boundary.
+PegasusApi.Abstractions is referenced only by the Infrastructure project and terminates at this boundary.
 
-The exact class and project structure should evolve as the first features are implemented.
+Future infrastructure concerns such as caching belong here when they are introduced.
+
+Dependency direction
+
+The allowed project dependencies are:
+
+```
+Taurus.Web
+├── Taurus.Application
+└── Taurus.Infrastructure
+└── Taurus.Application
+```
+Taurus.Application must remain independent of both Taurus.Web and Taurus.Infrastructure.
 
 ## API integration
 
