@@ -15,12 +15,16 @@ public sealed class NavigationHistoryService(NavigationManager navigationManager
     private bool _started;
     private bool _suppressNextLocation;
 
+    public void Dispose()
+    {
+        if (_started)
+            navigationManager.LocationChanged -= NavigationManagerOnLocationChanged;
+    }
+
     public void Start()
     {
         if (_started)
-        {
             return;
-        }
 
         _started = true;
 
@@ -32,9 +36,7 @@ public sealed class NavigationHistoryService(NavigationManager navigationManager
     public bool TryNavigateBack()
     {
         if (_history.Count < 2)
-        {
             return false;
-        }
 
         _history.RemoveAt(_history.Count - 1);
 
@@ -48,8 +50,7 @@ public sealed class NavigationHistoryService(NavigationManager navigationManager
 
     private void NavigationManagerOnLocationChanged(object? sender, LocationChangedEventArgs args)
     {
-        if (_suppressNextLocation)
-        {
+        if (_suppressNextLocation) {
             _suppressNextLocation = false;
             return;
         }
@@ -57,9 +58,7 @@ public sealed class NavigationHistoryService(NavigationManager navigationManager
         var path = GetLocalPath(args.Location);
 
         if (_history.Count > 0 && string.Equals(_history[^1], path, StringComparison.Ordinal))
-        {
             return;
-        }
 
         _history.Add(path);
     }
@@ -68,13 +67,5 @@ public sealed class NavigationHistoryService(NavigationManager navigationManager
     {
         var relativePath = navigationManager.ToBaseRelativePath(uri);
         return string.IsNullOrEmpty(relativePath) ? "/" : $"/{relativePath}";
-    }
-
-    public void Dispose()
-    {
-        if (_started)
-        {
-            navigationManager.LocationChanged -= NavigationManagerOnLocationChanged;
-        }
     }
 }

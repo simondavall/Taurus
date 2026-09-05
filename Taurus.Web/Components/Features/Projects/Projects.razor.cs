@@ -10,34 +10,23 @@ public partial class Projects
 
     [Inject]
     private IConfiguration Configuration { get; set; } = default!;
-
     [Inject]
     private IDialogService DialogService { get; set; } = default!;
-
     [Inject]
     private IProjectService ProjectService { get; set; } = default!;
-
     [Inject]
     private ISnackbar Snackbar { get; set; } = default!;
 
     private IReadOnlyList<Project> ProjectItems { get; set; } = [];
-
     private string SortField { get; set; } = nameof(Project.Title);
-
     private bool SortDescending { get; set; }
-
     private int PageSize { get; set; }
-
     private int CurrentPage { get; set; } = 1;
-
     private int PageCount => Math.Max(1, (int)Math.Ceiling(ProjectItems.Count / (double)PageSize));
 
-    private IEnumerable<Project> PagedProjectItems
-    {
-        get
-        {
-            var sortedProjects = SortField switch
-            {
+    private IEnumerable<Project> PagedProjectItems {
+        get {
+            var sortedProjects = SortField switch {
                 nameof(Project.Id) => Sort(ProjectItems, project => project.Id),
                 nameof(Project.Prefix) => Sort(ProjectItems, project => project.Prefix),
                 nameof(Project.LatestVersion) => Sort(ProjectItems, project => project.LatestVersion),
@@ -57,9 +46,7 @@ public partial class Projects
         PageSize = Configuration.GetValue("Projects:PageSize", DefaultPageSize);
 
         if (PageSize <= 0)
-        {
             PageSize = DefaultPageSize;
-        }
 
         await LoadProjectsAsync();
     }
@@ -73,9 +60,7 @@ public partial class Projects
         var result = await dialog.Result;
 
         if (result is null || result.Canceled || result.Data is not Project)
-        {
             return;
-        }
 
         await LoadProjectsAsync();
 
@@ -84,8 +69,7 @@ public partial class Projects
 
     private async Task EditProjectAsync(Project project)
     {
-        var parameters = new DialogParameters
-        {
+        var parameters = new DialogParameters {
             [nameof(ProjectDialog.ProjectToEdit)] = project
         };
 
@@ -97,14 +81,11 @@ public partial class Projects
         var result = await dialog.Result;
 
         if (result is null || result.Canceled || result.Data is not ProjectDialogResult dialogResult)
-        {
             return;
-        }
 
         await LoadProjectsAsync();
 
-        var message = dialogResult switch
-        {
+        var message = dialogResult switch {
             ProjectDialogResult.Deleted => "Project deleted successfully.",
             _ => "Project updated successfully."
         };
@@ -114,8 +95,7 @@ public partial class Projects
 
     private static DialogOptions CreateDialogOptions()
     {
-        return new DialogOptions
-        {
+        return new DialogOptions {
             FullWidth = true,
             MaxWidth = MaxWidth.Small,
             CloseOnEscapeKey = true
@@ -127,16 +107,14 @@ public partial class Projects
         ProjectItems = await ProjectService.GetProjectsAsync();
 
         if (CurrentPage > PageCount)
-        {
             CurrentPage = PageCount;
-        }
     }
 
     private Task ProjectRowClickedAsync(TableRowClickEventArgs<Project> args)
     {
         return EditProjectAsync(args.Item!);
     }
-    
+
     private IEnumerable<Project> Sort<TKey>(IEnumerable<Project> projects, Func<Project, TKey> selector)
     {
         return SortDescending
@@ -147,11 +125,8 @@ public partial class Projects
     private void SortBy(string field)
     {
         if (SortField == field)
-        {
             SortDescending = !SortDescending;
-        }
-        else
-        {
+        else {
             SortField = field;
             SortDescending = false;
         }

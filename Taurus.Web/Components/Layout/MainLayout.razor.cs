@@ -6,12 +6,11 @@ namespace Taurus.Components.Layout;
 
 public partial class MainLayout
 {
-    [Inject]
-    private NavigationManager NavigationManager { get; set; } = default!;
-
+    private DrawerVariant _drawerVariant = DrawerVariant.Persistent;
     private bool _navigationOpen = true;
 
-    private DrawerVariant _drawerVariant = DrawerVariant.Persistent;
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
 
     private Task BreakpointChanged(Breakpoint breakpoint)
     {
@@ -24,14 +23,14 @@ public partial class MainLayout
 
         return Task.CompletedTask;
     }
-    
+
     private static string DisplayName(ClaimsPrincipal user)
     {
         return user.FindFirst("display_name")?.Value
                ?? user.Identity?.Name
                ?? string.Empty;
     }
-    
+
     private void ToggleNavigation()
     {
         _navigationOpen = !_navigationOpen;

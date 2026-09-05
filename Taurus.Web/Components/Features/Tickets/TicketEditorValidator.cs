@@ -37,9 +37,7 @@ public sealed class TicketEditorValidator : AbstractValidator<TicketEditorModel>
     private bool CanCloseTicket(TicketEditorModel ticket)
     {
         if (!ticket.HasActiveSubTasks)
-        {
             return true;
-        }
 
         return ticket.StatusId != _lookupIds.CompletedStatusId
                && ticket.StatusId != _lookupIds.ObsoleteStatusId;
@@ -48,14 +46,10 @@ public sealed class TicketEditorValidator : AbstractValidator<TicketEditorModel>
     private bool CanCompleteTicket(TicketEditorModel ticket)
     {
         if (!_requireFixedInReleaseForCompletion)
-        {
             return true;
-        }
 
         if (ticket.StatusId != _lookupIds.CompletedStatusId)
-        {
             return true;
-        }
 
         return !string.IsNullOrWhiteSpace(ticket.FixedInRelease);
     }
