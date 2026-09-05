@@ -1,30 +1,23 @@
 ﻿using System.Net;
-using PegasusApi.Abstractions.Projects;
+using System.Net.Http.Json;
+using Microsoft.Extensions.Logging;
+using Taurus.Application;
 using Taurus.Application.PegasusApi;
+using Taurus.Application.Projects;
 using PegasusCreateProjectRequest = PegasusApi.Abstractions.Projects.CreateProjectRequest;
 using PegasusUpdateProjectRequest = PegasusApi.Abstractions.Projects.UpdateProjectRequest;
+using PegasusProjectsResponse = PegasusApi.Abstractions.Projects.ProjectsResponse;
+using PegasusProjectResponse = PegasusApi.Abstractions.Projects.ProjectResponse;
 
-namespace Taurus.Application.Projects;
+namespace Taurus.Infrastructure.PegasusApi.Projects;
 
-public interface IProjectService
-{
-    Task<IReadOnlyList<Project>> GetProjectsAsync();
-    Task<ApplicationResult<Project>> CreateProjectAsync(CreateProjectRequest request);
-    Task<ApplicationResult> UpdateProjectAsync(UpdateProjectRequest request);
-    Task<ApplicationResult> DeleteProjectAsync(Guid id);
-}
-
-public sealed class ProjectService(HttpClient httpClient, ILogger<ProjectService> logger) : IProjectService
-{
-    public async Task<IReadOnlyList<Project>> GetProjectsAsync()
-    {
+public sealed class ProjectService(HttpClient httpClient, ILogger<ProjectService> logger) : IProjectService {
+    public async Task<IReadOnlyList<Project>> GetProjectsAsync() {
         logger.LogInformation("Retrieving projects from PegasusApi");
 
-        try
-        {
-            var response = await httpClient.GetFromJsonAsync<ProjectsResponse>("api/projects");
-            if (response is null)
-            {
+        try {
+            var response = await httpClient.GetFromJsonAsync<PegasusProjectsResponse>("api/projects");
+            if (response is null) {
                 throw new InvalidOperationException("PegasusApi returned an empty projects response.");
             }
 
@@ -34,33 +27,26 @@ public sealed class ProjectService(HttpClient httpClient, ILogger<ProjectService
 
             logger.LogInformation("Retrieved {ProjectCount} projects from PegasusApi", projects.Length);
             return projects;
-        }
-        catch (Exception exception)
-        {
+        } catch (Exception exception) {
             logger.LogError(exception, "Failed to retrieve projects from PegasusApi");
             throw;
         }
     }
 
-    public async Task<ApplicationResult<Project>> CreateProjectAsync(CreateProjectRequest request)
-    {
+    public async Task<ApplicationResult<Project>> CreateProjectAsync(CreateProjectRequest request) {
         logger.LogInformation("Creating project in PegasusApi");
 
-        try
-        {
-            var apiRequest = new PegasusCreateProjectRequest
-            {
+        try {
+            var apiRequest = new PegasusCreateProjectRequest {
                 Title = request.Title,
                 Prefix = request.Prefix
             };
 
             using var response = await httpClient.PostAsJsonAsync("api/projects", apiRequest);
 
-            if (response.IsSuccessStatusCode)
-            {
-                var projectResponse = await response.Content.ReadFromJsonAsync<ProjectResponse>();
-                if (projectResponse is null)
-                {
+            if (response.IsSuccessStatusCode) {
+                var projectResponse = await response.Content.ReadFromJsonAsync<PegasusProjectResponse>();
+                if (projectResponse is null) {
                     throw new InvalidOperationException("PegasusApi returned an empty project response after project creation.");
                 }
 
@@ -70,8 +56,7 @@ public sealed class ProjectService(HttpClient httpClient, ILogger<ProjectService
                 return ApplicationResult<Project>.Success(project);
             }
 
-            if (response.StatusCode is HttpStatusCode.BadRequest or HttpStatusCode.Conflict)
-            {
+            if (response.StatusCode is HttpStatusCode.BadRequest or HttpStatusCode.Conflict) {
                 var errorMessage = await PegasusApiFailureReader.ReadAsync(
                     response,
                     "The project could not be created because PegasusApi rejected the supplied details.");
@@ -86,22 +71,17 @@ public sealed class ProjectService(HttpClient httpClient, ILogger<ProjectService
             response.EnsureSuccessStatusCode();
 
             throw new InvalidOperationException("PegasusApi project creation failed unexpectedly.");
-        }
-        catch (Exception exception)
-        {
+        } catch (Exception exception) {
             logger.LogError(exception, "Failed to create project in PegasusApi");
             throw;
         }
     }
 
-    public async Task<ApplicationResult> UpdateProjectAsync(UpdateProjectRequest request)
-    {
+    public async Task<ApplicationResult> UpdateProjectAsync(UpdateProjectRequest request) {
         logger.LogInformation("Updating project {ProjectId} in PegasusApi", request.Id);
 
-        try
-        {
-            var apiRequest = new PegasusUpdateProjectRequest
-            {
+        try {
+            var apiRequest = new PegasusUpdateProjectRequest {
                 Title = request.Title,
                 Prefix = request.Prefix,
                 IsActive = request.IsActive,
@@ -112,16 +92,14 @@ public sealed class ProjectService(HttpClient httpClient, ILogger<ProjectService
 
             using var response = await httpClient.PutAsJsonAsync($"api/projects/{request.Id}", apiRequest);
 
-            if (response.IsSuccessStatusCode)
-            {
+            if (response.IsSuccessStatusCode) {
                 logger.LogInformation("Updated project {ProjectId} in PegasusApi", request.Id);
                 return ApplicationResult.Success();
             }
 
             if (response.StatusCode is HttpStatusCode.BadRequest
                 or HttpStatusCode.NotFound
-                or HttpStatusCode.Conflict)
-            {
+                or HttpStatusCode.Conflict) {
                 var errorMessage = await PegasusApiFailureReader.ReadAsync(
                     response,
                     "The project could not be updated because PegasusApi rejected the supplied details.");
@@ -137,30 +115,24 @@ public sealed class ProjectService(HttpClient httpClient, ILogger<ProjectService
             response.EnsureSuccessStatusCode();
 
             throw new InvalidOperationException("PegasusApi project update failed unexpectedly.");
-        }
-        catch (Exception exception)
-        {
+        } catch (Exception exception) {
             logger.LogError(exception, "Failed to update project {ProjectId} in PegasusApi", request.Id);
             throw;
         }
     }
 
-    public async Task<ApplicationResult> DeleteProjectAsync(Guid id)
-    {
+    public async Task<ApplicationResult> DeleteProjectAsync(Guid id) {
         logger.LogInformation("Deleting project {ProjectId} in PegasusApi", id);
 
-        try
-        {
+        try {
             using var response = await httpClient.DeleteAsync($"api/projects/{id}");
 
-            if (response.IsSuccessStatusCode)
-            {
+            if (response.IsSuccessStatusCode) {
                 logger.LogInformation("Deleted project {ProjectId} in PegasusApi", id);
                 return ApplicationResult.Success();
             }
 
-            if (response.StatusCode == HttpStatusCode.NotFound)
-            {
+            if (response.StatusCode == HttpStatusCode.NotFound) {
                 logger.LogWarning(
                     "PegasusApi could not delete project {ProjectId} because it was not found",
                     id);
@@ -172,16 +144,13 @@ public sealed class ProjectService(HttpClient httpClient, ILogger<ProjectService
             response.EnsureSuccessStatusCode();
 
             throw new InvalidOperationException("PegasusApi project deletion failed unexpectedly.");
-        }
-        catch (Exception exception)
-        {
+        } catch (Exception exception) {
             logger.LogError(exception, "Failed to delete project {ProjectId} in PegasusApi", id);
             throw;
         }
     }
 
-    private static Project MapProject(ProjectResponse project)
-    {
+    private static Project MapProject(PegasusProjectResponse project) {
         return new Project(
             project.Id,
             project.Title,

@@ -1,11 +1,9 @@
-﻿using PegasusApi.Abstractions.Users;
+﻿using System.Net.Http.Json;
+using Microsoft.Extensions.Logging;
+using PegasusApi.Abstractions.Users;
+using Taurus.Application.Users;
 
-namespace Taurus.Application.Users;
-
-public interface IUserService
-{
-    Task<IReadOnlyList<User>> GetUsersAsync();
-}
+namespace Taurus.Infrastructure.PegasusApi.Users;
 
 public sealed class UserService(HttpClient httpClient, ILogger<UserService> logger) : IUserService
 {
@@ -13,13 +11,9 @@ public sealed class UserService(HttpClient httpClient, ILogger<UserService> logg
     {
         logger.LogInformation("Retrieving users from PegasusApi");
 
-        try
-        {
+        try {
             var response = await httpClient.GetFromJsonAsync<UsersResponse>("api/users");
-            if (response is null)
-            {
-                throw new InvalidOperationException("PegasusApi returned an empty users response.");
-            }
+            if (response is null) throw new InvalidOperationException("PegasusApi returned an empty users response.");
 
             var users = response.Items
                 .Select(MapUser)
@@ -29,9 +23,7 @@ public sealed class UserService(HttpClient httpClient, ILogger<UserService> logg
             logger.LogInformation("Retrieved {UserCount} users from PegasusApi", users.Length);
 
             return users;
-        }
-        catch (Exception exception)
-        {
+        } catch (Exception exception) {
             logger.LogError(exception, "Failed to retrieve users from PegasusApi");
             throw;
         }

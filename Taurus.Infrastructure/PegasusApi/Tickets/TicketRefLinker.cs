@@ -1,28 +1,22 @@
 ﻿using System.Net;
+using System.Net.Http.Json;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Logging;
 using PegasusApi.Abstractions.Tickets;
+using Taurus.Application.Tickets;
 
-namespace Taurus.Application.Tickets;
-
-public interface ITicketRefLinker
-{
-    Task<string?> LinkTicketRefsAsync(string? content);
-}
+namespace Taurus.Infrastructure.PegasusApi.Tickets;
 
 public sealed partial class TicketRefLinker(HttpClient httpClient, ILogger<TicketRefLinker> logger) : ITicketRefLinker
 {
     public async Task<string?> LinkTicketRefsAsync(string? content)
     {
         if (string.IsNullOrEmpty(content))
-        {
             return content;
-        }
 
         var matches = TicketRefRegex().Matches(content);
         if (matches.Count == 0)
-        {
             return content;
-        }
 
         var references = matches
             .Select(match => match.Groups["ticketRef"].Value)
@@ -31,31 +25,22 @@ public sealed partial class TicketRefLinker(HttpClient httpClient, ILogger<Ticke
 
         var existingReferences = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var ticketRef in references)
-        {
+        foreach (var ticketRef in references) {
             var existingTicketRef = await GetExistingTicketRefAsync(ticketRef);
             if (existingTicketRef is not null)
-            {
                 existingReferences[ticketRef] = existingTicketRef;
-            }
         }
 
         if (existingReferences.Count == 0)
-        {
             return content;
-        }
 
         return TicketRefRegex().Replace(
             content,
-            match =>
-            {
+            match => {
                 var ticketRef = match.Groups["ticketRef"].Value;
-                if (!existingReferences.TryGetValue(ticketRef, out var existingTicketRef))
-                {
-                    return match.Value;
-                }
-
-                return $"[{existingTicketRef}](/tickets/{existingTicketRef})";
+                return !existingReferences.TryGetValue(ticketRef, out var existingTicketRef)
+                    ? match.Value
+                    : $"[{existingTicketRef}](/tickets/{existingTicketRef})";
             });
     }
 
@@ -65,19 +50,15 @@ public sealed partial class TicketRefLinker(HttpClient httpClient, ILogger<Ticke
 
         var escapedTicketRef = Uri.EscapeDataString(ticketRef);
         using var response = await httpClient.GetAsync($"api/tickets/by_ref/{escapedTicketRef}");
-        if (response.IsSuccessStatusCode)
-        {
+        if (response.IsSuccessStatusCode) {
             var ticket = await response.Content.ReadFromJsonAsync<TicketResponse>();
             if (ticket is null)
-            {
                 throw new InvalidOperationException("PegasusApi returned an empty ticket response.");
-            }
 
             return ticket.TicketRef;
         }
 
-        if (response.StatusCode == HttpStatusCode.NotFound)
-        {
+        if (response.StatusCode == HttpStatusCode.NotFound) {
             logger.LogInformation("Ticket reference {TicketRef} does not exist and will not be linked", ticketRef);
             return null;
         }

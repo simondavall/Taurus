@@ -1,13 +1,9 @@
-﻿using PegasusApi.Abstractions.Lookups;
+﻿using System.Net.Http.Json;
+using Microsoft.Extensions.Logging;
+using PegasusApi.Abstractions.Lookups;
+using Taurus.Application.Tickets.Lookups;
 
-namespace Taurus.Application.Tickets.Lookups;
-
-public interface ITicketLookupDataService
-{
-    Task<IReadOnlyList<TicketStatus>> GetStatusesAsync();
-    Task<IReadOnlyList<TicketPriority>> GetPrioritiesAsync();
-    Task<IReadOnlyList<TicketType>> GetTypesAsync();
-}
+namespace Taurus.Infrastructure.PegasusApi.Tickets.Lookups;
 
 public sealed class TicketLookupDataService(HttpClient httpClient, ILogger<TicketLookupDataService> logger) : ITicketLookupDataService
 {
@@ -39,13 +35,9 @@ public sealed class TicketLookupDataService(HttpClient httpClient, ILogger<Ticke
     {
         logger.LogInformation("Retrieving {LookupName} from PegasusApi", lookupName);
 
-        try
-        {
+        try {
             var response = await httpClient.GetFromJsonAsync<LookupResponses>(requestUri);
-            if (response is null)
-            {
-                throw new InvalidOperationException($"PegasusApi returned an empty {lookupName} response.");
-            }
+            if (response is null) throw new InvalidOperationException($"PegasusApi returned an empty {lookupName} response.");
 
             var items = response.Items
                 .OrderBy(item => item.DisplayOrder)
@@ -54,9 +46,7 @@ public sealed class TicketLookupDataService(HttpClient httpClient, ILogger<Ticke
 
             logger.LogInformation("Retrieved {LookupCount} {LookupName} from PegasusApi", items.Length, lookupName);
             return items;
-        }
-        catch (Exception exception)
-        {
+        } catch (Exception exception) {
             logger.LogError(exception, "Failed to retrieve {LookupName} from PegasusApi", lookupName);
             throw;
         }
