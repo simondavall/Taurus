@@ -1,8 +1,15 @@
 ﻿using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using Taurus.Application.Tickets;
-using Taurus.Application.UserState;
 
 namespace Taurus.UserState;
+
+public interface IUserStateService
+{
+    Task<Guid?> GetSelectedProjectIdAsync();
+    Task SetSelectedProjectIdAsync(Guid? projectId);
+    Task<TicketFilter?> GetSelectedTicketFilterAsync();
+    Task SetSelectedTicketFilterAsync(TicketFilter filter);
+}
 
 public sealed class UserStateService(ProtectedLocalStorage localStorage) : IUserStateService
 {

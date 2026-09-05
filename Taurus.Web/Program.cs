@@ -9,7 +9,6 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using MudBlazor.Services;
 using Serilog;
 using Taurus.Application;
-using Taurus.Application.UserState;
 using Taurus.Components;
 using Taurus.Components.Features.Shared;
 using Taurus.Infrastructure;

@@ -4,7 +4,7 @@ using MudBlazor;
 using Taurus.Application.Projects;
 using Taurus.Application.Tickets;
 using Taurus.Application.Tickets.Lookups;
-using Taurus.Application.UserState;
+using Taurus.UserState;
 
 namespace Taurus.Components.Features.Tickets;
 
