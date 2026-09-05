@@ -23,27 +23,38 @@
 
 ## Project Structure
 
-- Organise user-facing functionality under `Components/Features`.
-- Each feature owns its pages, components and feature-specific code.
-- Shared UI belongs in `Components/Shared`.
-- Application-wide status pages belong in `Components/Status`.
+- Structure the solution as `Taurus.Web`, `Taurus.Application` and `Taurus.Infrastructure`.
+- Preserve Vertical Slice Architecture within each project.
+- Use project boundaries to enforce responsibility and dependency direction rather than horizontally organising the solution by technical type.
+- `Taurus.Web` owns the application host and user-facing functionality.
+- Organise Web features under `Components/Features`.
+- Shared Web UI belongs in `Components/Shared`.
 - Shared application shell components belong in `Components/Layout`.
 - Application theme assets belong in `Components/Theme`.
-- Application services and integration infrastructure belong under `Application`.
+- Web-specific application state belongs in Web.
+- `Taurus.Application` owns Taurus application contracts, models and infrastructure-independent shared behaviour.
+- `Taurus.Infrastructure` owns PegasusApi implementations and external infrastructure concerns.
+- Keep `PegasusApi.Abstractions` confined to `Taurus.Infrastructure`.
+- Do not introduce additional projects or layers without a demonstrated responsibility boundary.
 
 ## Dependency Injection
 
-- Expose application-layer registrations through a single `DependencyInjection` extension class.
-- Register the application layer from `Program.cs` using `AddTaurusApplication()`.
+- `Taurus.Web` is the composition root.
+- Expose Application registrations through `AddTaurusApplication()`.
+- Expose Infrastructure registrations through `AddTaurusInfrastructure(configuration)`.
+- Keep PegasusApi typed `HttpClient` registrations within Infrastructure.
+- Register Web-only services from the Web composition root.
 - Register services explicitly as they are introduced.
 - Do not introduce marker interfaces or automatic assembly scanning.
 
 ## Application Services
 
-- Define application-facing service interfaces where the service implementation is expected to change while its consumer contract remains stable.
+- Define application-facing service interfaces in `Taurus.Application` when they form the contract between consumers and Infrastructure implementations.
 - Keep application models independent of external API transport models.
-- UI features consume Taurus-owned application models through application services.
-- Register application services explicitly through `AddTaurusApplication()`.
+- UI features consume Taurus-owned application models through application service interfaces.
+- Implement external service contracts in `Taurus.Infrastructure`.
+- Do not place an interface in Application solely because it is an interface; Web-only contracts belong in Web.
+- Do not introduce forwarding application services where an Infrastructure implementation can directly satisfy an Application contract without obscuring application behaviour.
 
 ## PegasusApi Integration
 
@@ -51,7 +62,7 @@
 - Validate required PegasusApi configuration during application startup.
 - Use typed `HttpClient` registrations for feature services that communicate with PegasusApi.
 - Use the published `PegasusApi.Abstractions` package for PegasusApi request and response contracts.
-- Keep PegasusApi abstraction types within the application integration boundary.
+- Reference and consume PegasusApi abstraction types only within `Taurus.Infrastructure`.
 - Map PegasusApi responses to Taurus-owned application models before returning data to the Web layer.
 - Include only fields required by Taurus when mapping external API models to application models.
 - Keep API endpoint paths in integration code rather than environment configuration where the path is part of the stable API contract.
@@ -210,7 +221,7 @@
 
 ## Persistent Browser State
 
-- Access persistent browser state through Taurus-owned application services rather than directly from feature components.
+- Access persistent browser state through a Taurus Web-owned service rather than directly from feature components.
 - Use Protected Local Storage for lightweight user preferences and persistent application context.
 - Keep persisted state models incremental and introduce values only when required by implemented features.
 - Define an explicit default or fallback for every persisted value.

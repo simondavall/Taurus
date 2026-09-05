@@ -441,3 +441,19 @@
 - Verified existing Pegasus ticket behaviour is preserved in Taurus.
 - Verified the application builds and starts successfully with the completed Ticket Editing functionality.
 - Completed Milestone 3.3 – Ticket Editing.
+- Implemented project Latest Version.
+    - Added Latest Version to project editing and the project listing.
+    - Displayed Latest Version alongside the project name on Ticket Details.
+- Replaced Global Fixed In Release Requirement with Per-Project Setting.
+    - Added Require Fixed In Release to project editing and the project listing.
+    - Replaced the global Fixed In Release completion setting with per-project behaviour.
+    - Applied the project-specific requirement consistently to ticket creation and editing.
+    - Added Fixed In Release support to ticket creation.
+- Verified the application builds, starts and affected project and ticket workflows operate successfully.
+- Added 'No tickets' text if filter returns no tickets for a project.
+- Changed Ticket Details Cancel behaviour to discard unsaved changes and refresh the current ticket from persisted data without leaving the page.
+- Restructured Taurus into Web, Application and Infrastructure projects.
+- Preserved Vertical Slice Architecture within the new project boundaries.
+- Separated Taurus application contracts from PegasusApi infrastructure implementations.
+- Restricted PegasusApi integration to Infrastructure and Web-specific concerns to Web.
+- Preserved existing application behaviour after restructuring.

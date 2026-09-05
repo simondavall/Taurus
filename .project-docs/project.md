@@ -51,42 +51,45 @@ When suggesting framework-specific implementations:
 
 # High-level architecture
 
-The application uses a Vertical Slice Architecture.
+The application uses Vertical Slice Architecture within three explicit project-level boundaries.
 
-Each feature owns its own:
+- `Taurus.Web` owns the Blazor application, presentation and UI workflow.
+- `Taurus.Application` owns Taurus application contracts and models.
+- `Taurus.Infrastructure` owns PegasusApi integration and external infrastructure concerns.
 
-- Pages
-- Components
-- Services
+Each project remains organised by feature where appropriate.
 
-Business logic is implemented within feature services.
-
-The application consumes PegasusApi through a dedicated integration layer, allowing the UI to remain independent of the external API contract.
-
-Shared functionality should emerge from proven implementation patterns rather than speculation.
-
-# Folder structure
+The dependency structure is:
 
 ```text
+Taurus.Web
+  ├── Taurus.Application
+  └── Taurus.Infrastructure
+        └── Taurus.Application
+```
+The UI remains independent of the external PegasusApi contract, and PegasusApi.Abstractions is confined to Infrastructure.
+
+Shared functionality should continue to emerge from proven implementation patterns rather than speculation.
+
+# Solution structure
+```
 Taurus
 │
-├── Components
-│   ├── Features
-│   ├── Layout
-│   ├── Shared
-│   ├── Status
-│   └── Theme
-├── Application
-└── Docs
+├── Taurus.Web
+│   └── Components
+│       ├── Features
+│       ├── Layout
+│       ├── Shared
+│       └── Theme
+│
+├── Taurus.Application
+│
+├── Taurus.Infrastructure
+│   └── PegasusApi
+│
+└── .project-docs
 ```
-
-Features contain all UI and services relating to a single functional area.
-
-Shared contains reusable UI components.
-
-Application contains the application's integration and business services.
-
-Docs contains the project documentation.
+The project boundaries define architectural responsibilities while vertical feature slicing remains the primary organisation within those boundaries.
 
 # Design principles
 
