@@ -1,0 +1,15 @@
+#  CSharp formatting rules:
+[*.cs]
+brace_style = end_of_line
+type_declaration_braces = next_line
+invocable_declaration_braces = next_line
+braces_for_ifelse = not_required
+new_line_before_else = false
+new_line_before_catch = false
+new_line_before_finally = false
+
+csharp_sort_usings_with_system_first = true
+
+# these are the options for "new line before open brace"
+#  accessors, anonymous_methods, anonymous_types, control_blocks, events, indexers,
+#  lambdas, local_functions, methods, object_collection_array_initializers, properties, types

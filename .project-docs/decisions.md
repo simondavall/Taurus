@@ -1,13 +1,16 @@
 ﻿This document captures the architectural and design decisions that guide development of the project. These decisions are considered project rules and should be followed consistently unless there is a compelling reason to change them. The document focuses on long-lived decisions rather than implementation details or current progress.
 
-# Architecture
-
-- Use Vertical Slice Architecture.
-- Organise the application by feature rather than technical layer.
-- Keep business logic within feature services.
+- Use Vertical Slice Architecture within explicit project-level responsibility boundaries.
+- Structure Taurus as `Taurus.Web`, `Taurus.Application` and `Taurus.Infrastructure`.
+- Use projects to enforce dependency boundaries, not to replace vertical feature organisation with horizontal slicing.
+- Organise functionality by feature within each project.
+- `Taurus.Web` owns Blazor presentation, UI workflow, UI validation, navigation and browser state.
+- `Taurus.Application` owns Taurus application contracts, models and infrastructure-independent shared application behaviour.
+- `Taurus.Infrastructure` owns PegasusApi integration and other external infrastructure concerns.
+- `Taurus.Application` must not depend on `Taurus.Web` or `Taurus.Infrastructure`.
 - PegasusApi is an external dependency.
+- Reference `PegasusApi.Abstractions` only from `Taurus.Infrastructure`.
 - Do not couple the UI directly to PegasusApi request or response models.
-- Keep API integration behind a dedicated application layer.
 - Shared functionality should be actively considered whenever patterns emerge.
 - Introduce abstractions that remove repeated implementation while preserving explicit behaviour.
 - Prefer small abstractions with a single responsibility.
@@ -47,11 +50,14 @@
 
 # Feature Design
 
-- Each feature owns its pages, components and services.
-- Pages coordinate workflow.
+- Each project retains vertical feature slicing within its responsibility boundary.
+- Web features own their pages, components, editor models and UI validation.
+- Application features own Taurus application contracts and models.
+- Infrastructure features own their external integration implementations.
+- Pages coordinate UI workflow.
 - Components encapsulate reusable UI.
-- Feature services own business logic and API integration.
 - Avoid business logic in Razor markup.
+- Do not introduce horizontal solution-wide `Services`, `Models`, `Repositories` or similar structures in place of feature ownership.
 
 # Components
 

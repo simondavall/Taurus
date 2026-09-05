@@ -109,3 +109,30 @@ Existing historic comments will not receive an automated content migration. The 
 - Markdown-to-HTML conversion can be introduced at the presentation boundary without changing the PegasusApi comment contracts.
 - Retaining HTML sanitisation after Markdown conversion preserves the established security boundary for rendered user-authored content.
 - Historic comments contain sufficiently little HTML that manual correction is preferable to introducing automated migration complexity.
+
+2026-09-05
+
+### Structure Taurus as three projects while preserving Vertical Slice Architecture
+
+#### Decision
+
+Taurus is structured as three physical projects:
+
+- `Taurus.Web`
+- `Taurus.Application`
+- `Taurus.Infrastructure`
+
+Vertical Slice Architecture is preserved within each project.
+
+`Taurus.Web` is the application host and presentation layer, `Taurus.Application` owns Taurus application contracts and models, and `Taurus.Infrastructure` owns PegasusApi and other external infrastructure implementations.
+
+`Taurus.Application` does not depend on Web or Infrastructure. `PegasusApi.Abstractions` is restricted to Infrastructure.
+
+#### Rationale
+
+- The completed Project and Ticket implementations demonstrated stable responsibility boundaries that justified project-level separation.
+- Physical projects allow important dependency rules to be enforced by the compiler rather than convention alone.
+- Separating PegasusApi implementations prevents external transport concerns from leaking into Taurus application contracts.
+- Preserving vertical slicing keeps feature ownership explicit and avoids returning to horizontal organisation by technical type.
+- The structure provides a natural boundary for future infrastructure concerns such as caching.
+- Additional architectural layers and abstractions remain unnecessary until demonstrated by implementation needs.
