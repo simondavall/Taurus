@@ -5,21 +5,25 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+
+    <RootNamespace>Taurus</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup>
     <Version>1.0.1</Version>
     <InformationalVersion>1.0.1</InformationalVersion>
   </PropertyGroup>
-  
+
+  <ItemGroup>
+    <ProjectReference Include="..\Taurus.Application\Taurus.Application.csproj" />
+    <ProjectReference Include="..\Taurus.Infrastructure\Taurus.Infrastructure.csproj" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="DotNetEnv" Version="3.1.1" />
     <PackageReference Include="FluentValidation" Version="12.1.1" />
-    <PackageReference Include="HtmlSanitizer" Version="9.2.995" />
-    <PackageReference Include="Markdig" Version="1.3.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.10" />
     <PackageReference Include="MudBlazor" Version="9.6.0" />
-    <PackageReference Include="PegasusApi.Abstractions" Version="3.0.6" />
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="10.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
