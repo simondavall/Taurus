@@ -9,8 +9,11 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using MudBlazor.Services;
 using Serilog;
 using Taurus.Application;
+using Taurus.Application.UserState;
 using Taurus.Components;
 using Taurus.Components.Features.Shared;
+using Taurus.Infrastructure;
+using Taurus.UserState;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -102,9 +105,13 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddMudServices();
-builder.Services.AddScoped<INavigationHistoryService, NavigationHistoryService>();
 
-builder.Services.AddTaurusApplication(builder.Configuration);
+builder.Services.AddTaurusApplication();
+builder.Services.AddTaurusInfrastructure(builder.Configuration);
+
+builder.Services.AddScoped<INavigationHistoryService, NavigationHistoryService>();
+builder.Services.AddScoped<IUserStateService, UserStateService>();
+
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();

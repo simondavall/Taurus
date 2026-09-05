@@ -3,7 +3,6 @@ using System.Net.Http.Json;
 using Microsoft.Extensions.Logging;
 using PegasusApi.Abstractions.Comments;
 using Taurus.Application;
-using Taurus.Application.PegasusApi;
 using Taurus.Application.Tickets;
 using Taurus.Application.Tickets.Comments;
 using PegasusCreateCommentRequest = PegasusApi.Abstractions.Comments.CreateCommentRequest;

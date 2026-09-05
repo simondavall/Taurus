@@ -2,7 +2,6 @@
 using System.Net.Http.Json;
 using Microsoft.Extensions.Logging;
 using Taurus.Application;
-using Taurus.Application.PegasusApi;
 using Taurus.Application.Tickets;
 using PegasusCreateTicketRequest = PegasusApi.Abstractions.Tickets.CreateTicketRequest;
 using PegasusTicketResponse = PegasusApi.Abstractions.Tickets.TicketResponse;

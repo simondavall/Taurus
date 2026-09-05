@@ -1,7 +1,8 @@
-﻿using System.Text.Json;
+﻿using System.Net.Http.Json;
+using System.Text.Json;
 using PegasusApi.Abstractions;
 
-namespace Taurus.Application.PegasusApi;
+namespace Taurus.Infrastructure.PegasusApi;
 
 internal static class PegasusApiFailureReader
 {
