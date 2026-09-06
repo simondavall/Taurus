@@ -13,9 +13,11 @@ public sealed class UserService(HttpClient httpClient, ILogger<UserService> logg
 
         try {
             var response = await httpClient.GetFromJsonAsync<UsersResponse>("api/users");
-            if (response is null) throw new InvalidOperationException("PegasusApi returned an empty users response.");
+            if (response is null)
+                throw new InvalidOperationException("PegasusApi returned an empty users response.");
 
-            var users = response.Items
+            var users = response
+                .Items
                 .Select(MapUser)
                 .OrderBy(user => user.DisplayName, StringComparer.OrdinalIgnoreCase)
                 .ToArray();
@@ -23,7 +25,8 @@ public sealed class UserService(HttpClient httpClient, ILogger<UserService> logg
             logger.LogInformation("Retrieved {UserCount} users from PegasusApi", users.Length);
 
             return users;
-        } catch (Exception exception) {
+        }
+        catch (Exception exception) {
             logger.LogError(exception, "Failed to retrieve users from PegasusApi");
             throw;
         }

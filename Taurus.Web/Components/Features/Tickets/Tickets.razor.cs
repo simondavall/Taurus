@@ -168,11 +168,7 @@ public partial class Tickets
 
     private static DialogOptions CreateTicketDialogOptions()
     {
-        return new DialogOptions {
-            FullWidth = true,
-            MaxWidth = MaxWidth.Small,
-            CloseOnEscapeKey = true
-        };
+        return new DialogOptions { FullWidth = true, MaxWidth = MaxWidth.Small, CloseOnEscapeKey = true };
     }
 
     private async Task LoadTicketsAsync()
@@ -198,15 +194,15 @@ public partial class Tickets
     {
         return SelectedTicketFilter switch {
             TicketFilter.Open => tickets.Where(ticket =>
-                ticket.StatusId != LookupIds.CompletedStatusId &&
-                ticket.StatusId != LookupIds.ObsoleteStatusId),
+                ticket.StatusId != LookupIds.CompletedStatusId
+                && ticket.StatusId != LookupIds.ObsoleteStatusId),
 
             TicketFilter.Backlog => tickets.Where(ticket =>
                 ticket.StatusId == LookupIds.BacklogStatusId),
 
             TicketFilter.HighPriority => tickets.Where(ticket =>
-                ticket.PriorityId == LookupIds.HighPriorityId ||
-                ticket.PriorityId == LookupIds.CriticalPriorityId),
+                ticket.PriorityId == LookupIds.HighPriorityId
+                || ticket.PriorityId == LookupIds.CriticalPriorityId),
 
             TicketFilter.Obsolete => tickets.Where(ticket =>
                 ticket.StatusId == LookupIds.ObsoleteStatusId),

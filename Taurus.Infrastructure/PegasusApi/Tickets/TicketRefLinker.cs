@@ -34,14 +34,15 @@ public sealed partial class TicketRefLinker(HttpClient httpClient, ILogger<Ticke
         if (existingReferences.Count == 0)
             return content;
 
-        return TicketRefRegex().Replace(
-            content,
-            match => {
-                var ticketRef = match.Groups["ticketRef"].Value;
-                return !existingReferences.TryGetValue(ticketRef, out var existingTicketRef)
-                    ? match.Value
-                    : $"[{existingTicketRef}](/tickets/{existingTicketRef})";
-            });
+        return TicketRefRegex()
+            .Replace(
+                content,
+                match => {
+                    var ticketRef = match.Groups["ticketRef"].Value;
+                    return !existingReferences.TryGetValue(ticketRef, out var existingTicketRef)
+                        ? match.Value
+                        : $"[{existingTicketRef}](/tickets/{existingTicketRef})";
+                });
     }
 
     private async Task<string?> GetExistingTicketRefAsync(string ticketRef)

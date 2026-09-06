@@ -28,7 +28,7 @@ public sealed class TicketCreateEditorValidator : AbstractValidator<TicketCreate
         var context = ValidationContext<TicketCreateEditorModel>.CreateWithOptions(
             (TicketCreateEditorModel)model,
             options => options.IncludeProperties(propertyName));
-        
+
         var result = await ValidateAsync(context);
 
         return result.Errors.Select(error => error.ErrorMessage);

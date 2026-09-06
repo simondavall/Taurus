@@ -15,9 +15,7 @@ namespace Taurus.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddTaurusInfrastructure(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddTaurusInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         var baseAddress = configuration["PegasusApi:BaseAddress"];
 
