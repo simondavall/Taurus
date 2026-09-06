@@ -23,7 +23,8 @@ internal static class PegasusApiFailureReader
             return messages.Length > 0
                 ? string.Join(" ", messages)
                 : fallbackMessage;
-        } catch (JsonException) {
+        }
+        catch (JsonException) {
             return fallbackMessage;
         }
     }

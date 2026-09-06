@@ -28,29 +28,31 @@ public partial class TicketDetails
 
     private TicketEditorValidator _validator = default!;
 
-    [Parameter] public string TicketRef { get; set; } = string.Empty;
+    [Parameter]
+    public string TicketRef { get; set; } = string.Empty;
 
-    [Inject] private ITicketService TicketService { get; set; } = default!;
-
-    [Inject] private ITicketCommentService TicketCommentService { get; set; } = default!;
-
-    [Inject] private ITicketLookupDataService TicketLookupDataService { get; set; } = default!;
-
-    [Inject] private IProjectService ProjectService { get; set; } = default!;
-
-    [Inject] private IMarkdownRenderer MarkdownRenderer { get; set; } = default!;
-
-    [Inject] private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
-
-    [Inject] private NavigationManager NavigationManager { get; set; } = default!;
-
-    [Inject] private INavigationHistoryService NavigationHistoryService { get; set; } = default!;
-
-    [Inject] private IDialogService DialogService { get; set; } = default!;
-
-    [Inject] private IUserService UserService { get; set; } = default!;
-
-    [Inject] private ISnackbar Snackbar { get; set; } = default!;
+    [Inject]
+    private ITicketService TicketService { get; set; } = default!;
+    [Inject]
+    private ITicketCommentService TicketCommentService { get; set; } = default!;
+    [Inject]
+    private ITicketLookupDataService TicketLookupDataService { get; set; } = default!;
+    [Inject]
+    private IProjectService ProjectService { get; set; } = default!;
+    [Inject]
+    private IMarkdownRenderer MarkdownRenderer { get; set; } = default!;
+    [Inject]
+    private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
+    [Inject]
+    private NavigationManager NavigationManager { get; set; } = default!;
+    [Inject]
+    private INavigationHistoryService NavigationHistoryService { get; set; } = default!;
+    [Inject]
+    private IDialogService DialogService { get; set; } = default!;
+    [Inject]
+    private IUserService UserService { get; set; } = default!;
+    [Inject]
+    private ISnackbar Snackbar { get; set; } = default!;
 
     private IReadOnlyList<string> ValidationBannerMessages { get; set; } = [];
     private TicketEditorModel? Editor { get; set; }
@@ -71,7 +73,8 @@ public partial class TicketDetails
 
     private string ProjectTitle {
         get {
-            if (CurrentProject is null) return "Unknown project";
+            if (CurrentProject is null)
+                return "Unknown project";
 
             return string.IsNullOrWhiteSpace(CurrentProject.LatestVersion)
                 ? CurrentProject.Title
@@ -79,14 +82,11 @@ public partial class TicketDetails
         }
     }
 
-    private Project? CurrentProject =>
-        Editor is null
-            ? null
-            : Projects.FirstOrDefault(project => project.Id == Editor.ProjectId);
+    private Project? CurrentProject => Editor is null
+        ? null
+        : Projects.FirstOrDefault(project => project.Id == Editor.ProjectId);
 
-    private bool HasResolvedAssignedUser =>
-        Editor?.AssignedTo is not null &&
-        Users.Any(user => user.Id == Editor.AssignedTo.Value);
+    private bool HasResolvedAssignedUser => Editor?.AssignedTo is not null && Users.Any(user => user.Id == Editor.AssignedTo.Value);
 
     protected override async Task OnParametersSetAsync()
     {
@@ -99,7 +99,8 @@ public partial class TicketDetails
 
         try {
             await LoadPageDataAsync();
-        } finally {
+        }
+        finally {
             _loading = false;
         }
     }
@@ -185,7 +186,7 @@ public partial class TicketDetails
         if (parentTask is not null) {
             var parentResult = await parentTask;
 
-            if (parentResult.Succeeded && parentResult.Value is not null)
+            if (parentResult is { Succeeded: true, Value: not null })
                 ParentTicket = parentResult.Value;
         }
     }
@@ -331,9 +332,7 @@ public partial class TicketDetails
 
         var result = await dialog.Result;
 
-        if (result is null ||
-            result.Canceled ||
-            result.Data is not Application.Tickets.TicketDetails ticket)
+        if (result is null || result.Canceled || result.Data is not Application.Tickets.TicketDetails ticket)
             return;
 
         Snackbar.Add($"Ticket {ticket.TicketRef} created successfully.", Severity.Success);
@@ -342,11 +341,7 @@ public partial class TicketDetails
 
     private static DialogOptions CreateTicketDialogOptions()
     {
-        return new DialogOptions {
-            FullWidth = true,
-            MaxWidth = MaxWidth.Small,
-            CloseOnEscapeKey = true
-        };
+        return new DialogOptions { FullWidth = true, MaxWidth = MaxWidth.Small, CloseOnEscapeKey = true };
     }
 
     private void OpenSubTask(Ticket ticket)
@@ -422,13 +417,15 @@ public partial class TicketDetails
                 }
             }
 
-            if (IsClosedTicket() && NavigationHistoryService.TryNavigateBack()) return;
+            if (IsClosedTicket() && NavigationHistoryService.TryNavigateBack())
+                return;
 
             await ReloadPageDataAsync();
 
             if (Editor is not null)
                 Snackbar.Add($"Ticket {Editor.TicketRef} updated successfully.", Severity.Success);
-        } finally {
+        }
+        finally {
             _saving = false;
         }
     }
@@ -468,7 +465,8 @@ public partial class TicketDetails
 
         var validationResult = await _validator.ValidateAsync(Editor!);
 
-        ValidationBannerMessages = validationResult.Errors
+        ValidationBannerMessages = validationResult
+            .Errors
             .Where(error => error.CustomState is TicketValidationPresentation.Banner)
             .Select(error => error.ErrorMessage)
             .Distinct()
@@ -494,21 +492,17 @@ public partial class TicketDetails
     private async Task<Guid> GetCurrentUserIdAsync()
     {
         var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-
         var subject = authenticationState.User.FindFirstValue("sub");
 
         if (!Guid.TryParse(subject, out var userId))
-            throw new InvalidOperationException(
-                "The authenticated Soteria principal does not contain a valid 'sub' user identifier.");
+            throw new InvalidOperationException("The authenticated Soteria principal does not contain a valid 'sub' user identifier.");
 
         return userId;
     }
 
     private bool IsClosedTicket()
     {
-        return Editor is not null &&
-               (Editor.StatusId == LookupIds.CompletedStatusId ||
-                Editor.StatusId == LookupIds.ObsoleteStatusId);
+        return Editor is not null && (Editor.StatusId == LookupIds.CompletedStatusId || Editor.StatusId == LookupIds.ObsoleteStatusId);
     }
 
     private string GetSubTaskClass(Ticket ticket)

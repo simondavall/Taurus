@@ -21,7 +21,8 @@ public sealed class UserStateService(ProtectedLocalStorage localStorage) : IUser
         try {
             var result = await localStorage.GetAsync<Guid?>(SelectedProjectIdKey);
             return result.Success ? result.Value : null;
-        } catch {
+        }
+        catch {
             return null;
         }
     }
@@ -40,9 +41,9 @@ public sealed class UserStateService(ProtectedLocalStorage localStorage) : IUser
     {
         try {
             var result = await localStorage.GetAsync<TicketFilter>(SelectedTicketFilterKey);
-            if (!result.Success || !Enum.IsDefined(result.Value)) return null;
-            return result.Value;
-        } catch {
+            return !result.Success || !Enum.IsDefined(result.Value) ? null : result.Value;
+        }
+        catch {
             return null;
         }
     }

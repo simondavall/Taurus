@@ -20,10 +20,9 @@ public sealed class ProjectEditorValidator : AbstractValidator<ProjectEditorMode
 
     private async Task<IEnumerable<string>> ValidatePropertyAsync(object model, string propertyName)
     {
-        var context = ValidationContext<ProjectEditorModel>
-            .CreateWithOptions(
-                (ProjectEditorModel)model,
-                options => options.IncludeProperties(propertyName));
+        var context = ValidationContext<ProjectEditorModel>.CreateWithOptions(
+            (ProjectEditorModel)model,
+            options => options.IncludeProperties(propertyName));
 
         var result = await ValidateAsync(context);
 

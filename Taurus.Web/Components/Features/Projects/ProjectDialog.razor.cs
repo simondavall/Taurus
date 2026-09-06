@@ -61,7 +61,8 @@ public partial class ProjectDialog
                 await UpdateProjectAsync();
             else
                 await CreateProjectAsync();
-        } finally {
+        }
+        finally {
             _saving = false;
         }
     }
@@ -92,7 +93,8 @@ public partial class ProjectDialog
             }
 
             MudDialog.Close(DialogResult.Ok(ProjectDialogResult.Deleted));
-        } finally {
+        }
+        finally {
             _deleting = false;
         }
     }

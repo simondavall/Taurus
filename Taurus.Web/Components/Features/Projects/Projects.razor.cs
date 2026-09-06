@@ -53,12 +53,8 @@ public partial class Projects
 
     private async Task CreateProjectAsync()
     {
-        var dialog = await DialogService.ShowAsync<ProjectDialog>(
-            "Create Project",
-            CreateDialogOptions());
-
+        var dialog = await DialogService.ShowAsync<ProjectDialog>("Create Project", CreateDialogOptions());
         var result = await dialog.Result;
-
         if (result is null || result.Canceled || result.Data is not Project)
             return;
 
@@ -69,17 +65,10 @@ public partial class Projects
 
     private async Task EditProjectAsync(Project project)
     {
-        var parameters = new DialogParameters {
-            [nameof(ProjectDialog.ProjectToEdit)] = project
-        };
+        var parameters = new DialogParameters { [nameof(ProjectDialog.ProjectToEdit)] = project };
 
-        var dialog = await DialogService.ShowAsync<ProjectDialog>(
-            "Edit Project",
-            parameters,
-            CreateDialogOptions());
-
+        var dialog = await DialogService.ShowAsync<ProjectDialog>("Edit Project", parameters, CreateDialogOptions());
         var result = await dialog.Result;
-
         if (result is null || result.Canceled || result.Data is not ProjectDialogResult dialogResult)
             return;
 
@@ -95,11 +84,7 @@ public partial class Projects
 
     private static DialogOptions CreateDialogOptions()
     {
-        return new DialogOptions {
-            FullWidth = true,
-            MaxWidth = MaxWidth.Small,
-            CloseOnEscapeKey = true
-        };
+        return new DialogOptions { FullWidth = true, MaxWidth = MaxWidth.Small, CloseOnEscapeKey = true };
     }
 
     private async Task LoadProjectsAsync()
