@@ -19,7 +19,8 @@ var builder = WebApplication.CreateBuilder(args);
 var isLocalExecution = string.Equals(Environment.GetEnvironmentVariable("TAURUS_LOCAL_EXECUTION"), "true", StringComparison.OrdinalIgnoreCase);
 
 if (isLocalExecution) {
-    Env.NoClobber()
+    Env
+        .NoClobber()
         .TraversePath()
         .Load();
 
@@ -39,11 +40,13 @@ ValidateRequiredConfiguration(builder.Configuration);
 
 ConfigureDataProtection(builder.Services, builder.Configuration);
 
-builder.Services
+builder
+    .Services
     .AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services
+builder
+    .Services
     .AddAuthentication(options => {
         options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
@@ -120,34 +123,31 @@ app.UseAuthorization();
 
 app.UseAntiforgery();
 
-app.MapStaticAssets()
+app
+    .MapStaticAssets()
     .Add(endpointBuilder =>
         endpointBuilder.Metadata.Add(new AllowAnonymousAttribute()));
 
-app.MapGet("/authentication/login", (string? returnUrl) => {
-    var properties = new AuthenticationProperties {
-        RedirectUri = IsLocalReturnUrl(returnUrl) ? returnUrl! : "/"
-    };
+app
+    .MapGet("/authentication/login", (string? returnUrl) => {
+        var properties = new AuthenticationProperties { RedirectUri = IsLocalReturnUrl(returnUrl) ? returnUrl! : "/" };
 
-    return Results.Challenge(properties,
-    [
-        OpenIdConnectDefaults.AuthenticationScheme
-    ]);
-}).AllowAnonymous();
+        return Results.Challenge(properties,
+            [OpenIdConnectDefaults.AuthenticationScheme]);
+    })
+    .AllowAnonymous();
 
-app.MapGet("/authentication/logout", () => {
-    var properties = new AuthenticationProperties {
-        RedirectUri = "/"
-    };
+app
+    .MapGet("/authentication/logout", () => {
+        var properties = new AuthenticationProperties { RedirectUri = "/" };
 
-    return Results.SignOut(properties,
-    [
-        CookieAuthenticationDefaults.AuthenticationScheme,
-        OpenIdConnectDefaults.AuthenticationScheme
-    ]);
-}).AllowAnonymous();
+        return Results.SignOut(properties,
+            [CookieAuthenticationDefaults.AuthenticationScheme, OpenIdConnectDefaults.AuthenticationScheme]);
+    })
+    .AllowAnonymous();
 
-app.MapRazorComponents<App>()
+app
+    .MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
@@ -157,13 +157,8 @@ return;
 static void ValidateRequiredConfiguration(IConfiguration configuration)
 {
     string[] keys = [
-        "OpenIdConnect:Authority",
-        "OpenIdConnect:ClientId",
-        "OpenIdConnect:ClientSecret",
-        "PegasusApi:BaseAddress",
-        "DataProtection:KeysPath",
-        "DataProtection:CertificatePath",
-        "DataProtection:CertificatePassword"
+        "OpenIdConnect:Authority", "OpenIdConnect:ClientId", "OpenIdConnect:ClientSecret", "PegasusApi:BaseAddress", "DataProtection:KeysPath",
+        "DataProtection:CertificatePath", "DataProtection:CertificatePassword"
     ];
 
     var missing = keys
@@ -173,9 +168,9 @@ static void ValidateRequiredConfiguration(IConfiguration configuration)
     if (missing.Length == 0)
         return;
 
-    throw new InvalidOperationException(
-        "Missing required configuration values:" + Environment.NewLine +
-        string.Join(Environment.NewLine, missing.Select(key => $" - {key}")));
+    throw new InvalidOperationException("Missing required configuration values:"
+                                        + Environment.NewLine
+                                        + string.Join(Environment.NewLine, missing.Select(key => $" - {key}")));
 }
 
 static bool IsLocalReturnUrl(string? returnUrl)
@@ -194,8 +189,7 @@ static void ConfigureDataProtection(IServiceCollection services, IConfiguration 
     var certificatePath = configuration["DataProtection:CertificatePath"];
     var certificatePassword = configuration["DataProtection:CertificatePassword"];
 
-    var certificate = X509CertificateLoader.LoadPkcs12FromFile(
-        certificatePath!,
+    var certificate = X509CertificateLoader.LoadPkcs12FromFile(certificatePath!,
         certificatePassword,
         X509KeyStorageFlags.EphemeralKeySet);
 
