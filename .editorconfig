@@ -1,15 +1,59 @@
+# For definitive list of properties go to "Index of EditorConfig properties" at
+# https://www.jetbrains.com/help/rider/EditorConfig_Index.html?utm_source=product
+
 #  CSharp formatting rules:
 [*.cs]
+#braces
 brace_style = end_of_line
 type_declaration_braces = next_line
 invocable_declaration_braces = next_line
 braces_for_ifelse = not_required
-new_line_before_else = false
-new_line_before_catch = false
-new_line_before_finally = false
 
-csharp_sort_usings_with_system_first = true
+sort_usings_with_system_first = true
 
-# these are the options for "new line before open brace"
-#  accessors, anonymous_methods, anonymous_types, control_blocks, events, indexers,
-#  lambdas, local_functions, methods, object_collection_array_initializers, properties, types
+#line breaks
+keep_existing_arrangement = false
+keep_existing_embedded_arrangement = false
+place_attribute_on_same_line = never
+
+place_constructor_initializer_on_same_line = true
+place_expr_method_on_single_line = true
+place_expr_property_on_single_line = true
+place_expr_accessor_on_single_line = true
+place_type_constraints_on_same_line = false
+wrap_before_first_type_parameter_constraint = true
+
+place_simple_embedded_statement_on_same_line = false
+place_simple_case_statement_on_same_line = false
+wrap_object_and_collection_initializer_style = chop_if_long
+wrap_array_initializer_style = wrap_if_long
+wrap_list_pattern = wrap_if_long
+
+keep_user_linebreaks = true
+wrap_parameters_style = chop_if_long
+wrap_primary_constructor_parameters_style = chop_if_long
+wrap_before_binary_opsign = true
+wrap_chained_binary_expressions = chop_if_long
+wrap_before_binary_pattern_op = true
+wrap_chained_binary_patterns = chop_if_long
+wrap_before_ternary_opsigns = true
+wrap_ternary_expr_style = chop_if_long
+wrap_before_first_method_call = true
+wrap_chained_method_calls = chop_if_long
+wrap_after_invocation_lpar = true
+wrap_arguments_style = chop_if_long
+
+
+#blank lines
+blank_lines_around_field = 0
+blank_lines_around_property = 0
+blank_lines_around_auto_property = 0
+
+remove_blank_lines_near_braces_in_declarations = true
+remove_blank_lines_near_braces_in_code = true
+
+#tabs, indent, alignment
+indent_nested_for_stmt = true
+indent_nested_while_stmt = true
+indent_nested_foreach_stmt = true
+

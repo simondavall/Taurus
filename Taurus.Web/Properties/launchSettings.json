@@ -1,25 +1,25 @@
 {
   "$schema": "https://json.schemastore.org/launchsettings.json",
-    "profiles": {
-      "Development": {
-        "commandName": "Project",
-        "dotnetRunMessages": true,
-        "launchBrowser": true,
-        "applicationUrl": "https://localhost:7120;http://localhost:5050",
-        "environmentVariables": {
-          "ASPNETCORE_ENVIRONMENT": "Development",
-          "TAURUS_LOCAL_EXECUTION": "true"
-        }
-      },
-      "Production": {
-        "commandName": "Project",
-        "dotnetRunMessages": true,
-        "launchBrowser": true,
-        "applicationUrl": "https://localhost:7120;http://localhost:5050",
-        "environmentVariables": {
-          "ASPNETCORE_ENVIRONMENT": "Production",
-          "TAURUS_LOCAL_EXECUTION": "true"
-        }
+  "profiles": {
+    "Development": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:7120;http://localhost:5050",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "TAURUS_LOCAL_EXECUTION": "true"
+      }
+    },
+    "Production": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:7120;http://localhost:5050",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production",
+        "TAURUS_LOCAL_EXECUTION": "true"
       }
     }
   }
+}

@@ -4,10 +4,8 @@ namespace Taurus.Components.Theme;
 
 public static class TaurusTheme
 {
-    public static MudTheme Default { get; } = new()
-    {
-        PaletteLight = new PaletteLight
-        {
+    public static MudTheme Default { get; } = new() {
+        PaletteLight = new PaletteLight {
             Primary = "#1E5AA8",
             PrimaryContrastText = "#FFFFFF",
             Secondary = "#007C83",
@@ -36,8 +34,7 @@ public static class TaurusTheme
             Warning = "#ED6C02",
             Error = "#D32F2F"
         },
-        PaletteDark = new PaletteDark
-        {
+        PaletteDark = new PaletteDark {
             Primary = "#79B2FF",
             PrimaryContrastText = "#0D2035",
             Secondary = "#67D5DA",
@@ -65,6 +62,6 @@ public static class TaurusTheme
             Success = "#81C784",
             Warning = "#FFB74D",
             Error = "#EF9A9A"
-        },
+        }
     };
 }

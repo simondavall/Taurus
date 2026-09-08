@@ -5,14 +5,17 @@ using Taurus.Application;
 using Taurus.Application.Tickets;
 using PegasusCreateTicketRequest = PegasusApi.Abstractions.Tickets.CreateTicketRequest;
 using PegasusTicketResponse = PegasusApi.Abstractions.Tickets.TicketResponse;
+using PegasusTicketSummaryResponse = PegasusApi.Abstractions.Tickets.TicketSummaryResponse;
 using PegasusTicketsResponse = PegasusApi.Abstractions.Tickets.TicketsResponse;
 using PegasusUpdateTicketRequest = PegasusApi.Abstractions.Tickets.UpdateTicketRequest;
 
 
 namespace Taurus.Infrastructure.PegasusApi.Tickets;
 
-public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> logger, ITicketRefLinker ticketRefLinker) : ITicketService {
-    public async Task<IReadOnlyList<Ticket>> GetTicketsAsync(Guid? projectId = null) {
+public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> logger, ITicketRefLinker ticketRefLinker) : ITicketService
+{
+    public async Task<IReadOnlyList<Ticket>> GetTicketsAsync(Guid? projectId = null)
+    {
         logger.LogInformation("Retrieving tickets from PegasusApi for project {ProjectId}", projectId);
 
         try {
@@ -21,35 +24,36 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
                 : "api/tickets";
 
             var response = await httpClient.GetFromJsonAsync<PegasusTicketsResponse>(requestUri);
-            if (response is null) {
+            if (response is null)
                 throw new InvalidOperationException("PegasusApi returned an empty tickets response.");
-            }
 
-            var tickets = response.Items
+            var tickets = response
+                .Items
                 .Select(MapTicket)
                 .ToArray();
 
             logger.LogInformation("Retrieved {TicketCount} tickets from PegasusApi for project {ProjectId}", tickets.Length, projectId);
             return tickets;
-        } catch (Exception exception) {
+        }
+        catch (Exception exception) {
             logger.LogError(exception, "Failed to retrieve tickets from PegasusApi for project {ProjectId}", projectId);
             throw;
         }
     }
 
-    public async Task<IReadOnlyList<Ticket>> GetSubTasksAsync(string parentTicketRef) {
+    public async Task<IReadOnlyList<Ticket>> GetSubTasksAsync(string parentTicketRef)
+    {
         logger.LogInformation("Retrieving sub tasks for ticket {ParentTicketRef} from PegasusApi", parentTicketRef);
 
         try {
             var escapedParentTicketRef = Uri.EscapeDataString(parentTicketRef);
-            var response = await httpClient.GetFromJsonAsync<PegasusTicketsResponse>(
-                $"api/tickets?ParentRef={escapedParentTicketRef}");
+            var response = await httpClient.GetFromJsonAsync<PegasusTicketsResponse>($"api/tickets?ParentRef={escapedParentTicketRef}");
 
-            if (response is null) {
+            if (response is null)
                 throw new InvalidOperationException("PegasusApi returned an empty sub tasks response.");
-            }
 
-            var tickets = response.Items
+            var tickets = response
+                .Items
                 .Select(MapTicket)
                 .ToArray();
 
@@ -59,7 +63,8 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
                 parentTicketRef);
 
             return tickets;
-        } catch (Exception exception) {
+        }
+        catch (Exception exception) {
             logger.LogError(
                 exception,
                 "Failed to retrieve sub tasks for ticket {ParentTicketRef} from PegasusApi",
@@ -69,7 +74,8 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
         }
     }
 
-    public async Task<ApplicationResult<TicketDetails>> GetTicketByRefAsync(string ticketRef) {
+    public async Task<ApplicationResult<TicketDetails>> GetTicketByRefAsync(string ticketRef)
+    {
         logger.LogInformation("Retrieving ticket {TicketRef} from PegasusApi", ticketRef);
 
         try {
@@ -79,9 +85,8 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
 
             if (response.IsSuccessStatusCode) {
                 var ticketResponse = await response.Content.ReadFromJsonAsync<PegasusTicketResponse>();
-                if (ticketResponse is null) {
+                if (ticketResponse is null)
                     throw new InvalidOperationException("PegasusApi returned an empty ticket response.");
-                }
 
                 var ticket = MapTicketDetails(ticketResponse);
 
@@ -98,13 +103,15 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
             response.EnsureSuccessStatusCode();
 
             throw new InvalidOperationException("PegasusApi ticket retrieval failed unexpectedly.");
-        } catch (Exception exception) {
+        }
+        catch (Exception exception) {
             logger.LogError(exception, "Failed to retrieve ticket {TicketRef} from PegasusApi", ticketRef);
             throw;
         }
     }
 
-    public async Task<ApplicationResult<TicketDetails>> CreateTicketAsync(CreateTicketRequest request, Guid userId) {
+    public async Task<ApplicationResult<TicketDetails>> CreateTicketAsync(CreateTicketRequest request, Guid userId)
+    {
         logger.LogInformation("Creating ticket in PegasusApi for project {ProjectId}", request.ProjectId);
 
         var description = await ticketRefLinker.LinkTicketRefsAsync(request.Description);
@@ -126,10 +133,8 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
 
             if (response.StatusCode == HttpStatusCode.Created) {
                 var ticketResponse = await response.Content.ReadFromJsonAsync<PegasusTicketResponse>();
-                if (ticketResponse is null) {
-                    throw new InvalidOperationException(
-                        "PegasusApi returned an empty ticket response after ticket creation.");
-                }
+                if (ticketResponse is null)
+                    throw new InvalidOperationException("PegasusApi returned an empty ticket response after ticket creation.");
 
                 var ticket = MapTicketDetails(ticketResponse);
 
@@ -154,13 +159,15 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
             response.EnsureSuccessStatusCode();
 
             throw new InvalidOperationException("PegasusApi ticket creation failed unexpectedly.");
-        } catch (Exception exception) {
+        }
+        catch (Exception exception) {
             logger.LogError(exception, "Failed to create ticket in PegasusApi for project {ProjectId}", request.ProjectId);
             throw;
         }
     }
 
-    public async Task<ApplicationResult> UpdateTicketAsync(UpdateTicketRequest request, Guid userId) {
+    public async Task<ApplicationResult> UpdateTicketAsync(UpdateTicketRequest request, Guid userId)
+    {
         logger.LogInformation("Updating ticket {TicketId} in PegasusApi", request.Id);
 
         var description = await ticketRefLinker.LinkTicketRefsAsync(request.Description);
@@ -202,13 +209,15 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
             response.EnsureSuccessStatusCode();
 
             throw new InvalidOperationException("PegasusApi ticket update failed unexpectedly.");
-        } catch (Exception exception) {
+        }
+        catch (Exception exception) {
             logger.LogError(exception, "Failed to update ticket {TicketId} in PegasusApi", request.Id);
             throw;
         }
     }
 
-    private static Ticket MapTicket(PegasusTicketResponse ticket) {
+    private static Ticket MapTicket(PegasusTicketSummaryResponse ticket)
+    {
         return new Ticket(
             ticket.Id,
             ticket.TicketRef,
@@ -219,7 +228,8 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
             AsUtc(ticket.LastModified));
     }
 
-    private static TicketDetails MapTicketDetails(PegasusTicketResponse ticket) {
+    private static TicketDetails MapTicketDetails(PegasusTicketResponse ticket)
+    {
         return new TicketDetails(
             ticket.Id,
             ticket.TicketRef,
@@ -238,7 +248,8 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
             AsUtc(ticket.LastModified));
     }
 
-    private static DateTimeOffset AsUtc(DateTimeOffset value) {
+    private static DateTimeOffset AsUtc(DateTimeOffset value)
+    {
         return value.Offset == TimeSpan.Zero
             ? value
             : new DateTimeOffset(value.DateTime, TimeSpan.Zero);

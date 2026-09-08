@@ -37,16 +37,19 @@ public sealed class TicketLookupDataService(HttpClient httpClient, ILogger<Ticke
 
         try {
             var response = await httpClient.GetFromJsonAsync<LookupResponses>(requestUri);
-            if (response is null) throw new InvalidOperationException($"PegasusApi returned an empty {lookupName} response.");
+            if (response is null)
+                throw new InvalidOperationException($"PegasusApi returned an empty {lookupName} response.");
 
-            var items = response.Items
+            var items = response
+                .Items
                 .OrderBy(item => item.DisplayOrder)
                 .Select(map)
                 .ToArray();
 
             logger.LogInformation("Retrieved {LookupCount} {LookupName} from PegasusApi", items.Length, lookupName);
             return items;
-        } catch (Exception exception) {
+        }
+        catch (Exception exception) {
             logger.LogError(exception, "Failed to retrieve {LookupName} from PegasusApi", lookupName);
             throw;
         }

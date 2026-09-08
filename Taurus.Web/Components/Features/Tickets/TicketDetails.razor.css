@@ -169,6 +169,7 @@
 .ticket-comment-deleted .ticket-comment-actions ::deep .mud-icon-root {
     color: var(--mud-palette-text-primary);
 }
+
 .ticket-comment-editor {
     width: 100%;
 }

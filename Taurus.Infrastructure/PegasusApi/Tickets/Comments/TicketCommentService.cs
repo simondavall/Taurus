@@ -22,17 +22,19 @@ public sealed class TicketCommentService(HttpClient httpClient, ILogger<TicketCo
             var requestUri = $"api/comments?TicketId={Uri.EscapeDataString(ticketId.ToString())}";
 
             var response = await httpClient.GetFromJsonAsync<CommentsResponse>(requestUri);
-            if (response is null) 
+            if (response is null)
                 throw new InvalidOperationException("PegasusApi returned an empty comments response.");
 
-            var comments = response.Items
+            var comments = response
+                .Items
                 .Select(MapComment)
                 .ToArray();
 
             logger.LogInformation("Retrieved {CommentCount} comments from PegasusApi for ticket {TicketId}", comments.Length, ticketId);
 
             return comments;
-        } catch (Exception exception) {
+        }
+        catch (Exception exception) {
             logger.LogError(exception, "Failed to retrieve comments from PegasusApi for ticket {TicketId}", ticketId);
 
             throw;
@@ -49,16 +51,10 @@ public sealed class TicketCommentService(HttpClient httpClient, ILogger<TicketCo
             foreach (var comment in comments) {
                 var content = await ticketRefLinker.LinkTicketRefsAsync(comment.Content);
 
-                apiComments.Add(new PegasusUpdateCommentRequest {
-                    Id = comment.Id,
-                    Content = content!,
-                    IsDeleted = comment.IsDeleted
-                });
+                apiComments.Add(new PegasusUpdateCommentRequest { Id = comment.Id, Content = content!, IsDeleted = comment.IsDeleted });
             }
 
-            var apiRequest = new PegasusUpdateCommentsRequest {
-                Comments = apiComments
-            };
+            var apiRequest = new PegasusUpdateCommentsRequest { Comments = apiComments };
 
             using var response = await httpClient.PutAsJsonAsync("api/comments", apiRequest);
 
@@ -80,7 +76,8 @@ public sealed class TicketCommentService(HttpClient httpClient, ILogger<TicketCo
             response.EnsureSuccessStatusCode();
 
             throw new InvalidOperationException("PegasusApi comment update failed unexpectedly.");
-        } catch (Exception exception) {
+        }
+        catch (Exception exception) {
             logger.LogError(exception, "Failed to update comments in PegasusApi");
             throw;
         }
@@ -93,19 +90,14 @@ public sealed class TicketCommentService(HttpClient httpClient, ILogger<TicketCo
         try {
             var content = await ticketRefLinker.LinkTicketRefsAsync(request.Content);
 
-            var apiRequest = new PegasusCreateCommentRequest {
-                TicketId = request.TicketId,
-                Content = content!,
-                UserId = userId
-            };
+            var apiRequest = new PegasusCreateCommentRequest { TicketId = request.TicketId, Content = content!, UserId = userId };
 
             using var response = await httpClient.PostAsJsonAsync("api/comments", apiRequest);
 
             if (response.StatusCode == HttpStatusCode.Created) {
                 var commentResponse = await response.Content.ReadFromJsonAsync<CommentResponse>();
                 if (commentResponse is null)
-                    throw new InvalidOperationException(
-                        "PegasusApi returned an empty comment response after comment creation.");
+                    throw new InvalidOperationException("PegasusApi returned an empty comment response after comment creation.");
 
                 var comment = MapComment(commentResponse);
 
@@ -130,7 +122,8 @@ public sealed class TicketCommentService(HttpClient httpClient, ILogger<TicketCo
             response.EnsureSuccessStatusCode();
 
             throw new InvalidOperationException("PegasusApi comment creation failed unexpectedly.");
-        } catch (Exception exception) {
+        }
+        catch (Exception exception) {
             logger.LogError(exception, "Failed to create comment in PegasusApi for ticket {TicketId}", request.TicketId);
             throw;
         }

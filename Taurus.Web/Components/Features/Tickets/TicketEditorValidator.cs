@@ -37,9 +37,7 @@ public sealed class TicketEditorValidator : AbstractValidator<TicketEditorModel>
     private bool CanCloseTicket(TicketEditorModel ticket)
     {
         if (!ticket.HasActiveSubTasks)
-        {
             return true;
-        }
 
         return ticket.StatusId != _lookupIds.CompletedStatusId
                && ticket.StatusId != _lookupIds.ObsoleteStatusId;
@@ -48,24 +46,19 @@ public sealed class TicketEditorValidator : AbstractValidator<TicketEditorModel>
     private bool CanCompleteTicket(TicketEditorModel ticket)
     {
         if (!_requireFixedInReleaseForCompletion)
-        {
             return true;
-        }
 
         if (ticket.StatusId != _lookupIds.CompletedStatusId)
-        {
             return true;
-        }
 
         return !string.IsNullOrWhiteSpace(ticket.FixedInRelease);
     }
 
     private async Task<IEnumerable<string>> ValidatePropertyAsync(object model, string propertyName)
     {
-        var context = ValidationContext<TicketEditorModel>
-            .CreateWithOptions(
-                (TicketEditorModel)model,
-                options => options.IncludeProperties(propertyName));
+        var context = ValidationContext<TicketEditorModel>.CreateWithOptions(
+            (TicketEditorModel)model,
+            options => options.IncludeProperties(propertyName));
 
         var result = await ValidateAsync(context);
 

@@ -1,7 +1,5 @@
 ﻿@page "/access-denied"
 @using Microsoft.AspNetCore.Authorization
-@using MudBlazor
-@using Taurus.Components.Layout
 @attribute [AllowAnonymous]
 @layout MainLayout
 
@@ -40,4 +38,5 @@
         Reason == "disabled"
             ? "This application has been disabled and cannot currently sign you in."
             : "You are not authorized to sign in to this application.";
+
 }

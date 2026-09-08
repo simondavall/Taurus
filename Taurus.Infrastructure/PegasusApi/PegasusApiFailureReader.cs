@@ -8,13 +8,10 @@ internal static class PegasusApiFailureReader
 {
     public static async Task<string> ReadAsync(HttpResponseMessage response, string fallbackMessage)
     {
-        try
-        {
+        try {
             var failure = await response.Content.ReadFromJsonAsync<ValidationFailureResponse>();
             if (failure is null)
-            {
                 return fallbackMessage;
-            }
 
             var errors = JsonSerializer.SerializeToElement(failure.Errors);
 
@@ -27,40 +24,28 @@ internal static class PegasusApiFailureReader
                 ? string.Join(" ", messages)
                 : fallbackMessage;
         }
-        catch (JsonException)
-        {
+        catch (JsonException) {
             return fallbackMessage;
         }
     }
 
     private static IEnumerable<string> GetMessages(JsonElement element)
     {
-        switch (element.ValueKind)
-        {
+        switch (element.ValueKind) {
             case JsonValueKind.String:
                 yield return element.GetString()!;
                 break;
 
             case JsonValueKind.Array:
                 foreach (var item in element.EnumerateArray())
-                {
                     foreach (var message in GetMessages(item))
-                    {
                         yield return message;
-                    }
-                }
-
                 break;
 
             case JsonValueKind.Object:
                 foreach (var property in element.EnumerateObject())
-                {
                     foreach (var message in GetMessages(property.Value))
-                    {
                         yield return message;
-                    }
-                }
-
                 break;
         }
     }

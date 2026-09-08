@@ -25,10 +25,9 @@ public sealed class TicketCreateEditorValidator : AbstractValidator<TicketCreate
 
     private async Task<IEnumerable<string>> ValidatePropertyAsync(object model, string propertyName)
     {
-        var context = ValidationContext<TicketCreateEditorModel>
-            .CreateWithOptions(
-                (TicketCreateEditorModel)model,
-                options => options.IncludeProperties(propertyName));
+        var context = ValidationContext<TicketCreateEditorModel>.CreateWithOptions(
+            (TicketCreateEditorModel)model,
+            options => options.IncludeProperties(propertyName));
 
         var result = await ValidateAsync(context);
 

@@ -27,10 +27,7 @@ public sealed record TicketLookupIds(
     {
         var status = statuses.FirstOrDefault(status => string.Equals(status.Code, code, StringComparison.OrdinalIgnoreCase));
         if (status is null)
-        {
-            throw new InvalidOperationException(
-                $"PegasusApi ticket status '{code}' is required by Taurus but was not returned.");
-        }
+            throw new InvalidOperationException($"PegasusApi ticket status '{code}' is required by Taurus but was not returned.");
 
         return status.Id;
     }
@@ -39,10 +36,7 @@ public sealed record TicketLookupIds(
     {
         var priority = priorities.FirstOrDefault(priority => string.Equals(priority.Code, code, StringComparison.OrdinalIgnoreCase));
         if (priority is null)
-        {
-            throw new InvalidOperationException(
-                $"PegasusApi ticket priority '{code}' is required by Taurus but was not returned.");
-        }
+            throw new InvalidOperationException($"PegasusApi ticket priority '{code}' is required by Taurus but was not returned.");
 
         return priority.Id;
     }
