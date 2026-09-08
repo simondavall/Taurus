@@ -5,6 +5,7 @@ using Taurus.Application;
 using Taurus.Application.Tickets;
 using PegasusCreateTicketRequest = PegasusApi.Abstractions.Tickets.CreateTicketRequest;
 using PegasusTicketResponse = PegasusApi.Abstractions.Tickets.TicketResponse;
+using PegasusTicketSummaryResponse = PegasusApi.Abstractions.Tickets.TicketSummaryResponse;
 using PegasusTicketsResponse = PegasusApi.Abstractions.Tickets.TicketsResponse;
 using PegasusUpdateTicketRequest = PegasusApi.Abstractions.Tickets.UpdateTicketRequest;
 
@@ -215,7 +216,7 @@ public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> 
         }
     }
 
-    private static Ticket MapTicket(PegasusTicketResponse ticket)
+    private static Ticket MapTicket(PegasusTicketSummaryResponse ticket)
     {
         return new Ticket(
             ticket.Id,
