@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using MudBlazor.Services;
 using Serilog;
+using Serilog.Events;
 using Taurus.Application;
 using Taurus.Components;
 using Taurus.Components.Features.Shared;
@@ -107,6 +108,25 @@ builder.Services.AddScoped<IUserStateService, UserStateService>();
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
+
+var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
+
+lifetime.ApplicationStarted.Register(() =>
+{
+    Log.Information("{Application} is starting up...", app.Environment.ApplicationName);
+    Log.Information("Environment: {Environment}", app.Environment.EnvironmentName);
+    Log.Information("App version: {Version}", typeof(Program).Assembly.GetName().Version);
+});
+
+lifetime.ApplicationStopping.Register(() => {
+    Log.Warning("{Application} is shutting down...", app.Environment.ApplicationName);
+});
+
+lifetime.ApplicationStopped.Register(() =>
+{
+    Log.Warning("{Application} has stopped", app.Environment.ApplicationName);
+    Log.CloseAndFlush(); // Ensure all logs are written
+});
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment()) {
