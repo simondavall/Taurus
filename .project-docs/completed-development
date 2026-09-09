@@ -466,3 +466,12 @@
     - Used absolute cache expiration.
     - Kept Web consumers and the existing `ITicketLookupDataService` contract unchanged.
     - Verified cached lookup behaviour, expiration, application restart behaviour and existing ticket workflows.
+- Implemented caching for project list.
+    - Added an Application-owned project service to coordinate project caching and project data access.
+    - Separated PegasusApi project operations behind `IProjectDataProvider`.
+    - Cached the project list using a configurable absolute expiration of 60 minutes.
+    - Extended the shared caching abstraction with explicit cache removal.
+    - Invalidated the project-list cache following successful project creation, update and deletion.
+    - Preserved the existing cache following failed project mutations.
+    - Kept Web consumers and the existing `IProjectService` contract unchanged.
+    - Verified project-list caching, expiration, application restart behaviour, mutation invalidation and existing project and ticket workflows.

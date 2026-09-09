@@ -18,10 +18,10 @@ namespace Taurus.Infrastructure;
 public static class DependencyInjection
 {
     private const int DefaultTicketLookupCacheDurationMinutes = 60;
+    private const int DefaultProjectCacheDurationMinutes = 60;
     
     public static IServiceCollection AddTaurusInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-
         var baseAddress = configuration["PegasusApi:BaseAddress"];
 
         Action<HttpClient> client = httpClient => { httpClient.BaseAddress = new Uri(baseAddress!); };
@@ -29,8 +29,9 @@ public static class DependencyInjection
         services.AddMemoryCache();
         services.AddSingleton<ICacheService, MemoryCacheService>();
         services.AddSingleton(new TicketLookupCacheOptions(ResolveTicketLookupCacheDuration(configuration)));
+        services.AddSingleton(new ProjectCacheOptions(ResolveProjectCacheDuration(configuration)));
         
-        services.AddHttpClient<IProjectService, ProjectService>(client);
+        services.AddHttpClient<IProjectDataProvider, PegasusProjectDataProvider>(client);
         services.AddHttpClient<ITicketService, TicketService>(client);
         services.AddHttpClient<ITicketLookupDataProvider, TicketLookupDataProvider>(client);
         services.AddHttpClient<ITicketCommentService, TicketCommentService>(client);
@@ -40,6 +41,7 @@ public static class DependencyInjection
         return services;
     }
     
+    // todo: tidy these methods up as both very similar. Wait til settings are resolved.
     private static TimeSpan ResolveTicketLookupCacheDuration(IConfiguration configuration)
     {
         var durationMinutes = configuration.GetValue<int?>("Caching:TicketLookups:DurationMinutes");
@@ -47,5 +49,14 @@ public static class DependencyInjection
         return durationMinutes is > 0
             ? TimeSpan.FromMinutes(durationMinutes.Value)
             : TimeSpan.FromMinutes(DefaultTicketLookupCacheDurationMinutes);
+    }
+    
+    private static TimeSpan ResolveProjectCacheDuration(IConfiguration configuration)
+    {
+        var durationMinutes = configuration.GetValue<int?>("Caching:Projects:DurationMinutes");
+
+        return durationMinutes is > 0
+            ? TimeSpan.FromMinutes(durationMinutes.Value)
+            : TimeSpan.FromMinutes(DefaultProjectCacheDurationMinutes);
     }
 }

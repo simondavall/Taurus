@@ -17,4 +17,9 @@ public sealed class MemoryCacheService(IMemoryCache memoryCache) : ICacheService
 
         return value ?? throw new InvalidOperationException($"Cache factory returned no value for key '{key}'.");
     }
+    
+    public void Remove(string key)
+    {
+        memoryCache.Remove(key);
+    }
 }

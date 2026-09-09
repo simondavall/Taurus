@@ -1,6 +1,6 @@
 ﻿namespace Taurus.Application.Projects;
 
-public interface IProjectService
+public interface IProjectDataProvider
 {
     Task<ApplicationResult<Project>> CreateProjectAsync(CreateProjectRequest request);
     Task<ApplicationResult> DeleteProjectAsync(Guid id);

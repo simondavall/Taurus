@@ -246,6 +246,6 @@ Existing application settings are fully available in Taurus.
 - ✓ Ticket Details page Cancel refreshes original ticket info.
 - ✓ Restructure project into Web, Application and Infrastructure layers.
 - ✓ Implement lookup caching.
-- Implement caching for project list.gst
+- ✓ Implement caching for project list.
 
 Future enhancements outside the planned implementation phases will be recorded here as the project evolves.

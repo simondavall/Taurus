@@ -49,12 +49,33 @@
 
 ## Application Services
 
-- Define application-facing service interfaces in `Taurus.Application` when they form the contract between consumers and Infrastructure implementations.
+- Define application-facing service interfaces in `Taurus.Application`.
 - Keep application models independent of external API transport models.
 - UI features consume Taurus-owned application models through application service interfaces.
-- Implement external service contracts in `Taurus.Infrastructure`.
+- Implement application services in Infrastructure when the service directly represents an external integration and no Application-owned orchestration is required.
+- Implement application services in Application when they coordinate multiple capabilities or apply infrastructure-independent application behaviour.
+- Introduce Application-owned provider or capability abstractions where an Application service needs to coordinate external or technical mechanisms independently.
+- Implement those provider and capability abstractions in Infrastructure.
 - Do not place an interface in Application solely because it is an interface; Web-only contracts belong in Web.
-- Do not introduce forwarding application services where an Infrastructure implementation can directly satisfy an Application contract without obscuring application behaviour.
+- Do not introduce forwarding Application services where an Infrastructure implementation can directly satisfy the Application contract without obscuring application behaviour.
+- Application services that coordinate caching, data retrieval, invalidation or other genuine workflow behaviour are not forwarding services.
+
+## Caching
+
+- Coordinate cached data access in Application services.
+- Access caching through the shared Application-owned `ICacheService` abstraction.
+- Implement the cache provider in Infrastructure.
+- Use process-local memory caching as the current cache implementation.
+- Keep external data retrieval separate from caching through Application-owned data-provider abstractions where an Application service coordinates the two.
+- Keep cache keys and feature-specific cache policy with the owning Application service.
+- Configure cache durations through application configuration and pass the resolved policy to the owning Application service.
+- Use absolute expiration for cached application data.
+- Invalidate cached data after successful mutations where the mutation can make the cached value stale.
+- Do not invalidate an existing cache entry when the corresponding mutation fails.
+- Add cache capabilities only when required by demonstrated implementations.
+- Keep Web consumers unaware of cache behaviour and concrete cache implementations.
+- Preserve application-facing service contracts when introducing caching where practical.
+- Keep the caching boundary suitable for replacing process-local memory caching with an external provider without changing consuming workflows.
 
 ## PegasusApi Integration
 
