@@ -106,38 +106,44 @@ The Web project must not consume PegasusApi request or response models directly.
 
 ### Taurus.Application
 
-The Application project defines Taurus-owned application contracts and models.
+The Application project defines Taurus-owned application contracts, models and application behaviour.
 
 It owns:
 
 - Taurus request and response models.
 - Application service interfaces.
 - Taurus-owned result types.
-- Shared application behaviour that is independent of Web and external infrastructure.
+- Application workflow and orchestration that is independent of concrete infrastructure implementations.
+- Infrastructure capability abstractions required by application workflows, such as caching.
 - Shared content-processing abstractions such as Markdown rendering and HTML sanitisation.
+
+Application services may coordinate multiple infrastructure capabilities where this represents genuine application behaviour. For example, a service may coordinate cached access to an underlying data provider while remaining independent of the concrete cache and data-source implementations.
 
 The Application project does not depend on the Web or Infrastructure projects.
 
-The Application project must not depend on MudBlazor, Blazor presentation infrastructure or PegasusApi transport models.
+The Application project must not depend on MudBlazor, Blazor presentation infrastructure, concrete caching implementations or PegasusApi transport models.
 
 ### Taurus.Infrastructure
 
-The Infrastructure project implements external integration concerns required by Taurus.
+The Infrastructure project implements external and technical capabilities required by Taurus.
 
 It owns:
 
 - PegasusApi HTTP communication.
-- PegasusApi service implementations.
+- PegasusApi data-provider implementations.
 - Mapping Taurus requests to PegasusApi requests.
 - Mapping PegasusApi responses to Taurus responses.
 - Interpreting PegasusApi validation and failure responses.
+- Concrete caching implementations.
 - Infrastructure-specific dependency registration.
 
 PegasusApi.Abstractions is referenced only by the Infrastructure project and terminates at this boundary.
 
-Future infrastructure concerns such as caching belong here when they are introduced.
+Where Application coordinates infrastructure-independent behaviour, Infrastructure implements the required Application-owned capability abstractions rather than owning the orchestration itself.
 
-Dependency direction
+Caching follows this model: Application owns cache policy and coordinates cached data access, while Infrastructure provides the concrete cache implementation and external data provider.
+
+### Dependency direction
 
 The allowed project dependencies are:
 

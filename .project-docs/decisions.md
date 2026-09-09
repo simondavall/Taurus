@@ -16,6 +16,26 @@
 - Prefer small abstractions with a single responsibility.
 - Avoid abstractions that hide application flow or introduce unnecessary indirection.
 
+# Application Orchestration
+
+- Application services may coordinate multiple capabilities when the coordination represents genuine application behaviour.
+- Keep concrete external data access and technical implementations in Infrastructure.
+- Define Application-owned provider or capability abstractions where they provide a demonstrated separation between application behaviour and Infrastructure mechanisms.
+- Do not introduce Application services that merely forward calls to Infrastructure without adding meaningful application behaviour.
+
+# Caching
+
+- Application owns cache policy and coordinates cached data access.
+- Infrastructure owns concrete cache implementations.
+- Keep external data retrieval independent of caching by exposing data providers through Application-owned abstractions where caching is coordinated by an Application service.
+- Cache consumers must not depend on the concrete cache provider.
+- Use process-local memory caching initially.
+- Use configurable absolute expiration for cached data.
+- Add invalidation behaviour only where the cached data can become stale through application mutations or another demonstrated requirement.
+- Invalidate affected cache entries only after successful mutations.
+- Keep the caching abstraction small and extend it only as demonstrated requirements emerge.
+- Preserve the ability to replace process-local caching with an external cache implementation without changing application workflows or Web consumers.
+
 # Rendering
 
 - Use Interactive Server rendering throughout the application.
