@@ -10,7 +10,6 @@ public interface IProjectService
     Task<ApplicationResult> UpdateProjectAsync(UpdateProjectRequest request);
 }
 
-
 public sealed class ProjectService(IProjectDataProvider dataProvider, ICacheService cacheService, ProjectCacheOptions cacheOptions) : IProjectService
 {
     private const string ProjectsCacheKey = "projects:list";
@@ -19,7 +18,7 @@ public sealed class ProjectService(IProjectDataProvider dataProvider, ICacheServ
     {
         return cacheService.GetOrCreateAsync(
             ProjectsCacheKey,
-            cacheOptions.Duration, 
+            cacheOptions.Duration,
             dataProvider.GetProjectsAsync);
     }
 

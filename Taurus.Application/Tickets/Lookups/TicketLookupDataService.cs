@@ -21,24 +21,24 @@ public sealed class TicketLookupDataService(
     public Task<IReadOnlyList<TicketStatus>> GetStatusesAsync()
     {
         return cacheService.GetOrCreateAsync(
-            StatusesCacheKey, 
-            cacheOptions.Duration, 
+            StatusesCacheKey,
+            cacheOptions.Duration,
             dataProvider.GetStatusesAsync);
     }
 
     public Task<IReadOnlyList<TicketPriority>> GetPrioritiesAsync()
     {
         return cacheService.GetOrCreateAsync(
-            PrioritiesCacheKey, 
-            cacheOptions.Duration, 
+            PrioritiesCacheKey,
+            cacheOptions.Duration,
             dataProvider.GetPrioritiesAsync);
     }
 
     public Task<IReadOnlyList<TicketType>> GetTypesAsync()
     {
         return cacheService.GetOrCreateAsync(
-            TypesCacheKey, 
-            cacheOptions.Duration, 
+            TypesCacheKey,
+            cacheOptions.Duration,
             dataProvider.GetTypesAsync);
     }
 }
