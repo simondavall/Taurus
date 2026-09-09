@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Taurus.Application.Caching;
+using Taurus.Application.Configuration;
 using Taurus.Application.Projects;
 using Taurus.Application.Tickets;
 using Taurus.Application.Tickets.Comments;
@@ -17,46 +18,21 @@ namespace Taurus.Infrastructure;
 
 public static class DependencyInjection
 {
-    private const int DefaultTicketLookupCacheDurationMinutes = 60;
-    private const int DefaultProjectCacheDurationMinutes = 60;
-    
-    public static IServiceCollection AddTaurusInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static void AddTaurusInfrastructure(this IServiceCollection services, TaurusSettings settings)
     {
-        var baseAddress = configuration["PegasusApi:BaseAddress"];
-
-        Action<HttpClient> client = httpClient => { httpClient.BaseAddress = new Uri(baseAddress!); };
+        var baseAddress = settings.PegasusApi.BaseAddress;
+        Action<HttpClient> client = httpClient => { httpClient.BaseAddress = baseAddress; };
 
         services.AddMemoryCache();
         services.AddSingleton<ICacheService, MemoryCacheService>();
-        services.AddSingleton(new TicketLookupCacheOptions(ResolveTicketLookupCacheDuration(configuration)));
-        services.AddSingleton(new ProjectCacheOptions(ResolveProjectCacheDuration(configuration)));
-        
+        services.AddSingleton(new TicketLookupCacheOptions(settings.Caching.TicketLookups.Duration));
+        services.AddSingleton(new ProjectCacheOptions(settings.Caching.Projects.Duration));
+
         services.AddHttpClient<IProjectDataProvider, PegasusProjectDataProvider>(client);
         services.AddHttpClient<ITicketService, TicketService>(client);
         services.AddHttpClient<ITicketLookupDataProvider, TicketLookupDataProvider>(client);
         services.AddHttpClient<ITicketCommentService, TicketCommentService>(client);
         services.AddHttpClient<ITicketRefLinker, TicketRefLinker>(client);
         services.AddHttpClient<IUserService, UserService>(client);
-
-        return services;
-    }
-    
-    // todo: tidy these methods up as both very similar. Wait til settings are resolved.
-    private static TimeSpan ResolveTicketLookupCacheDuration(IConfiguration configuration)
-    {
-        var durationMinutes = configuration.GetValue<int?>("Caching:TicketLookups:DurationMinutes");
-
-        return durationMinutes is > 0
-            ? TimeSpan.FromMinutes(durationMinutes.Value)
-            : TimeSpan.FromMinutes(DefaultTicketLookupCacheDurationMinutes);
-    }
-    
-    private static TimeSpan ResolveProjectCacheDuration(IConfiguration configuration)
-    {
-        var durationMinutes = configuration.GetValue<int?>("Caching:Projects:DurationMinutes");
-
-        return durationMinutes is > 0
-            ? TimeSpan.FromMinutes(durationMinutes.Value)
-            : TimeSpan.FromMinutes(DefaultProjectCacheDurationMinutes);
     }
 }

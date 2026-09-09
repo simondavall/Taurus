@@ -1,15 +1,15 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using AngleSharp;
+using Microsoft.AspNetCore.Components;
 using MudBlazor;
+using Taurus.Application.Configuration;
 using Taurus.Application.Projects;
 
 namespace Taurus.Components.Features.Projects;
 
 public partial class Projects
 {
-    private const int DefaultPageSize = 10;
-
     [Inject]
-    private IConfiguration Configuration { get; set; } = default!;
+    private ProjectSettings Settings { get; set; } = default!;
     [Inject]
     private IDialogService DialogService { get; set; } = default!;
     [Inject]
@@ -43,11 +43,7 @@ public partial class Projects
 
     protected override async Task OnInitializedAsync()
     {
-        PageSize = Configuration.GetValue("Projects:PageSize", DefaultPageSize);
-
-        if (PageSize <= 0)
-            PageSize = DefaultPageSize;
-
+        PageSize = Settings.PageSize;
         await LoadProjectsAsync();
     }
 
