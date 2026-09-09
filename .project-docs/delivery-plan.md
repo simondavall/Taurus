@@ -247,5 +247,6 @@ Existing application settings are fully available in Taurus.
 - ✓ Restructure project into Web, Application and Infrastructure layers.
 - ✓ Implement lookup caching.
 - ✓ Implement caching for project list.
+- ✓ Implement application settings.
 
 Future enhancements outside the planned implementation phases will be recorded here as the project evolves.

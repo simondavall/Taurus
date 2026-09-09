@@ -57,6 +57,21 @@
 - Obtain the current user identifier from the authenticated principal.
 - Never allow editable UI input to determine the acting user.
 
+# Configuration
+
+- Represent application configuration through the Taurus-owned `TaurusSettings` authority.
+- Own `TaurusSettings` in `Taurus.Application` so the validated settings model can be shared by Web, Application and Infrastructure without reversing dependency direction.
+- Load configuration providers and construct `TaurusSettings` in the Web composition root.
+- Read and validate migrated configuration once during application startup.
+- Prevent application startup when represented settings are missing or invalid.
+- Report all detected settings validation failures together rather than failing validation on the first error.
+- After successful startup validation, consumers may rely on represented settings being complete and valid.
+- Prefer strongly typed application values such as `Uri` and `TimeSpan` over exposing raw configuration representations to consumers.
+- Do not introduce local fallback values for required settings represented by `TaurusSettings`.
+- Pass validated settings to Application and Infrastructure rather than passing raw `IConfiguration` for migrated settings.
+- Migrate existing configuration into `TaurusSettings` incrementally as each area is reviewed.
+- Keep third-party framework configuration that does not represent Taurus application settings, such as Serilog configuration, with its owning framework configuration mechanism.
+
 # Dependencies
 
 - Prefer first-party .NET features where practical.

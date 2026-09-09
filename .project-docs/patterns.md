@@ -47,6 +47,24 @@
 - Register services explicitly as they are introduced.
 - Do not introduce marker interfaces or automatic assembly scanning.
 
+## Application Settings
+
+- Define the Taurus-owned application settings authority in `Taurus.Application`.
+- Use `TaurusSettings` as the root immutable settings model.
+- Group related settings into focused strongly typed settings models.
+- Load configuration providers before creating `TaurusSettings`.
+- Create and validate `TaurusSettings` once from the final `IConfiguration` in the Web composition root.
+- Collect all settings validation failures and report them together through a startup exception.
+- Prevent application startup when any represented required setting is missing or invalid.
+- Convert configuration representations into application-appropriate types during settings creation, such as configuration minutes into `TimeSpan` and addresses into `Uri`.
+- Once validation succeeds, treat represented settings as authoritative and do not repeat validation or provide local fallback values in consumers.
+- Register the validated settings authority for dependency injection where runtime consumers require it.
+- Pass `TaurusSettings` to Infrastructure dependency registration rather than raw `IConfiguration` for migrated settings.
+- Allow consumers to use focused settings groups where they require only part of the complete authority.
+- Keep the act of loading ASP.NET Core configuration and constructing the settings authority in Web.
+- Migrate existing raw configuration access into the settings authority incrementally as configuration areas are reviewed.
+- Leave framework-owned configuration outside `TaurusSettings` where Taurus does not consume those values directly.
+
 ## Application Services
 
 - Define application-facing service interfaces in `Taurus.Application`.

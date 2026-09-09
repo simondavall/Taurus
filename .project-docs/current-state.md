@@ -13,7 +13,7 @@ where development should continue.
 
 # Current task
 
-- Implement caching for project list
+- None
 
 # Remaining milestone tasks
 
