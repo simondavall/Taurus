@@ -245,6 +245,8 @@ Existing application settings are fully available in Taurus.
 - ✓ Add "No Tickets" dcisplay when no tickets are returned from selection.
 - ✓ Ticket Details page Cancel refreshes original ticket info.
 - ✓ Restructure project into Web, Application and Infrastructure layers.
-- Introduce caching
+- ✓ Implement lookup caching.
+- ✓ Implement caching for project list.
+- ✓ Implement application settings.
 
 Future enhancements outside the planned implementation phases will be recorded here as the project evolves.

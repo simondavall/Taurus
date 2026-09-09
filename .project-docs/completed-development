@@ -457,3 +457,33 @@
 - Separated Taurus application contracts from PegasusApi infrastructure implementations.
 - Restricted PegasusApi integration to Infrastructure and Web-specific concerns to Web.
 - Preserved existing application behaviour after restructuring.
+- Implemented lookup caching.
+    - Added an Application-owned caching abstraction with a process-local Infrastructure implementation.
+    - Added an Application-owned ticket lookup data service that coordinates cache access and underlying data retrieval.
+    - Separated PegasusApi lookup retrieval behind `ITicketLookupDataProvider`.
+    - Cached ticket statuses, priorities and types independently.
+    - Added a shared configurable ticket lookup cache duration of 60 minutes.
+    - Used absolute cache expiration.
+    - Kept Web consumers and the existing `ITicketLookupDataService` contract unchanged.
+    - Verified cached lookup behaviour, expiration, application restart behaviour and existing ticket workflows.
+- Implemented caching for project list.
+    - Added an Application-owned project service to coordinate project caching and project data access.
+    - Separated PegasusApi project operations behind `IProjectDataProvider`.
+    - Cached the project list using a configurable absolute expiration of 60 minutes.
+    - Extended the shared caching abstraction with explicit cache removal.
+    - Invalidated the project-list cache following successful project creation, update and deletion.
+    - Preserved the existing cache following failed project mutations.
+    - Kept Web consumers and the existing `IProjectService` contract unchanged.
+    - Verified project-list caching, expiration, application restart behaviour, mutation invalidation and existing project and ticket workflows.
+- Implemented application settings.
+    - Added the Taurus-owned `TaurusSettings` application settings authority in Application.
+    - Combined application settings and environment-derived configuration into a strongly typed validated settings model during startup.
+    - Added grouped settings for OpenID Connect, PegasusApi, Data Protection, project and ticket page sizes, and caching.
+    - Added startup validation that collects and reports all missing or invalid represented settings.
+    - Prevented application startup when represented configuration is invalid.
+    - Replaced the existing Web `ValidateRequiredConfiguration` implementation.
+    - Replaced migrated raw `IConfiguration` access with validated application settings.
+    - Updated Infrastructure dependency registration to consume `TaurusSettings` rather than `IConfiguration`.
+    - Removed hard-coded fallback durations from ticket lookup and project-list caching.
+    - Preserved existing application-settings, environment-variable and local `.env` configuration-source behaviour.
+    - Verified startup validation and existing authentication, Data Protection, PegasusApi, caching, project and ticket workflows.

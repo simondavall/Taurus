@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using MudBlazor.Services;
 using Serilog;
 using Taurus.Application;
+using Taurus.Application.Configuration;
 using Taurus.Components;
 using Taurus.Components.Features.Shared;
 using Taurus.Infrastructure;
@@ -16,8 +17,7 @@ using Taurus.UserState;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var isLocalExecution = string.Equals(Environment.GetEnvironmentVariable("TAURUS_LOCAL_EXECUTION"), "true", StringComparison.OrdinalIgnoreCase);
-
+_ = bool.TryParse(Environment.GetEnvironmentVariable("TAURUS_LOCAL_EXECUTION"), out var isLocalExecution);
 if (isLocalExecution) {
     Env
         .NoClobber()
@@ -29,6 +29,11 @@ if (isLocalExecution) {
     builder.WebHost.UseStaticWebAssets();
 }
 
+var settings = TaurusSettings.Create(builder.Configuration);
+builder.Services.AddSingleton(settings);
+builder.Services.AddSingleton(settings.Projects);
+builder.Services.AddSingleton(settings.Tickets);
+
 builder.Services.AddSerilog((services, configuration) => {
     configuration
         .ReadFrom.Configuration(builder.Configuration)
@@ -36,9 +41,7 @@ builder.Services.AddSerilog((services, configuration) => {
         .Enrich.FromLogContext();
 });
 
-ValidateRequiredConfiguration(builder.Configuration);
-
-ConfigureDataProtection(builder.Services, builder.Configuration);
+ConfigureDataProtection(builder.Services, settings.DataProtection);
 
 builder
     .Services
@@ -53,11 +56,9 @@ builder
     })
     .AddCookie()
     .AddOpenIdConnect(options => {
-        var configuration = builder.Configuration.GetSection("OpenIdConnect");
-
-        options.Authority = configuration["Authority"];
-        options.ClientId = configuration["ClientId"];
-        options.ClientSecret = configuration["ClientSecret"];
+        options.Authority = settings.OpenIdConnect.Authority.ToString();
+        options.ClientId = settings.OpenIdConnect.ClientId;
+        options.ClientSecret = settings.OpenIdConnect.ClientSecret;
 
         options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         options.ResponseType = OpenIdConnectResponseType.Code;
@@ -94,12 +95,14 @@ builder
     });
 
 builder.Services.AddAuthorization(options => { options.FallbackPolicy = options.DefaultPolicy; });
+
 builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddMudServices();
 
 builder.Services.AddTaurusApplication();
-builder.Services.AddTaurusInfrastructure(builder.Configuration);
+
+builder.Services.AddTaurusInfrastructure(settings);
 
 builder.Services.AddScoped<INavigationHistoryService, NavigationHistoryService>();
 builder.Services.AddScoped<IUserStateService, UserStateService>();
@@ -108,14 +111,28 @@ builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
+
+lifetime.ApplicationStarted.Register(() => {
+    Log.Information("{Application} is starting up...", app.Environment.ApplicationName);
+    Log.Information("Environment: {Environment}", app.Environment.EnvironmentName);
+    Log.Information("App version: {Version}", typeof(Program).Assembly.GetName().Version);
+});
+
+lifetime.ApplicationStopping.Register(() => { Log.Warning("{Application} is shutting down...", app.Environment.ApplicationName); });
+
+lifetime.ApplicationStopped.Register(() => {
+    Log.Warning("{Application} has stopped", app.Environment.ApplicationName);
+    Log.CloseAndFlush();
+});
+
 if (!app.Environment.IsDevelopment()) {
     app.UseExceptionHandler("/Error", true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
@@ -125,8 +142,7 @@ app.UseAntiforgery();
 
 app
     .MapStaticAssets()
-    .Add(endpointBuilder =>
-        endpointBuilder.Metadata.Add(new AllowAnonymousAttribute()));
+    .Add(endpointBuilder => endpointBuilder.Metadata.Add(new AllowAnonymousAttribute()));
 
 app
     .MapGet(
@@ -154,31 +170,6 @@ app.Run();
 
 return;
 
-static void ValidateRequiredConfiguration(IConfiguration configuration)
-{
-    string[] keys = [
-        "OpenIdConnect:Authority",
-        "OpenIdConnect:ClientId",
-        "OpenIdConnect:ClientSecret",
-        "PegasusApi:BaseAddress",
-        "DataProtection:KeysPath",
-        "DataProtection:CertificatePath",
-        "DataProtection:CertificatePassword"
-    ];
-
-    var missing = keys
-        .Where(key => string.IsNullOrWhiteSpace(configuration[key]))
-        .ToArray();
-
-    if (missing.Length == 0)
-        return;
-
-    throw new InvalidOperationException(
-        "Missing required configuration values:"
-        + Environment.NewLine
-        + string.Join(Environment.NewLine, missing.Select(key => $" - {key}")));
-}
-
 static bool IsLocalReturnUrl(string? returnUrl)
 {
     if (string.IsNullOrWhiteSpace(returnUrl))
@@ -189,20 +180,16 @@ static bool IsLocalReturnUrl(string? returnUrl)
            && !returnUrl.StartsWith("/\\");
 }
 
-static void ConfigureDataProtection(IServiceCollection services, IConfiguration configuration)
+static void ConfigureDataProtection(IServiceCollection services, DataProtectionSettings settings)
 {
-    var keysPath = configuration["DataProtection:KeysPath"];
-    var certificatePath = configuration["DataProtection:CertificatePath"];
-    var certificatePassword = configuration["DataProtection:CertificatePassword"];
-
     var certificate = X509CertificateLoader.LoadPkcs12FromFile(
-        certificatePath!,
-        certificatePassword,
+        settings.CertificatePath,
+        settings.CertificatePassword,
         X509KeyStorageFlags.EphemeralKeySet);
 
     services
         .AddDataProtection()
         .SetApplicationName("Taurus")
-        .PersistKeysToFileSystem(new DirectoryInfo(keysPath!))
+        .PersistKeysToFileSystem(new DirectoryInfo(settings.KeysPath))
         .ProtectKeysWithCertificate(certificate);
 }

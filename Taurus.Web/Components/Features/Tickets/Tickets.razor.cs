@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using AngleSharp;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
+using Taurus.Application.Configuration;
 using Taurus.Application.Projects;
 using Taurus.Application.Tickets;
 using Taurus.Application.Tickets.Lookups;
@@ -10,12 +12,10 @@ namespace Taurus.Components.Features.Tickets;
 
 public partial class Tickets
 {
-    private const int DefaultPageSize = 20;
-
     private static readonly Guid AllProjectsId = Guid.Empty;
 
     [Inject]
-    private IConfiguration Configuration { get; set; } = default!;
+    private TicketSettings Settings { get; set; } = default!;
     [Inject]
     private NavigationManager NavigationManager { get; set; } = default!;
     [Inject]
@@ -65,10 +65,7 @@ public partial class Tickets
 
     protected override void OnInitialized()
     {
-        PageSize = Configuration.GetValue("Tickets:PageSize", DefaultPageSize);
-
-        if (PageSize <= 0)
-            PageSize = DefaultPageSize;
+        PageSize = Settings.PageSize;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

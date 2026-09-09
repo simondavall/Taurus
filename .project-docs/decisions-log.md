@@ -136,3 +136,55 @@ Vertical Slice Architecture is preserved within each project.
 - Preserving vertical slicing keeps feature ownership explicit and avoids returning to horizontal organisation by technical type.
 - The structure provides a natural boundary for future infrastructure concerns such as caching.
 - Additional architectural layers and abstractions remain unnecessary until demonstrated by implementation needs.
+
+2026-09-09
+
+### Coordinate caching in Application while keeping cache and data implementations independent
+
+#### Decision
+
+Taurus coordinates cached data access through Application services.
+
+Application owns caching policy, including cache keys, expiration and invalidation behaviour. It depends on small Application-owned abstractions for cache access and underlying data retrieval.
+
+Infrastructure provides the concrete cache implementation and external data-provider implementations.
+
+The initial cache provider uses process-local memory caching with configurable absolute expiration. Cache entries are explicitly invalidated after successful mutations where required to prevent Taurus knowingly returning stale data.
+
+#### Rationale
+
+- Lookup caching demonstrated the benefit of separating cache orchestration from PegasusApi retrieval.
+- Project-list caching demonstrated the need for explicit invalidation following successful create, update and delete operations.
+- Keeping cache policy in Application makes caching part of explicit application behaviour rather than an incidental concern embedded in external data access.
+- Keeping the cache provider and data provider independent gives each implementation a single responsibility.
+- Application-owned abstractions preserve the dependency direction between Application and Infrastructure.
+- Web consumers remain unaware of whether data is cached or how it is retrieved.
+- The cache implementation can be replaced by an external caching service without changing application workflows.
+- The caching abstraction has grown only in response to demonstrated requirements: cache retrieval was introduced for lookup caching and explicit removal was added when project-list caching required invalidation.
+
+2026-09-09
+
+### Use a validated Taurus-owned application settings authority
+
+#### Decision
+
+Taurus represents application configuration through an immutable `TaurusSettings` model owned by `Taurus.Application`.
+
+The Web composition root loads the configured ASP.NET Core configuration sources and creates `TaurusSettings` during startup.
+
+Creation validates all represented settings and prevents application startup if any are missing or invalid. Validation failures are collected and reported together through a startup exception.
+
+After successful creation, Web, Application and Infrastructure consume the validated settings model rather than independently reading raw configuration for migrated settings.
+
+Settings will be migrated into the authority incrementally as existing configuration usage is reviewed.
+
+#### Rationale
+
+- Application code should be able to rely on required configuration being complete and valid.
+- Central validation removes repeated null handling, parsing and fallback behaviour from individual consumers.
+- Strongly typed settings make configuration dependencies explicit.
+- Owning the settings model in Application allows both Web and Infrastructure to consume it without introducing an invalid project dependency.
+- Passing the settings authority avoids increasingly large dependency-registration signatures containing individual configuration values.
+- Constructing the authority in Web preserves configuration providers and startup as host responsibilities.
+- Keeping `IConfiguration` at the composition boundary prevents lower layers from independently interpreting the same configuration.
+- Incremental migration allows the pattern to be adopted without expanding the current task into an application-wide configuration refactoring.

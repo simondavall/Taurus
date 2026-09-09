@@ -10,7 +10,7 @@ using PegasusProjectResponse = PegasusApi.Abstractions.Projects.ProjectResponse;
 
 namespace Taurus.Infrastructure.PegasusApi.Projects;
 
-public sealed class ProjectService(HttpClient httpClient, ILogger<ProjectService> logger) : IProjectService
+public sealed class PegasusProjectDataProvider(HttpClient httpClient, ILogger<PegasusProjectDataProvider> logger) : IProjectDataProvider
 {
     public async Task<IReadOnlyList<Project>> GetProjectsAsync()
     {
@@ -136,10 +136,7 @@ public sealed class ProjectService(HttpClient httpClient, ILogger<ProjectService
             }
 
             if (response.StatusCode == HttpStatusCode.NotFound) {
-                logger.LogWarning(
-                    "PegasusApi could not delete project {ProjectId} because it was not found",
-                    id);
-
+                logger.LogWarning("PegasusApi could not delete project {ProjectId} because it was not found", id);
                 return ApplicationResult.Failure("The project could not be deleted because it no longer exists.");
             }
 

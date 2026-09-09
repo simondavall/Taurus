@@ -47,14 +47,53 @@
 - Register services explicitly as they are introduced.
 - Do not introduce marker interfaces or automatic assembly scanning.
 
+## Application Settings
+
+- Define the Taurus-owned application settings authority in `Taurus.Application`.
+- Use `TaurusSettings` as the root immutable settings model.
+- Group related settings into focused strongly typed settings models.
+- Load configuration providers before creating `TaurusSettings`.
+- Create and validate `TaurusSettings` once from the final `IConfiguration` in the Web composition root.
+- Collect all settings validation failures and report them together through a startup exception.
+- Prevent application startup when any represented required setting is missing or invalid.
+- Convert configuration representations into application-appropriate types during settings creation, such as configuration minutes into `TimeSpan` and addresses into `Uri`.
+- Once validation succeeds, treat represented settings as authoritative and do not repeat validation or provide local fallback values in consumers.
+- Register the validated settings authority for dependency injection where runtime consumers require it.
+- Pass `TaurusSettings` to Infrastructure dependency registration rather than raw `IConfiguration` for migrated settings.
+- Allow consumers to use focused settings groups where they require only part of the complete authority.
+- Keep the act of loading ASP.NET Core configuration and constructing the settings authority in Web.
+- Migrate existing raw configuration access into the settings authority incrementally as configuration areas are reviewed.
+- Leave framework-owned configuration outside `TaurusSettings` where Taurus does not consume those values directly.
+
 ## Application Services
 
-- Define application-facing service interfaces in `Taurus.Application` when they form the contract between consumers and Infrastructure implementations.
+- Define application-facing service interfaces in `Taurus.Application`.
 - Keep application models independent of external API transport models.
 - UI features consume Taurus-owned application models through application service interfaces.
-- Implement external service contracts in `Taurus.Infrastructure`.
+- Implement application services in Infrastructure when the service directly represents an external integration and no Application-owned orchestration is required.
+- Implement application services in Application when they coordinate multiple capabilities or apply infrastructure-independent application behaviour.
+- Introduce Application-owned provider or capability abstractions where an Application service needs to coordinate external or technical mechanisms independently.
+- Implement those provider and capability abstractions in Infrastructure.
 - Do not place an interface in Application solely because it is an interface; Web-only contracts belong in Web.
-- Do not introduce forwarding application services where an Infrastructure implementation can directly satisfy an Application contract without obscuring application behaviour.
+- Do not introduce forwarding Application services where an Infrastructure implementation can directly satisfy the Application contract without obscuring application behaviour.
+- Application services that coordinate caching, data retrieval, invalidation or other genuine workflow behaviour are not forwarding services.
+
+## Caching
+
+- Coordinate cached data access in Application services.
+- Access caching through the shared Application-owned `ICacheService` abstraction.
+- Implement the cache provider in Infrastructure.
+- Use process-local memory caching as the current cache implementation.
+- Keep external data retrieval separate from caching through Application-owned data-provider abstractions where an Application service coordinates the two.
+- Keep cache keys and feature-specific cache policy with the owning Application service.
+- Configure cache durations through application configuration and pass the resolved policy to the owning Application service.
+- Use absolute expiration for cached application data.
+- Invalidate cached data after successful mutations where the mutation can make the cached value stale.
+- Do not invalidate an existing cache entry when the corresponding mutation fails.
+- Add cache capabilities only when required by demonstrated implementations.
+- Keep Web consumers unaware of cache behaviour and concrete cache implementations.
+- Preserve application-facing service contracts when introducing caching where practical.
+- Keep the caching boundary suitable for replacing process-local memory caching with an external provider without changing consuming workflows.
 
 ## PegasusApi Integration
 
