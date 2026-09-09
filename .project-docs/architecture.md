@@ -333,3 +333,38 @@ The `.env` file is excluded from source control and loaded during application st
 A committed `.env.example` file documents the required configuration keys using placeholder values.
 
 Production deployments should supply the same configuration using the hosting environment's standard configuration mechanisms rather than a `.env` file.
+
+## Application settings
+
+Taurus converts its combined ASP.NET Core configuration into a Taurus-owned application settings model during startup.
+
+Configuration providers such as application settings, environment variables and local `.env` values remain hosting concerns. After these sources have been loaded, the Web composition root creates and validates the application settings authority.
+
+The application settings model is owned by `Taurus.Application` so it can be consumed by both Web and Infrastructure without reversing project dependencies.
+
+The startup flow is:
+
+```text
+Configuration providers
+        |
+        v
+IConfiguration
+        |
+        | Read and validate once during startup
+        v
+TaurusSettings
+        |
+        +----> Taurus.Web
+        |
+        +----> Taurus.Application
+        |
+        +----> Taurus.Infrastructure
+```
+TaurusSettings provides strongly typed settings grouped by application concern.
+
+All settings represented by TaurusSettings must be valid before application startup can continue. Validation collects configuration failures and reports them together through a startup exception.
+
+Once TaurusSettings has been successfully created, consumers may rely on represented settings being present, parsed and valid without introducing local configuration defaults or repeated validation.
+
+Raw IConfiguration should not be passed into Application or Infrastructure for settings that have been migrated to TaurusSettings.
+
