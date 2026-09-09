@@ -5,7 +5,7 @@ using Taurus.Application.Tickets.Lookups;
 
 namespace Taurus.Infrastructure.PegasusApi.Tickets.Lookups;
 
-public sealed class TicketLookupDataService(HttpClient httpClient, ILogger<TicketLookupDataService> logger) : ITicketLookupDataService
+public sealed class TicketLookupDataProvider(HttpClient httpClient, ILogger<TicketLookupDataProvider> logger) : ITicketLookupDataProvider
 {
     public Task<IReadOnlyList<TicketStatus>> GetStatusesAsync()
     {

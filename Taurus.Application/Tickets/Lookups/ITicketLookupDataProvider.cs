@@ -1,6 +1,6 @@
 ﻿namespace Taurus.Application.Tickets.Lookups;
 
-public interface ITicketLookupDataService
+public interface ITicketLookupDataProvider
 {
     Task<IReadOnlyList<TicketPriority>> GetPrioritiesAsync();
     Task<IReadOnlyList<TicketStatus>> GetStatusesAsync();
