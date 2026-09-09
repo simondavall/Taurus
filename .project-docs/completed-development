@@ -457,3 +457,12 @@
 - Separated Taurus application contracts from PegasusApi infrastructure implementations.
 - Restricted PegasusApi integration to Infrastructure and Web-specific concerns to Web.
 - Preserved existing application behaviour after restructuring.
+- Implemented lookup caching.
+    - Added an Application-owned caching abstraction with a process-local Infrastructure implementation.
+    - Added an Application-owned ticket lookup data service that coordinates cache access and underlying data retrieval.
+    - Separated PegasusApi lookup retrieval behind `ITicketLookupDataProvider`.
+    - Cached ticket statuses, priorities and types independently.
+    - Added a shared configurable ticket lookup cache duration of 60 minutes.
+    - Used absolute cache expiration.
+    - Kept Web consumers and the existing `ITicketLookupDataService` contract unchanged.
+    - Verified cached lookup behaviour, expiration, application restart behaviour and existing ticket workflows.
