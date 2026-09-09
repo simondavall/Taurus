@@ -18,6 +18,3 @@ where development should continue.
 # Remaining milestone tasks
 
 - None
-
-# Completed
-

@@ -48,14 +48,14 @@ Replace the existing ticket browsing and management experience.
 
 **Includes**
 
-- Display ticket listings.
-- Display ticket details.
-- Create tickets.
-- Edit tickets.
-- Comment on tickets.
-- Support ticket searching and filtering.
-- Support project-specific ticket views.
-- Preserve the existing Pegasus ticket workflow.
+- ✓ Display ticket listings.
+- ✓ Display ticket details.
+- ✓ Create tickets.
+- ✓ Edit tickets.
+- ✓ Comment on tickets.
+- ✓ Support ticket searching and filtering.
+- ✓ Support project-specific ticket views.
+- ✓ Preserve the existing Pegasus ticket workflow.
 
 **Deliverable**
 
