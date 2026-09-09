@@ -94,9 +94,7 @@ builder
         };
     });
 
-builder.Services.AddAuthorization(options => {
-    options.FallbackPolicy = options.DefaultPolicy;
-});
+builder.Services.AddAuthorization(options => { options.FallbackPolicy = options.DefaultPolicy; });
 
 builder.Services.AddCascadingAuthenticationState();
 
@@ -115,19 +113,15 @@ var app = builder.Build();
 
 var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
 
-lifetime.ApplicationStarted.Register(() =>
-{
+lifetime.ApplicationStarted.Register(() => {
     Log.Information("{Application} is starting up...", app.Environment.ApplicationName);
     Log.Information("Environment: {Environment}", app.Environment.EnvironmentName);
     Log.Information("App version: {Version}", typeof(Program).Assembly.GetName().Version);
 });
 
-lifetime.ApplicationStopping.Register(() => {
-    Log.Warning("{Application} is shutting down...", app.Environment.ApplicationName);
-});
+lifetime.ApplicationStopping.Register(() => { Log.Warning("{Application} is shutting down...", app.Environment.ApplicationName); });
 
-lifetime.ApplicationStopped.Register(() =>
-{
+lifetime.ApplicationStopped.Register(() => {
     Log.Warning("{Application} has stopped", app.Environment.ApplicationName);
     Log.CloseAndFlush();
 });

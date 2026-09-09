@@ -30,12 +30,11 @@ public sealed record TaurusSettings(
         var ticketLookupCacheDurationMinutes = GetPositiveInt(configuration, "Caching:TicketLookups:DurationMinutes", errors);
         var projectCacheDurationMinutes = GetPositiveInt(configuration, "Caching:Projects:DurationMinutes", errors);
 
-        if (errors.Count > 0) {
+        if (errors.Count > 0)
             throw new InvalidOperationException(
                 "Invalid Taurus configuration:"
                 + Environment.NewLine
                 + string.Join(Environment.NewLine, errors.Select(error => $" - {error}")));
-        }
 
         return new TaurusSettings(
             new OpenIdConnectSettings(openIdConnectAuthority!, openIdConnectClientId!, openIdConnectClientSecret!),
@@ -97,23 +96,19 @@ public sealed record OpenIdConnectSettings(
     string ClientId,
     string ClientSecret);
 
-public sealed record PegasusApiSettings(
-    Uri BaseAddress);
+public sealed record PegasusApiSettings(Uri BaseAddress);
 
 public sealed record DataProtectionSettings(
     string KeysPath,
     string CertificatePath,
     string CertificatePassword);
 
-public sealed record ProjectSettings(
-    int PageSize);
+public sealed record ProjectSettings(int PageSize);
 
-public sealed record TicketSettings(
-    int PageSize);
+public sealed record TicketSettings(int PageSize);
 
 public sealed record CachingSettings(
     CacheSettings TicketLookups,
     CacheSettings Projects);
 
-public sealed record CacheSettings(
-    TimeSpan Duration);
+public sealed record CacheSettings(TimeSpan Duration);
