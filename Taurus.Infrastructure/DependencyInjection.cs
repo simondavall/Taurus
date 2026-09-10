@@ -32,7 +32,6 @@ public static class DependencyInjection
         services.AddHttpClient<ITicketDataProvider, TicketDataProvider>(client);
         services.AddHttpClient<ITicketLookupDataProvider, TicketLookupDataProvider>(client);
         services.AddHttpClient<ITicketCommentDataProvider, TicketCommentDataProvider>(client);
-        services.AddHttpClient<ITicketRefLinker, TicketRefLinker>(client);
         services.AddHttpClient<IUserDataProvider, UserDataProvider>(client);
     }
 }

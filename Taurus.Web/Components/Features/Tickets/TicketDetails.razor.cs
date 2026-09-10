@@ -6,6 +6,7 @@ using MudBlazor;
 using Taurus.Application;
 using Taurus.Application.Markdown;
 using Taurus.Application.Projects;
+using Taurus.Application.Text;
 using Taurus.Application.Tickets;
 using Taurus.Application.Tickets.Comments;
 using Taurus.Application.Tickets.Lookups;
@@ -37,6 +38,8 @@ public partial class TicketDetails
     private ITicketCommentService TicketCommentService { get; set; } = default!;
     [Inject]
     private ITicketLookupService TicketLookupService { get; set; } = default!;
+    [Inject]
+    private ITextProcessor TextProcessor { get; set; } = default!;
     [Inject]
     private IProjectService ProjectService { get; set; } = default!;
     [Inject]
@@ -424,12 +427,13 @@ public partial class TicketDetails
         }
     }
 
-    private Task<ApplicationResult> UpdateTicketAsync(Guid userId)
+    private async Task<ApplicationResult> UpdateTicketAsync(Guid userId)
     {
+        var description = await TextProcessor.LinkTicketRefsAsync(Editor!.Description);
         var request = new UpdateTicket(
             Editor!.Id,
             Editor.Title.Trim(),
-            Editor.Description,
+            description,
             Editor.ProjectId,
             Editor.StatusId,
             Editor.TypeId,
@@ -438,19 +442,22 @@ public partial class TicketDetails
             Editor.ParentTicketRef,
             Editor.AssignedTo);
 
-        return TicketService.UpdateTicketAsync(request, userId);
+        return await TicketService.UpdateTicketAsync(request, userId);
     }
 
-    private Task<ApplicationResult> UpdateCommentsAsync()
+    private async Task<ApplicationResult> UpdateCommentsAsync()
     {
-        var comments = Comments
-            .Select(comment => new UpdateTicketComment(
-                comment.Id,
-                comment.Content,
-                comment.IsDeleted))
-            .ToArray();
+        var comments = new UpdateTicketComment[Comments.Count];
+        foreach (var (idx, comment) in Comments.Index()) {
+            var content = await TextProcessor.LinkTicketRefsAsync(comment.Content);
+            comments[idx] = 
+                new UpdateTicketComment(
+                    comment.Id, 
+                    content!, 
+                    comment.IsDeleted);
+        }
 
-        return TicketCommentService.UpdateCommentsAsync(comments);
+        return await TicketCommentService.UpdateCommentsAsync(comments);
     }
 
     private async Task<bool> ValidateEditorAsync()
@@ -476,9 +483,10 @@ public partial class TicketDetails
 
     private async Task<ApplicationResult<TicketComment>> CreateCommentAsync(Guid userId)
     {
+        var content = await TextProcessor.LinkTicketRefsAsync(NewComment!.Trim());
         var request = new CreateTicketComment(
             Editor!.Id,
-            NewComment!.Trim());
+            content!);
 
         return await TicketCommentService.CreateCommentAsync(request, userId);
     }

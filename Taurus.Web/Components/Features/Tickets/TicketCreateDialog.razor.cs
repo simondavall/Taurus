@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 using Taurus.Application.Projects;
+using Taurus.Application.Text;
 using Taurus.Application.Tickets;
 using Taurus.Application.Tickets.Lookups;
 
@@ -19,6 +20,8 @@ public partial class TicketCreateDialog
     private IMudDialogInstance MudDialog { get; set; } = default!;
     [Inject]
     private ITicketService TicketService { get; set; } = default!;
+    [Inject]
+    private ITextProcessor TextProcessor { get; set; } = default!; 
     [Inject]
     private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
 
@@ -76,10 +79,12 @@ public partial class TicketCreateDialog
 
         _saving = true;
 
+        var description = await TextProcessor.LinkTicketRefsAsync(Model.Description);
+        
         try {
             var request = new CreateTicket(
                 Model.Title.Trim(),
-                Model.Description,
+                description,
                 Project.Id,
                 Model.StatusId,
                 Model.TypeId,
