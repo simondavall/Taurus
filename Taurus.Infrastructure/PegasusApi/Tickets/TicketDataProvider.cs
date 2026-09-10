@@ -12,7 +12,7 @@ using PegasusUpdateTicketRequest = PegasusApi.Abstractions.Tickets.UpdateTicketR
 
 namespace Taurus.Infrastructure.PegasusApi.Tickets;
 
-public sealed class TicketService(HttpClient httpClient, ILogger<TicketService> logger, ITicketRefLinker ticketRefLinker) : ITicketService
+public sealed class TicketDataProvider(HttpClient httpClient, ILogger<TicketDataProvider> logger, ITicketRefLinker ticketRefLinker) : ITicketDataProvider
 {
     public async Task<IReadOnlyList<Ticket>> GetTicketsAsync(Guid? projectId = null)
     {

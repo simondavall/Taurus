@@ -1,5 +1,4 @@
-﻿using AngleSharp;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using MudBlazor;
 using Taurus.Application.Configuration;

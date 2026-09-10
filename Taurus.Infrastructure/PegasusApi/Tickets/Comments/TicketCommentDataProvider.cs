@@ -11,8 +11,8 @@ using PegasusUpdateCommentsRequest = PegasusApi.Abstractions.Comments.UpdateComm
 
 namespace Taurus.Infrastructure.PegasusApi.Tickets.Comments;
 
-public sealed class TicketCommentService(HttpClient httpClient, ILogger<TicketCommentService> logger, ITicketRefLinker ticketRefLinker)
-    : ITicketCommentService
+public sealed class TicketCommentDataProvider(HttpClient httpClient, ILogger<TicketCommentDataProvider> logger, ITicketRefLinker ticketRefLinker)
+    : ITicketCommentDataProvider
 {
     public async Task<IReadOnlyList<TicketComment>> GetCommentsAsync(Guid ticketId)
     {

@@ -5,7 +5,7 @@ using Taurus.Application.Users;
 
 namespace Taurus.Infrastructure.PegasusApi.Users;
 
-public sealed class UserService(HttpClient httpClient, ILogger<UserService> logger) : IUserService
+public sealed class UserDataProvider(HttpClient httpClient, ILogger<UserDataProvider> logger) : IUserDataProvider
 {
     public async Task<IReadOnlyList<User>> GetUsersAsync()
     {

@@ -368,12 +368,6 @@ public partial class TicketDetails
             .ToString("dd/MM/yyyy HH:mm");
     }
 
-    private void NavigateToParent()
-    {
-        if (ParentTicket is not null)
-            NavigateToTicket(ParentTicket.TicketRef);
-    }
-
     private void NavigateToTicket(string ticketRef)
     {
         NavigationManager.NavigateTo($"/tickets/{Uri.EscapeDataString(ticketRef)}");
