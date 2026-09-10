@@ -18,7 +18,7 @@ public partial class TicketCreateDialog
     [CascadingParameter]
     private IMudDialogInstance MudDialog { get; set; } = default!;
     [Inject]
-    private ITicketDataProvider TicketDataProvider { get; set; } = default!;
+    private ITicketService TicketService { get; set; } = default!;
     [Inject]
     private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
 
@@ -87,7 +87,7 @@ public partial class TicketCreateDialog
                 string.IsNullOrWhiteSpace(Model.FixedInRelease) ? null : Model.FixedInRelease.Trim(),
                 ParentTicketRef);
 
-            var result = await TicketDataProvider.CreateTicketAsync(request, userId);
+            var result = await TicketService.CreateTicketAsync(request, userId);
 
             if (!result.Succeeded || result.Value is null) {
                 _errorMessage = result.ErrorMessage;

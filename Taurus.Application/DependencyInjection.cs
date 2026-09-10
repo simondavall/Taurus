@@ -17,7 +17,7 @@ public static class DependencyInjection
         services.AddSingleton<IMarkdownRenderer, MarkdownRenderer>();
         services.AddScoped<ITicketService, TicketService>();
         services.AddScoped<ITicketCommentService, TicketCommentService>();
-        services.AddScoped<ITicketLookupDataService, TicketLookupDataService>();
+        services.AddScoped<ITicketLookupService, TicketLookupService>();
         services.AddScoped<IProjectService, ProjectService>();
         services.AddScoped<IUserService, UserService>();
     }

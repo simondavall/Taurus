@@ -22,7 +22,7 @@ public partial class Tickets
     [Inject]
     private ITicketService TicketService { get; set; } = default!;
     [Inject]
-    private ITicketLookupDataService TicketLookupDataService { get; set; } = default!;
+    private ITicketLookupService TicketLookupService { get; set; } = default!;
     [Inject]
     private IUserStateService UserStateService { get; set; } = default!;
     [Inject]
@@ -93,9 +93,9 @@ public partial class Tickets
 
     private async Task LoadTicketLookupDataAsync()
     {
-        TicketStatuses = await TicketLookupDataService.GetStatusesAsync();
-        TicketPriorities = await TicketLookupDataService.GetPrioritiesAsync();
-        TicketTypes = await TicketLookupDataService.GetTypesAsync();
+        TicketStatuses = await TicketLookupService.GetStatusesAsync();
+        TicketPriorities = await TicketLookupService.GetPrioritiesAsync();
+        TicketTypes = await TicketLookupService.GetTypesAsync();
 
         LookupIds = TicketLookupIds.Resolve(TicketStatuses, TicketPriorities);
     }
