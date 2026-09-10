@@ -2,18 +2,18 @@
 
 public interface ITicketService
 {
-    Task<ApplicationResult<TicketDetails>> CreateTicketAsync(CreateTicketRequest request, Guid userId);
+    Task<ApplicationResult<TicketDetails>> CreateTicketAsync(CreateTicket createTicket, Guid userId);
     Task<IReadOnlyList<Ticket>> GetSubTasksAsync(string parentTicketRef);
     Task<ApplicationResult<TicketDetails>> GetTicketByRefAsync(string ticketRef);
     Task<IReadOnlyList<Ticket>> GetTicketsAsync(Guid? projectId = null);
-    Task<ApplicationResult> UpdateTicketAsync(UpdateTicketRequest request, Guid userId);
+    Task<ApplicationResult> UpdateTicketAsync(UpdateTicket updateTicket, Guid userId);
 }
 
 public sealed class TicketService(ITicketDataProvider ticketDataProvider) : ITicketService
 {
-    public Task<ApplicationResult<TicketDetails>> CreateTicketAsync(CreateTicketRequest request, Guid userId)
+    public Task<ApplicationResult<TicketDetails>> CreateTicketAsync(CreateTicket createTicket, Guid userId)
     {
-        return ticketDataProvider.CreateTicketAsync(request, userId);
+        return ticketDataProvider.CreateTicketAsync(createTicket, userId);
     }
 
     public Task<IReadOnlyList<Ticket>> GetSubTasksAsync(string parentTicketRef)
@@ -31,8 +31,8 @@ public sealed class TicketService(ITicketDataProvider ticketDataProvider) : ITic
         return ticketDataProvider.GetTicketsAsync(projectId);
     }
 
-    public Task<ApplicationResult> UpdateTicketAsync(UpdateTicketRequest request, Guid userId)
+    public Task<ApplicationResult> UpdateTicketAsync(UpdateTicket updateTicket, Guid userId)
     {
-        return ticketDataProvider.UpdateTicketAsync(request, userId);
+        return ticketDataProvider.UpdateTicketAsync(updateTicket, userId);
     }
 }

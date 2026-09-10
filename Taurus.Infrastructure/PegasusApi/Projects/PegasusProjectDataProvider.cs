@@ -35,12 +35,12 @@ public sealed class PegasusProjectDataProvider(HttpClient httpClient, ILogger<Pe
         }
     }
 
-    public async Task<ApplicationResult<Project>> CreateProjectAsync(CreateProjectRequest request)
+    public async Task<ApplicationResult<Project>> CreateProjectAsync(CreateProject createProject)
     {
         logger.LogInformation("Creating project in PegasusApi");
 
         try {
-            var apiRequest = new PegasusCreateProjectRequest { Title = request.Title, Prefix = request.Prefix };
+            var apiRequest = new PegasusCreateProjectRequest { Title = createProject.Title, Prefix = createProject.Prefix };
 
             using var response = await httpClient.PostAsJsonAsync("api/projects", apiRequest);
 
@@ -77,24 +77,24 @@ public sealed class PegasusProjectDataProvider(HttpClient httpClient, ILogger<Pe
         }
     }
 
-    public async Task<ApplicationResult> UpdateProjectAsync(UpdateProjectRequest request)
+    public async Task<ApplicationResult> UpdateProjectAsync(UpdateProject updateProject)
     {
-        logger.LogInformation("Updating project {ProjectId} in PegasusApi", request.Id);
+        logger.LogInformation("Updating project {ProjectId} in PegasusApi", updateProject.Id);
 
         try {
             var apiRequest = new PegasusUpdateProjectRequest {
-                Title = request.Title,
-                Prefix = request.Prefix,
-                IsActive = request.IsActive,
+                Title = updateProject.Title,
+                Prefix = updateProject.Prefix,
+                IsActive = updateProject.IsActive,
                 IsDeleted = false,
-                LatestVersion = request.LatestVersion,
-                RequireFixedInRelease = request.RequireFixedInRelease
+                LatestVersion = updateProject.LatestVersion,
+                RequireFixedInRelease = updateProject.RequireFixedInRelease
             };
 
-            using var response = await httpClient.PutAsJsonAsync($"api/projects/{request.Id}", apiRequest);
+            using var response = await httpClient.PutAsJsonAsync($"api/projects/{updateProject.Id}", apiRequest);
 
             if (response.IsSuccessStatusCode) {
-                logger.LogInformation("Updated project {ProjectId} in PegasusApi", request.Id);
+                logger.LogInformation("Updated project {ProjectId} in PegasusApi", updateProject.Id);
                 return ApplicationResult.Success();
             }
 
@@ -107,7 +107,7 @@ public sealed class PegasusProjectDataProvider(HttpClient httpClient, ILogger<Pe
 
                 logger.LogWarning(
                     "PegasusApi rejected update of project {ProjectId} with status code {StatusCode}",
-                    request.Id,
+                    updateProject.Id,
                     (int)response.StatusCode);
 
                 return ApplicationResult.Failure(errorMessage);
@@ -118,7 +118,7 @@ public sealed class PegasusProjectDataProvider(HttpClient httpClient, ILogger<Pe
             throw new InvalidOperationException("PegasusApi project update failed unexpectedly.");
         }
         catch (Exception exception) {
-            logger.LogError(exception, "Failed to update project {ProjectId} in PegasusApi", request.Id);
+            logger.LogError(exception, "Failed to update project {ProjectId} in PegasusApi", updateProject.Id);
             throw;
         }
     }

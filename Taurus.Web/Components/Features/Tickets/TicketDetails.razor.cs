@@ -426,7 +426,7 @@ public partial class TicketDetails
 
     private Task<ApplicationResult> UpdateTicketAsync(Guid userId)
     {
-        var request = new UpdateTicketRequest(
+        var request = new UpdateTicket(
             Editor!.Id,
             Editor.Title.Trim(),
             Editor.Description,

@@ -26,7 +26,7 @@ public sealed record TicketDetails(
     Guid LastModifiedBy,
     DateTimeOffset LastModified);
     
-public sealed record CreateTicketRequest(
+public sealed record CreateTicket(
     string Title,
     string? Description,
     Guid ProjectId,
@@ -36,7 +36,7 @@ public sealed record CreateTicketRequest(
     string? FixedInRelease,
     string? ParentTicketRef = null);
 
-public sealed record UpdateTicketRequest(
+public sealed record UpdateTicket(
     Guid Id,
     string Title,
     string? Description,

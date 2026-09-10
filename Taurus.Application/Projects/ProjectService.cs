@@ -4,10 +4,10 @@ namespace Taurus.Application.Projects;
 
 public interface IProjectService
 {
-    Task<ApplicationResult<Project>> CreateProjectAsync(CreateProjectRequest request);
+    Task<ApplicationResult<Project>> CreateProjectAsync(CreateProject createProject);
     Task<ApplicationResult> DeleteProjectAsync(Guid id);
     Task<IReadOnlyList<Project>> GetProjectsAsync();
-    Task<ApplicationResult> UpdateProjectAsync(UpdateProjectRequest request);
+    Task<ApplicationResult> UpdateProjectAsync(UpdateProject updateProject);
 }
 
 public sealed class ProjectService(IProjectDataProvider dataProvider, ICacheService cacheService, ProjectCacheOptions cacheOptions) : IProjectService
@@ -22,9 +22,9 @@ public sealed class ProjectService(IProjectDataProvider dataProvider, ICacheServ
             dataProvider.GetProjectsAsync);
     }
 
-    public async Task<ApplicationResult<Project>> CreateProjectAsync(CreateProjectRequest request)
+    public async Task<ApplicationResult<Project>> CreateProjectAsync(CreateProject project)
     {
-        var result = await dataProvider.CreateProjectAsync(request);
+        var result = await dataProvider.CreateProjectAsync(project);
 
         if (result.Succeeded)
             cacheService.Remove(ProjectsCacheKey);
@@ -32,9 +32,9 @@ public sealed class ProjectService(IProjectDataProvider dataProvider, ICacheServ
         return result;
     }
 
-    public async Task<ApplicationResult> UpdateProjectAsync(UpdateProjectRequest request)
+    public async Task<ApplicationResult> UpdateProjectAsync(UpdateProject project)
     {
-        var result = await dataProvider.UpdateProjectAsync(request);
+        var result = await dataProvider.UpdateProjectAsync(project);
 
         if (result.Succeeded)
             cacheService.Remove(ProjectsCacheKey);

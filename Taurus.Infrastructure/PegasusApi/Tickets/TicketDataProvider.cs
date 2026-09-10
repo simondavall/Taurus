@@ -110,22 +110,22 @@ public sealed class TicketDataProvider(HttpClient httpClient, ILogger<TicketData
         }
     }
 
-    public async Task<ApplicationResult<TicketDetails>> CreateTicketAsync(CreateTicketRequest request, Guid userId)
+    public async Task<ApplicationResult<TicketDetails>> CreateTicketAsync(CreateTicket createTicket, Guid userId)
     {
-        logger.LogInformation("Creating ticket in PegasusApi for project {ProjectId}", request.ProjectId);
+        logger.LogInformation("Creating ticket in PegasusApi for project {ProjectId}", createTicket.ProjectId);
 
-        var description = await ticketRefLinker.LinkTicketRefsAsync(request.Description);
+        var description = await ticketRefLinker.LinkTicketRefsAsync(createTicket.Description);
 
         try {
             var apiRequest = new PegasusCreateTicketRequest {
-                Title = request.Title,
+                Title = createTicket.Title,
                 Description = description,
-                ProjectId = request.ProjectId,
-                StatusId = request.StatusId,
-                TypeId = request.TypeId,
-                PriorityId = request.PriorityId,
-                FixedInRelease = request.FixedInRelease,
-                ParentTicketRef = request.ParentTicketRef,
+                ProjectId = createTicket.ProjectId,
+                StatusId = createTicket.StatusId,
+                TypeId = createTicket.TypeId,
+                PriorityId = createTicket.PriorityId,
+                FixedInRelease = createTicket.FixedInRelease,
+                ParentTicketRef = createTicket.ParentTicketRef,
                 UserId = userId
             };
 
@@ -150,7 +150,7 @@ public sealed class TicketDataProvider(HttpClient httpClient, ILogger<TicketData
 
                 logger.LogWarning(
                     "PegasusApi rejected ticket creation for project {ProjectId} with status code {StatusCode}",
-                    request.ProjectId,
+                    createTicket.ProjectId,
                     (int)response.StatusCode);
 
                 return ApplicationResult<TicketDetails>.Failure(errorMessage);
@@ -161,35 +161,35 @@ public sealed class TicketDataProvider(HttpClient httpClient, ILogger<TicketData
             throw new InvalidOperationException("PegasusApi ticket creation failed unexpectedly.");
         }
         catch (Exception exception) {
-            logger.LogError(exception, "Failed to create ticket in PegasusApi for project {ProjectId}", request.ProjectId);
+            logger.LogError(exception, "Failed to create ticket in PegasusApi for project {ProjectId}", createTicket.ProjectId);
             throw;
         }
     }
 
-    public async Task<ApplicationResult> UpdateTicketAsync(UpdateTicketRequest request, Guid userId)
+    public async Task<ApplicationResult> UpdateTicketAsync(UpdateTicket updateTicket, Guid userId)
     {
-        logger.LogInformation("Updating ticket {TicketId} in PegasusApi", request.Id);
+        logger.LogInformation("Updating ticket {TicketId} in PegasusApi", updateTicket.Id);
 
-        var description = await ticketRefLinker.LinkTicketRefsAsync(request.Description);
+        var description = await ticketRefLinker.LinkTicketRefsAsync(updateTicket.Description);
 
         try {
             var apiRequest = new PegasusUpdateTicketRequest {
-                Title = request.Title,
+                Title = updateTicket.Title,
                 Description = description,
-                ProjectId = request.ProjectId,
-                StatusId = request.StatusId,
-                TypeId = request.TypeId,
-                PriorityId = request.PriorityId,
-                FixedInRelease = request.FixedInRelease,
-                ParentTicketRef = request.ParentTicketRef,
-                AssignedTo = request.AssignedTo,
+                ProjectId = updateTicket.ProjectId,
+                StatusId = updateTicket.StatusId,
+                TypeId = updateTicket.TypeId,
+                PriorityId = updateTicket.PriorityId,
+                FixedInRelease = updateTicket.FixedInRelease,
+                ParentTicketRef = updateTicket.ParentTicketRef,
+                AssignedTo = updateTicket.AssignedTo,
                 UserId = userId
             };
 
-            using var response = await httpClient.PutAsJsonAsync($"api/tickets/{request.Id}", apiRequest);
+            using var response = await httpClient.PutAsJsonAsync($"api/tickets/{updateTicket.Id}", apiRequest);
 
             if (response.IsSuccessStatusCode) {
-                logger.LogInformation("Updated ticket {TicketId} in PegasusApi", request.Id);
+                logger.LogInformation("Updated ticket {TicketId} in PegasusApi", updateTicket.Id);
                 return ApplicationResult.Success();
             }
 
@@ -200,7 +200,7 @@ public sealed class TicketDataProvider(HttpClient httpClient, ILogger<TicketData
 
                 logger.LogWarning(
                     "PegasusApi rejected update of ticket {TicketId} with status code {StatusCode}",
-                    request.Id,
+                    updateTicket.Id,
                     (int)response.StatusCode);
 
                 return ApplicationResult.Failure(errorMessage);
@@ -211,7 +211,7 @@ public sealed class TicketDataProvider(HttpClient httpClient, ILogger<TicketData
             throw new InvalidOperationException("PegasusApi ticket update failed unexpectedly.");
         }
         catch (Exception exception) {
-            logger.LogError(exception, "Failed to update ticket {TicketId} in PegasusApi", request.Id);
+            logger.LogError(exception, "Failed to update ticket {TicketId} in PegasusApi", updateTicket.Id);
             throw;
         }
     }

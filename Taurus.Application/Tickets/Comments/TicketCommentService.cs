@@ -2,16 +2,16 @@
 
 public interface ITicketCommentService
 {
-    Task<ApplicationResult<TicketComment>> CreateCommentAsync(CreateTicketComment request, Guid userId);
+    Task<ApplicationResult<TicketComment>> CreateCommentAsync(CreateTicketComment createComment, Guid userId);
     Task<IReadOnlyList<TicketComment>> GetCommentsAsync(Guid ticketId);
     Task<ApplicationResult> UpdateCommentsAsync(IReadOnlyList<UpdateTicketComment> comments);
 }
 
 public sealed class TicketCommentService(ITicketCommentDataProvider ticketCommentDataProvider) : ITicketCommentService
 {
-    public Task<ApplicationResult<TicketComment>> CreateCommentAsync(CreateTicketComment request, Guid userId)
+    public Task<ApplicationResult<TicketComment>> CreateCommentAsync(CreateTicketComment createComment, Guid userId)
     {
-        return ticketCommentDataProvider.CreateCommentAsync(request, userId);
+        return ticketCommentDataProvider.CreateCommentAsync(createComment, userId);
     }
 
     public Task<IReadOnlyList<TicketComment>> GetCommentsAsync(Guid ticketId)

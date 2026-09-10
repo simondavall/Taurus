@@ -8,11 +8,11 @@ public sealed record Project(
     bool RequireFixedInRelease,
     bool IsActive);
     
-public sealed record CreateProjectRequest(
+public sealed record CreateProject(
     string Title,
     string Prefix);
 
-public sealed record UpdateProjectRequest(
+public sealed record UpdateProject(
     Guid Id,
     string Title,
     string Prefix,

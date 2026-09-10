@@ -83,14 +83,14 @@ public sealed class TicketCommentDataProvider(HttpClient httpClient, ILogger<Tic
         }
     }
 
-    public async Task<ApplicationResult<TicketComment>> CreateCommentAsync(CreateTicketComment request, Guid userId)
+    public async Task<ApplicationResult<TicketComment>> CreateCommentAsync(CreateTicketComment createComment, Guid userId)
     {
-        logger.LogInformation("Creating comment in PegasusApi for ticket {TicketId}", request.TicketId);
+        logger.LogInformation("Creating comment in PegasusApi for ticket {TicketId}", createComment.TicketId);
 
         try {
-            var content = await ticketRefLinker.LinkTicketRefsAsync(request.Content);
+            var content = await ticketRefLinker.LinkTicketRefsAsync(createComment.Content);
 
-            var apiRequest = new PegasusCreateCommentRequest { TicketId = request.TicketId, Content = content!, UserId = userId };
+            var apiRequest = new PegasusCreateCommentRequest { TicketId = createComment.TicketId, Content = content!, UserId = userId };
 
             using var response = await httpClient.PostAsJsonAsync("api/comments", apiRequest);
 
@@ -101,7 +101,7 @@ public sealed class TicketCommentDataProvider(HttpClient httpClient, ILogger<Tic
 
                 var comment = MapComment(commentResponse);
 
-                logger.LogInformation("Created comment {CommentId} in PegasusApi for ticket {TicketId}", comment.Id, request.TicketId);
+                logger.LogInformation("Created comment {CommentId} in PegasusApi for ticket {TicketId}", comment.Id, createComment.TicketId);
 
                 return ApplicationResult<TicketComment>.Success(comment);
             }
@@ -113,7 +113,7 @@ public sealed class TicketCommentDataProvider(HttpClient httpClient, ILogger<Tic
 
                 logger.LogWarning(
                     "PegasusApi rejected comment creation for ticket {TicketId} with status code {StatusCode}",
-                    request.TicketId,
+                    createComment.TicketId,
                     (int)response.StatusCode);
 
                 return ApplicationResult<TicketComment>.Failure(errorMessage);
@@ -124,7 +124,7 @@ public sealed class TicketCommentDataProvider(HttpClient httpClient, ILogger<Tic
             throw new InvalidOperationException("PegasusApi comment creation failed unexpectedly.");
         }
         catch (Exception exception) {
-            logger.LogError(exception, "Failed to create comment in PegasusApi for ticket {TicketId}", request.TicketId);
+            logger.LogError(exception, "Failed to create comment in PegasusApi for ticket {TicketId}", createComment.TicketId);
             throw;
         }
     }
