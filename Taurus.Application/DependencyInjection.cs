@@ -18,6 +18,7 @@ public static class DependencyInjection
         services.AddScoped<ITicketService, TicketService>();
         services.AddScoped<ITicketCommentService, TicketCommentService>();
         services.AddScoped<ITicketLookupService, TicketLookupService>();
+        services.AddScoped<ITicketRefLinker, TicketRefLinker>();
         services.AddScoped<IProjectService, ProjectService>();
         services.AddScoped<IUserService, UserService>();
     }

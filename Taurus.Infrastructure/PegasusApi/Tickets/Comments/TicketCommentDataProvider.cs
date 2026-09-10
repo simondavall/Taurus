@@ -3,7 +3,6 @@ using System.Net.Http.Json;
 using Microsoft.Extensions.Logging;
 using PegasusApi.Abstractions.Comments;
 using Taurus.Application;
-using Taurus.Application.Tickets;
 using Taurus.Application.Tickets.Comments;
 using PegasusCreateCommentRequest = PegasusApi.Abstractions.Comments.CreateCommentRequest;
 using PegasusUpdateCommentRequest = PegasusApi.Abstractions.Comments.UpdateCommentRequest;
@@ -11,7 +10,7 @@ using PegasusUpdateCommentsRequest = PegasusApi.Abstractions.Comments.UpdateComm
 
 namespace Taurus.Infrastructure.PegasusApi.Tickets.Comments;
 
-public sealed class TicketCommentDataProvider(HttpClient httpClient, ILogger<TicketCommentDataProvider> logger, ITicketRefLinker ticketRefLinker)
+public sealed class TicketCommentDataProvider(HttpClient httpClient, ILogger<TicketCommentDataProvider> logger)
     : ITicketCommentDataProvider
 {
     public async Task<IReadOnlyList<TicketComment>> GetCommentsAsync(Guid ticketId)
@@ -46,13 +45,9 @@ public sealed class TicketCommentDataProvider(HttpClient httpClient, ILogger<Tic
         logger.LogInformation("Updating {CommentCount} comments in PegasusApi", comments.Count);
 
         try {
-            var apiComments = new List<PegasusUpdateCommentRequest>(comments.Count);
-
-            foreach (var comment in comments) {
-                var content = await ticketRefLinker.LinkTicketRefsAsync(comment.Content);
-
-                apiComments.Add(new PegasusUpdateCommentRequest { Id = comment.Id, Content = content!, IsDeleted = comment.IsDeleted });
-            }
+            var apiComments = comments
+                .Select(comment =>
+                    new PegasusUpdateCommentRequest { Id = comment.Id, Content = comment.Content, IsDeleted = comment.IsDeleted });
 
             var apiRequest = new PegasusUpdateCommentsRequest { Comments = apiComments };
 
@@ -88,40 +83,42 @@ public sealed class TicketCommentDataProvider(HttpClient httpClient, ILogger<Tic
         logger.LogInformation("Creating comment in PegasusApi for ticket {TicketId}", createComment.TicketId);
 
         try {
-            var content = await ticketRefLinker.LinkTicketRefsAsync(createComment.Content);
-
-            var apiRequest = new PegasusCreateCommentRequest { TicketId = createComment.TicketId, Content = content!, UserId = userId };
+            var apiRequest = new PegasusCreateCommentRequest { TicketId = createComment.TicketId, Content = createComment.Content, UserId = userId };
 
             using var response = await httpClient.PostAsJsonAsync("api/comments", apiRequest);
 
-            if (response.StatusCode == HttpStatusCode.Created) {
-                var commentResponse = await response.Content.ReadFromJsonAsync<CommentResponse>();
-                if (commentResponse is null)
-                    throw new InvalidOperationException("PegasusApi returned an empty comment response after comment creation.");
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.Created:
+                {
+                    var commentResponse = await response.Content.ReadFromJsonAsync<CommentResponse>();
+                    if (commentResponse is null)
+                        throw new InvalidOperationException("PegasusApi returned an empty comment response after comment creation.");
 
-                var comment = MapComment(commentResponse);
+                    var comment = MapComment(commentResponse);
 
-                logger.LogInformation("Created comment {CommentId} in PegasusApi for ticket {TicketId}", comment.Id, createComment.TicketId);
+                    logger.LogInformation("Created comment {CommentId} in PegasusApi for ticket {TicketId}", comment.Id, createComment.TicketId);
 
-                return ApplicationResult<TicketComment>.Success(comment);
+                    return ApplicationResult<TicketComment>.Success(comment);
+                }
+                case HttpStatusCode.BadRequest:
+                {
+                    var errorMessage = await PegasusApiFailureReader.ReadAsync(
+                        response,
+                        "The comment could not be created because PegasusApi rejected the supplied details.");
+
+                    logger.LogWarning(
+                        "PegasusApi rejected comment creation for ticket {TicketId} with status code {StatusCode}",
+                        createComment.TicketId,
+                        (int)response.StatusCode);
+
+                    return ApplicationResult<TicketComment>.Failure(errorMessage);
+                }
+                default:
+                    response.EnsureSuccessStatusCode();
+
+                    throw new InvalidOperationException("PegasusApi comment creation failed unexpectedly.");
             }
-
-            if (response.StatusCode == HttpStatusCode.BadRequest) {
-                var errorMessage = await PegasusApiFailureReader.ReadAsync(
-                    response,
-                    "The comment could not be created because PegasusApi rejected the supplied details.");
-
-                logger.LogWarning(
-                    "PegasusApi rejected comment creation for ticket {TicketId} with status code {StatusCode}",
-                    createComment.TicketId,
-                    (int)response.StatusCode);
-
-                return ApplicationResult<TicketComment>.Failure(errorMessage);
-            }
-
-            response.EnsureSuccessStatusCode();
-
-            throw new InvalidOperationException("PegasusApi comment creation failed unexpectedly.");
         }
         catch (Exception exception) {
             logger.LogError(exception, "Failed to create comment in PegasusApi for ticket {TicketId}", createComment.TicketId);

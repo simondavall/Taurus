@@ -20,6 +20,8 @@ public partial class TicketCreateDialog
     [Inject]
     private ITicketService TicketService { get; set; } = default!;
     [Inject]
+    private ITicketRefLinker TicketRefLinker { get; set; } = default!; 
+    [Inject]
     private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
 
     [Parameter]
@@ -76,10 +78,12 @@ public partial class TicketCreateDialog
 
         _saving = true;
 
+        var description = await TicketRefLinker.LinkTicketRefsAsync(Model.Description);
+        
         try {
             var request = new CreateTicket(
                 Model.Title.Trim(),
-                Model.Description,
+                description,
                 Project.Id,
                 Model.StatusId,
                 Model.TypeId,

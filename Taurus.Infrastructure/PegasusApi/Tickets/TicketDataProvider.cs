@@ -12,7 +12,7 @@ using PegasusUpdateTicketRequest = PegasusApi.Abstractions.Tickets.UpdateTicketR
 
 namespace Taurus.Infrastructure.PegasusApi.Tickets;
 
-public sealed class TicketDataProvider(HttpClient httpClient, ILogger<TicketDataProvider> logger, ITicketRefLinker ticketRefLinker) : ITicketDataProvider
+public sealed class TicketDataProvider(HttpClient httpClient, ILogger<TicketDataProvider> logger) : ITicketDataProvider
 {
     public async Task<IReadOnlyList<Ticket>> GetTicketsAsync(Guid? projectId = null)
     {
@@ -113,13 +113,11 @@ public sealed class TicketDataProvider(HttpClient httpClient, ILogger<TicketData
     public async Task<ApplicationResult<TicketDetails>> CreateTicketAsync(CreateTicket createTicket, Guid userId)
     {
         logger.LogInformation("Creating ticket in PegasusApi for project {ProjectId}", createTicket.ProjectId);
-
-        var description = await ticketRefLinker.LinkTicketRefsAsync(createTicket.Description);
-
+        
         try {
             var apiRequest = new PegasusCreateTicketRequest {
                 Title = createTicket.Title,
-                Description = description,
+                Description = createTicket.Description,
                 ProjectId = createTicket.ProjectId,
                 StatusId = createTicket.StatusId,
                 TypeId = createTicket.TypeId,
@@ -169,13 +167,11 @@ public sealed class TicketDataProvider(HttpClient httpClient, ILogger<TicketData
     public async Task<ApplicationResult> UpdateTicketAsync(UpdateTicket updateTicket, Guid userId)
     {
         logger.LogInformation("Updating ticket {TicketId} in PegasusApi", updateTicket.Id);
-
-        var description = await ticketRefLinker.LinkTicketRefsAsync(updateTicket.Description);
-
+        
         try {
             var apiRequest = new PegasusUpdateTicketRequest {
                 Title = updateTicket.Title,
-                Description = description,
+                Description = updateTicket.Description,
                 ProjectId = updateTicket.ProjectId,
                 StatusId = updateTicket.StatusId,
                 TypeId = updateTicket.TypeId,
