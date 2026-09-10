@@ -476,7 +476,7 @@ public partial class TicketDetails
 
     private async Task<ApplicationResult<TicketComment>> CreateCommentAsync(Guid userId)
     {
-        var request = new CreateTicketCommentRequest(
+        var request = new CreateTicketComment(
             Editor!.Id,
             NewComment!.Trim());
 

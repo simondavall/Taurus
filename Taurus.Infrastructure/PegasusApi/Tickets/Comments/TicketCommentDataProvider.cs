@@ -83,7 +83,7 @@ public sealed class TicketCommentDataProvider(HttpClient httpClient, ILogger<Tic
         }
     }
 
-    public async Task<ApplicationResult<TicketComment>> CreateCommentAsync(CreateTicketCommentRequest request, Guid userId)
+    public async Task<ApplicationResult<TicketComment>> CreateCommentAsync(CreateTicketComment request, Guid userId)
     {
         logger.LogInformation("Creating comment in PegasusApi for ticket {TicketId}", request.TicketId);
 
