@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 using Taurus.Application.Projects;
+using Taurus.Application.Text;
 using Taurus.Application.Tickets;
 using Taurus.Application.Tickets.Lookups;
 
@@ -20,7 +21,7 @@ public partial class TicketCreateDialog
     [Inject]
     private ITicketService TicketService { get; set; } = default!;
     [Inject]
-    private ITicketRefLinker TicketRefLinker { get; set; } = default!; 
+    private ITextProcessor TextProcessor { get; set; } = default!; 
     [Inject]
     private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
 
@@ -78,7 +79,7 @@ public partial class TicketCreateDialog
 
         _saving = true;
 
-        var description = await TicketRefLinker.LinkTicketRefsAsync(Model.Description);
+        var description = await TextProcessor.LinkTicketRefsAsync(Model.Description);
         
         try {
             var request = new CreateTicket(

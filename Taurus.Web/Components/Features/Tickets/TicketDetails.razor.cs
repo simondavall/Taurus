@@ -6,6 +6,7 @@ using MudBlazor;
 using Taurus.Application;
 using Taurus.Application.Markdown;
 using Taurus.Application.Projects;
+using Taurus.Application.Text;
 using Taurus.Application.Tickets;
 using Taurus.Application.Tickets.Comments;
 using Taurus.Application.Tickets.Lookups;
@@ -38,7 +39,7 @@ public partial class TicketDetails
     [Inject]
     private ITicketLookupService TicketLookupService { get; set; } = default!;
     [Inject]
-    private ITicketRefLinker TicketRefLinker { get; set; } = default!;
+    private ITextProcessor TextProcessor { get; set; } = default!;
     [Inject]
     private IProjectService ProjectService { get; set; } = default!;
     [Inject]
@@ -428,7 +429,7 @@ public partial class TicketDetails
 
     private async Task<ApplicationResult> UpdateTicketAsync(Guid userId)
     {
-        var description = await TicketRefLinker.LinkTicketRefsAsync(Editor!.Description);
+        var description = await TextProcessor.LinkTicketRefsAsync(Editor!.Description);
         var request = new UpdateTicket(
             Editor!.Id,
             Editor.Title.Trim(),
@@ -448,7 +449,7 @@ public partial class TicketDetails
     {
         var comments = new UpdateTicketComment[Comments.Count];
         foreach (var (idx, comment) in Comments.Index()) {
-            var content = await TicketRefLinker.LinkTicketRefsAsync(comment.Content);
+            var content = await TextProcessor.LinkTicketRefsAsync(comment.Content);
             comments[idx] = 
                 new UpdateTicketComment(
                     comment.Id, 
@@ -482,7 +483,7 @@ public partial class TicketDetails
 
     private async Task<ApplicationResult<TicketComment>> CreateCommentAsync(Guid userId)
     {
-        var content = await TicketRefLinker.LinkTicketRefsAsync(NewComment!.Trim());
+        var content = await TextProcessor.LinkTicketRefsAsync(NewComment!.Trim());
         var request = new CreateTicketComment(
             Editor!.Id,
             content!);

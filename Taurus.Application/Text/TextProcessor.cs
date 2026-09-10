@@ -1,13 +1,14 @@
 ﻿using System.Text.RegularExpressions;
+using Taurus.Application.Tickets;
 
-namespace Taurus.Application.Tickets;
+namespace Taurus.Application.Text;
 
-public interface ITicketRefLinker
+public interface ITextProcessor
 {
     Task<string?> LinkTicketRefsAsync(string? content);
 }
 
-public sealed partial class TicketRefLinker(ITicketDataProvider ticketDataProvider) : ITicketRefLinker
+public sealed partial class TextProcessor(ITicketDataProvider ticketDataProvider) : ITextProcessor
 {
     public async Task<string?> LinkTicketRefsAsync(string? content)
     {
