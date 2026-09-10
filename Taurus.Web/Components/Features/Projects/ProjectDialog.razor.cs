@@ -101,7 +101,7 @@ public partial class ProjectDialog
 
     private async Task CreateProjectAsync()
     {
-        var request = new CreateProjectRequest(Model.Title.Trim(), Model.Prefix.Trim());
+        var request = new CreateProject(Model.Title.Trim(), Model.Prefix.Trim());
         var result = await ProjectService.CreateProjectAsync(request);
 
         if (!result.Succeeded) {
@@ -117,7 +117,7 @@ public partial class ProjectDialog
         if (Model.Id is null)
             throw new InvalidOperationException("A project identifier is required when editing a project.");
 
-        var request = new UpdateProjectRequest(
+        var request = new UpdateProject(
             Model.Id.Value,
             Model.Title.Trim(),
             Model.Prefix.Trim(),

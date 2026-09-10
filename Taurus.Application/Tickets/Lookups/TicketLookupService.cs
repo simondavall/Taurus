@@ -2,17 +2,17 @@
 
 namespace Taurus.Application.Tickets.Lookups;
 
-public interface ITicketLookupDataService
+public interface ITicketLookupService
 {
     Task<IReadOnlyList<TicketPriority>> GetPrioritiesAsync();
     Task<IReadOnlyList<TicketStatus>> GetStatusesAsync();
     Task<IReadOnlyList<TicketType>> GetTypesAsync();
 }
 
-public sealed class TicketLookupDataService(
+public sealed class TicketLookupService(
     ITicketLookupDataProvider dataProvider,
     ICacheService cacheService,
-    TicketLookupCacheOptions cacheOptions) : ITicketLookupDataService
+    TicketLookupCacheOptions cacheOptions) : ITicketLookupService
 {
     private const string StatusesCacheKey = "ticket-lookups:statuses";
     private const string PrioritiesCacheKey = "ticket-lookups:priorities";

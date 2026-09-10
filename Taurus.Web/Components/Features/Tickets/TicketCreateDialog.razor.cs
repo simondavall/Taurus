@@ -77,7 +77,7 @@ public partial class TicketCreateDialog
         _saving = true;
 
         try {
-            var request = new CreateTicketRequest(
+            var request = new CreateTicket(
                 Model.Title.Trim(),
                 Model.Description,
                 Project.Id,

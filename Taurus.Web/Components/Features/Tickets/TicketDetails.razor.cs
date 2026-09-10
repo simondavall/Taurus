@@ -36,7 +36,7 @@ public partial class TicketDetails
     [Inject]
     private ITicketCommentService TicketCommentService { get; set; } = default!;
     [Inject]
-    private ITicketLookupDataService TicketLookupDataService { get; set; } = default!;
+    private ITicketLookupService TicketLookupService { get; set; } = default!;
     [Inject]
     private IProjectService ProjectService { get; set; } = default!;
     [Inject]
@@ -108,9 +108,9 @@ public partial class TicketDetails
     private async Task LoadPageDataAsync()
     {
         var projectsTask = ProjectService.GetProjectsAsync();
-        var statusesTask = TicketLookupDataService.GetStatusesAsync();
-        var prioritiesTask = TicketLookupDataService.GetPrioritiesAsync();
-        var typesTask = TicketLookupDataService.GetTypesAsync();
+        var statusesTask = TicketLookupService.GetStatusesAsync();
+        var prioritiesTask = TicketLookupService.GetPrioritiesAsync();
+        var typesTask = TicketLookupService.GetTypesAsync();
         var ticketTask = TicketService.GetTicketByRefAsync(TicketRef);
         var usersTask = UserService.GetUsersAsync();
 
@@ -368,12 +368,6 @@ public partial class TicketDetails
             .ToString("dd/MM/yyyy HH:mm");
     }
 
-    private void NavigateToParent()
-    {
-        if (ParentTicket is not null)
-            NavigateToTicket(ParentTicket.TicketRef);
-    }
-
     private void NavigateToTicket(string ticketRef)
     {
         NavigationManager.NavigateTo($"/tickets/{Uri.EscapeDataString(ticketRef)}");
@@ -432,7 +426,7 @@ public partial class TicketDetails
 
     private Task<ApplicationResult> UpdateTicketAsync(Guid userId)
     {
-        var request = new UpdateTicketRequest(
+        var request = new UpdateTicket(
             Editor!.Id,
             Editor.Title.Trim(),
             Editor.Description,
@@ -482,7 +476,7 @@ public partial class TicketDetails
 
     private async Task<ApplicationResult<TicketComment>> CreateCommentAsync(Guid userId)
     {
-        var request = new CreateTicketCommentRequest(
+        var request = new CreateTicketComment(
             Editor!.Id,
             NewComment!.Trim());
 
