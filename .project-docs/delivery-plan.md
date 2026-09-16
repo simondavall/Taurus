@@ -6,7 +6,7 @@ Unlike the roadmap, which describes the long-term delivery of the project, this 
 
 The roadmap should remain relatively stable.
 
-The delivery plan is expected to evolve as implementation progresses and understanding of the existing Pegasus application increases.
+The delivery plan is expected to evolve as implementation progresses and understanding of the existing Taurus application increases.
 
 Tasks listed here are intentionally concise. Detailed scope, goals and implementation notes belong in the Jira task.
 

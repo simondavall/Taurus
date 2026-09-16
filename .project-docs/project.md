@@ -119,11 +119,3 @@ The project values:
 | collaboration.md | How the assistant should collaborate. |
 | coding-conventions.md | Coding style and conventions. |
 | decisions-log.md | Record of important architectural decisions. |
-
-# Non-goals
-
-The project deliberately does not aim to:
-
-- Introduce unnecessary architectural layers.
-- Couple the UI directly to the PegasusApi models.
-- Optimise for hypothetical future requirements.
