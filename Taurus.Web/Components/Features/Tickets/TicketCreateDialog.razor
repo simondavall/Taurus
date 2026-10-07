@@ -21,45 +21,53 @@
                               Lines="4"
                               Sizing="InputSizing.Auto" />
 
-                <MudSelect T="int"
-                           @bind-Value="Model.TypeId"
-                           Label="Type"
-                           Variant="Variant.Outlined">
-                    @foreach (var type in TicketTypes)
-                    {
-                        <MudSelectItem T="int"
-                                       Value="@type.Id">
-                            @type.Title
-                        </MudSelectItem>
-                    }
-                </MudSelect>
+                <MudGrid Spacing="3">
+                    <MudItem xs="12" sm="4">
+                        <MudSelect T="int"
+                                   @bind-Value="Model.TypeId"
+                                   Label="Type"
+                                   Variant="Variant.Outlined">
+                            @foreach (var type in TicketTypes)
+                            {
+                                <MudSelectItem T="int"
+                                               Value="@type.Id">
+                                    @type.Title
+                                </MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
 
-                <MudSelect T="int"
-                           @bind-Value="Model.PriorityId"
-                           Label="Priority"
-                           Variant="Variant.Outlined">
-                    @foreach (var priority in TicketPriorities)
-                    {
-                        <MudSelectItem T="int"
-                                       Value="@priority.Id">
-                            @priority.Title
-                        </MudSelectItem>
-                    }
-                </MudSelect>
+                    <MudItem xs="12" sm="4">
+                        <MudSelect T="int"
+                                   @bind-Value="Model.PriorityId"
+                                   Label="Priority"
+                                   Variant="Variant.Outlined">
+                            @foreach (var priority in TicketPriorities)
+                            {
+                                <MudSelectItem T="int"
+                                               Value="@priority.Id">
+                                    @priority.Title
+                                </MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
 
-                <MudSelect T="int"
-                           @bind-Value="Model.StatusId"
-                           Label="Status"
-                           Variant="Variant.Outlined">
-                    @foreach (var status in AvailableTicketStatuses)
-                    {
-                        <MudSelectItem T="int"
-                                       Value="@status.Id">
-                            @status.Title
-                        </MudSelectItem>
-                    }
-                </MudSelect>
-
+                    <MudItem xs="12" sm="4">
+                        <MudSelect T="int"
+                                   @bind-Value="Model.StatusId"
+                                   Label="Status"
+                                   Variant="Variant.Outlined">
+                            @foreach (var status in AvailableTicketStatuses)
+                            {
+                                <MudSelectItem T="int"
+                                               Value="@status.Id">
+                                    @status.Title
+                                </MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                </MudGrid>
+                
                 @if (!string.IsNullOrWhiteSpace(_errorMessage))
                 {
                     <MudAlert Severity="Severity.Error">
