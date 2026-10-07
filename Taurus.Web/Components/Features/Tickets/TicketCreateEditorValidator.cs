@@ -5,7 +5,7 @@ namespace Taurus.Components.Features.Tickets;
 
 public sealed class TicketCreateEditorValidator : AbstractValidator<TicketCreateEditorModel>, IMudValidator<TicketCreateEditorModel>
 {
-    public TicketCreateEditorValidator(int completedStatusId, bool requireFixedInRelease)
+    public TicketCreateEditorValidator()
     {
         RuleFor(ticket => ticket.Title)
             .NotEmpty()
@@ -14,11 +14,6 @@ public sealed class TicketCreateEditorValidator : AbstractValidator<TicketCreate
         RuleFor(ticket => ticket.Description)
             .NotEmpty()
             .WithMessage("Description is required.");
-
-        RuleFor(ticket => ticket.FixedInRelease)
-            .NotEmpty()
-            .When(ticket => requireFixedInRelease && ticket.StatusId == completedStatusId)
-            .WithMessage("This ticket cannot be completed, Fixed In Release is required.");
     }
 
     public Func<object, string, Task<IEnumerable<string>>> ValidateValueAsync => ValidatePropertyAsync;
