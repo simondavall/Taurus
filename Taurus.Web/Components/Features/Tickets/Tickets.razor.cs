@@ -164,7 +164,12 @@ public partial class Tickets
 
     private static DialogOptions CreateTicketDialogOptions()
     {
-        return new DialogOptions { FullWidth = true, MaxWidth = MaxWidth.Small, CloseOnEscapeKey = true };
+        return new DialogOptions {
+            FullWidth = true,
+            MaxWidth = MaxWidth.Medium,
+            BackdropClick = false,
+            CloseOnEscapeKey = true
+        };
     }
 
     private async Task LoadTicketsAsync()

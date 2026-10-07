@@ -51,7 +51,7 @@
                            @bind-Value="Model.StatusId"
                            Label="Status"
                            Variant="Variant.Outlined">
-                    @foreach (var status in TicketStatuses)
+                    @foreach (var status in AvailableTicketStatuses)
                     {
                         <MudSelectItem T="int"
                                        Value="@status.Id">
@@ -59,13 +59,6 @@
                         </MudSelectItem>
                     }
                 </MudSelect>
-
-                <MudTextField T="string"
-                              @bind-Value="Model.FixedInRelease"
-                              For="@(() => Model.FixedInRelease)"
-                              Label="Fixed In Release"
-                              Variant="Variant.Outlined"
-                              OnlyValidateIfDirty="true" />
 
                 @if (!string.IsNullOrWhiteSpace(_errorMessage))
                 {
