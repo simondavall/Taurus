@@ -497,3 +497,12 @@
     - Arranged Type, Priority and Status selectors on a single row at tablet and larger viewport widths.
     - Preserved stacked Type, Priority and Status selectors on mobile.
     - Verified ticket creation and responsive editor behaviour across mobile, tablet and desktop layouts.
+- Added responsive ticket listing filters.
+    - Added Project and Filter dropdowns to the ticket listing below the desktop breakpoint.
+    - Displayed the Project and Filter dropdowns side-by-side on tablet layouts and stacked on mobile.
+    - Preserved the existing Projects and Filters sidebar on desktop.
+    - Reused the existing project and filter selection state and behaviour across responsive presentations.
+    - Preserved persisted project and filter selections.
+    - Preserved project-specific ticket loading, client-side filtering and pagination reset behaviour.
+    - Preserved Create Ticket availability and heading updates when changing project from the responsive controls.
+    - Verified project and filter selection across desktop, tablet and mobile layouts.
