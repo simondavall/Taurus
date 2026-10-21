@@ -1,6 +1,6 @@
 ﻿namespace Taurus.Application.Users;
 
-public interface IUserService
+public interface IUserDataProvider
 {
     Task<IReadOnlyList<User>> GetUsersAsync();
 }

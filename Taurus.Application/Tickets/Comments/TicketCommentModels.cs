@@ -10,3 +10,12 @@ public sealed record TicketComment(
     DateTimeOffset LastModified,
     Guid CreatedBy,
     DateTimeOffset CreatedDate);
+    
+public sealed record CreateTicketComment(
+    Guid TicketId,
+    string Content);
+
+public sealed record UpdateTicketComment(
+    Guid Id,
+    string Content,
+    bool IsDeleted);

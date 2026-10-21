@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 using Taurus.Application.Projects;
+using Taurus.Application.Text;
 using Taurus.Application.Tickets;
 using Taurus.Application.Tickets.Lookups;
 
@@ -19,6 +20,8 @@ public partial class TicketCreateDialog
     private IMudDialogInstance MudDialog { get; set; } = default!;
     [Inject]
     private ITicketService TicketService { get; set; } = default!;
+    [Inject]
+    private ITextProcessor TextProcessor { get; set; } = default!; 
     [Inject]
     private AuthenticationStateProvider AuthenticationStateProvider { get; set; } = default!;
 
@@ -39,6 +42,8 @@ public partial class TicketCreateDialog
 
     private TicketCreateEditorModel Model { get; } = new();
 
+    private IReadOnlyList<TicketStatus> AvailableTicketStatuses { get; set; } = [];
+
     protected override void OnInitialized()
     {
         if (TicketTypes.Count == 0)
@@ -51,11 +56,19 @@ public partial class TicketCreateDialog
             throw new InvalidOperationException("Ticket status reference data is required when creating a ticket.");
 
         var lookupIds = TicketLookupIds.Resolve(TicketStatuses, TicketPriorities);
-        _validator = new TicketCreateEditorValidator(lookupIds.CompletedStatusId, Project.RequireFixedInRelease);
+
+        AvailableTicketStatuses = TicketStatuses
+            .Where(status => status.Id != lookupIds.CompletedStatusId)
+            .ToArray();
+
+        if (AvailableTicketStatuses.Count == 0)
+            throw new InvalidOperationException("At least one non-completed ticket status is required when creating a ticket.");
+
+        _validator = new TicketCreateEditorValidator();
 
         Model.TypeId = TicketTypes[0].Id;
         Model.PriorityId = TicketPriorities[0].Id;
-        Model.StatusId = TicketStatuses[0].Id;
+        Model.StatusId = AvailableTicketStatuses[0].Id;
     }
 
     private void Cancel()
@@ -76,15 +89,17 @@ public partial class TicketCreateDialog
 
         _saving = true;
 
+        var description = await TextProcessor.LinkTicketRefsAsync(Model.Description);
+        
         try {
-            var request = new CreateTicketRequest(
+            var request = new CreateTicket(
                 Model.Title.Trim(),
-                Model.Description,
+                description,
                 Project.Id,
                 Model.StatusId,
                 Model.TypeId,
                 Model.PriorityId,
-                string.IsNullOrWhiteSpace(Model.FixedInRelease) ? null : Model.FixedInRelease.Trim(),
+                null,
                 ParentTicketRef);
 
             var result = await TicketService.CreateTicketAsync(request, userId);

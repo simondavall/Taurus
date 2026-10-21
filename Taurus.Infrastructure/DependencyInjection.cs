@@ -29,10 +29,9 @@ public static class DependencyInjection
         services.AddSingleton(new ProjectCacheOptions(settings.Caching.Projects.Duration));
 
         services.AddHttpClient<IProjectDataProvider, PegasusProjectDataProvider>(client);
-        services.AddHttpClient<ITicketService, TicketService>(client);
+        services.AddHttpClient<ITicketDataProvider, TicketDataProvider>(client);
         services.AddHttpClient<ITicketLookupDataProvider, TicketLookupDataProvider>(client);
-        services.AddHttpClient<ITicketCommentService, TicketCommentService>(client);
-        services.AddHttpClient<ITicketRefLinker, TicketRefLinker>(client);
-        services.AddHttpClient<IUserService, UserService>(client);
+        services.AddHttpClient<ITicketCommentDataProvider, TicketCommentDataProvider>(client);
+        services.AddHttpClient<IUserDataProvider, UserDataProvider>(client);
     }
 }

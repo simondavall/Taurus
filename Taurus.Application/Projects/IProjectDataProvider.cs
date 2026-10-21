@@ -2,8 +2,8 @@
 
 public interface IProjectDataProvider
 {
-    Task<ApplicationResult<Project>> CreateProjectAsync(CreateProjectRequest request);
+    Task<ApplicationResult<Project>> CreateProjectAsync(CreateProject createProject);
     Task<ApplicationResult> DeleteProjectAsync(Guid id);
     Task<IReadOnlyList<Project>> GetProjectsAsync();
-    Task<ApplicationResult> UpdateProjectAsync(UpdateProjectRequest request);
+    Task<ApplicationResult> UpdateProjectAsync(UpdateProject updateProject);
 }

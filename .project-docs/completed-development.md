@@ -487,3 +487,22 @@
     - Removed hard-coded fallback durations from ticket lookup and project-list caching.
     - Preserved existing application-settings, environment-variable and local `.env` configuration-source behaviour.
     - Verified startup validation and existing authentication, Data Protection, PegasusApi, caching, project and ticket workflows.
+- Improved Ticket Create editor behaviour.
+    - Increased the Ticket Create dialog width for improved desktop and tablet presentation.
+    - Prevented accidental dismissal of the editor by clicking outside the dialog.
+    - Preserved explicit cancellation through the Cancel action and Escape key.
+    - Removed Fixed In Release from the ticket creation workflow.
+    - Excluded Completed from the statuses available during ticket creation.
+    - Preserved the existing ticket creation application contract by supplying no Fixed In Release value.
+    - Arranged Type, Priority and Status selectors on a single row at tablet and larger viewport widths.
+    - Preserved stacked Type, Priority and Status selectors on mobile.
+    - Verified ticket creation and responsive editor behaviour across mobile, tablet and desktop layouts.
+- Added responsive ticket listing filters.
+    - Added Project and Filter dropdowns to the ticket listing below the desktop breakpoint.
+    - Displayed the Project and Filter dropdowns side-by-side on tablet layouts and stacked on mobile.
+    - Preserved the existing Projects and Filters sidebar on desktop.
+    - Reused the existing project and filter selection state and behaviour across responsive presentations.
+    - Preserved persisted project and filter selections.
+    - Preserved project-specific ticket loading, client-side filtering and pagination reset behaviour.
+    - Preserved Create Ticket availability and heading updates when changing project from the responsive controls.
+    - Verified project and filter selection across desktop, tablet and mobile layouts.

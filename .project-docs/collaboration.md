@@ -9,7 +9,7 @@
 - Distinguish clearly between observations, recommendations, and project decisions.
 - When suggesting documentation changes, quote the existing text and provide the replacement text.
 - When reviewing the documentation, focus on consistency, ambiguity, correctness, and completeness rather than stylistic improvements.
-- Provide document updates that are easy for the user to apply in the established format.
+- Provide document updates that are easy for the user to apply in the established markdown format.
 - Recommend updates only for documents affected by the completed task.
 - Prefer a single replacement covering adjacent sections rather than multiple small replacements where it improves readability.
 
@@ -36,7 +36,7 @@ The assistant should complete each task using the following workflow:
 
 1. Discuss the implementation where architectural or design decisions remain. Do not revisit established project decisions unless a genuine inconsistency or ambiguity is identified.
 2. Update affected project documentation immediately when the discussion settles a project decision, scope clarification, responsibility boundary or delivery-plan change. The documentation should describe the implementation that is about to be performed before implementation begins.
-3. Define the Jira ticket after the discussion phase so that its title, description, goal and scope reflect the agreed implementation. The developer will assign the RefId.
+3. Define the Jira-style ticket after the discussion phase so that its title, description, goal and concise scope reflect the agreed implementation.
 4. Provide the complete implementation together with the verification checklist in a single response, pausing only where new information or a genuine decision is required.
 5. Once verification has passed, recommend updates that record the completed implementation and advance the documented project state.
 
@@ -80,7 +80,6 @@ Verification should include confirming that:
 - As understanding grows, reduce repeated explanation of previously agreed approaches.
 - Actively look for opportunities to improve maintainability.
 - Recommend abstractions only after repeated successful implementations demonstrate clear value.
-- Explain the trade-offs of proposed abstractions.
 - Challenge unnecessary complexity.
 - Do not expand the scope of a request unless explicitly asked or required to identify a genuine inconsistency, ambiguity or risk.
 - Preserve established behaviour unless there is an agreed reason to change it.

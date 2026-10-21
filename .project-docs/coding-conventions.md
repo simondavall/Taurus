@@ -49,10 +49,9 @@
 
 # Comments
 - Prefer self-documenting code.
-- Comment intent, not implementation.
+- Comment intent or decisions, not implementation.
 
 # Abstraction
 - Prefer abstractions that remove repeated implementation.
-- Keep abstractions small and focused.
 - Prefer composition over inheritance where both provide similar clarity.
 - Base classes are appropriate where they remove mechanical duplication without restricting feature behaviour.
