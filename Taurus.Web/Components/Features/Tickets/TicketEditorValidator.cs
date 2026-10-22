@@ -17,10 +17,6 @@ public sealed class TicketEditorValidator : AbstractValidator<TicketEditorModel>
             .NotEmpty()
             .WithMessage("Title is required.");
 
-        RuleFor(ticket => ticket.Description)
-            .NotEmpty()
-            .WithMessage("Description is required.");
-
         RuleFor(ticket => ticket)
             .Must(CanCloseTicket)
             .WithMessage("This ticket cannot be closed, it has active sub tasks.")

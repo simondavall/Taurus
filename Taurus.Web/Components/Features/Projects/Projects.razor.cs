@@ -1,5 +1,4 @@
-﻿using AngleSharp;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using Taurus.Application.Configuration;
 using Taurus.Application.Projects;
@@ -80,7 +79,7 @@ public partial class Projects
 
     private static DialogOptions CreateDialogOptions()
     {
-        return new DialogOptions { FullWidth = true, MaxWidth = MaxWidth.Small, CloseOnEscapeKey = true };
+        return new DialogOptions { FullWidth = true, MaxWidth = MaxWidth.Small, BackdropClick = false, CloseOnEscapeKey = true };
     }
 
     private async Task LoadProjectsAsync()
