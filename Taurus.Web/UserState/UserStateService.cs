@@ -9,12 +9,15 @@ public interface IUserStateService
     Task SetSelectedProjectIdAsync(Guid? projectId);
     Task<TicketFilter?> GetSelectedTicketFilterAsync();
     Task SetSelectedTicketFilterAsync(TicketFilter filter);
+    Task<bool?> GetShowActiveProjectsOnlyAsync();
+    Task SetShowActiveProjectsOnlyAsync(bool showActiveOnly);
 }
 
 public sealed class UserStateService(ProtectedLocalStorage localStorage) : IUserStateService
 {
     private const string SelectedProjectIdKey = "Taurus.SelectedProjectId";
     private const string SelectedTicketFilterKey = "Taurus.SelectedTicketFilter";
+    private const string ShowActiveProjectsOnlyKey = "Taurus.ShowActiveProjectsOnly";
 
     public async Task<Guid?> GetSelectedProjectIdAsync()
     {
@@ -51,5 +54,21 @@ public sealed class UserStateService(ProtectedLocalStorage localStorage) : IUser
     public Task SetSelectedTicketFilterAsync(TicketFilter filter)
     {
         return localStorage.SetAsync(SelectedTicketFilterKey, filter).AsTask();
+    }
+    
+    public async Task<bool?> GetShowActiveProjectsOnlyAsync()
+    {
+        try {
+            var result = await localStorage.GetAsync<bool>(ShowActiveProjectsOnlyKey);
+            return result.Success ? result.Value : null;
+        }
+        catch {
+            return null;
+        }
+    }
+
+    public Task SetShowActiveProjectsOnlyAsync(bool showActiveOnly)
+    {
+        return localStorage.SetAsync(ShowActiveProjectsOnlyKey, showActiveOnly).AsTask();
     }
 }
