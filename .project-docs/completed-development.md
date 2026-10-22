@@ -506,3 +506,12 @@
     - Preserved project-specific ticket loading, client-side filtering and pagination reset behaviour.
     - Preserved Create Ticket availability and heading updates when changing project from the responsive controls.
     - Verified project and filter selection across desktop, tablet and mobile layouts.
+- Added Show Active Only filtering to the Projects page.
+    - Added a Show Active Only switch to the Projects header, enabled by default.
+    - Persisted and restored the selection using the existing user-state service and Protected Local Storage.
+    - Defaulted to showing active projects when no stored preference exists.
+    - Applied client-side filtering before sorting and pagination.
+    - Reset pagination when the filter changes.
+    - Preserved existing project-list caching and project creation, editing and deletion workflows.
+    - Added responsive switch positioning for desktop, tablet and mobile layouts.
+    - Verified filtering, persistence, sorting, pagination and existing project workflows.

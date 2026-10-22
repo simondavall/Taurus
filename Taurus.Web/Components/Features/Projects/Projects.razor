@@ -10,12 +10,20 @@
             Projects
         </MudText>
 
-        <MudButton Variant="Variant.Filled"
-                   Color="Color.Primary"
-                   StartIcon="@Icons.Material.Filled.Add"
-                   OnClick="CreateProjectAsync">
-            Create Project
-        </MudButton>
+        <div class="projects-header-actions">
+            <MudSwitch T="bool"
+                       Value="@ShowActiveOnly"
+                       ValueChanged="ShowActiveOnlyChangedAsync"
+                       Color="Color.Primary"
+                       Label="Show Active Only"/>
+
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.Add"
+                       OnClick="CreateProjectAsync">
+                Create Project
+            </MudButton>
+        </div>
     </div>
 
     <div class="d-none d-sm-block">

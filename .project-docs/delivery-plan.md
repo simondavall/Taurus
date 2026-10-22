@@ -249,6 +249,6 @@ Existing application settings are fully available in Taurus.
 - ✓ Implement caching for project list.
 - ✓ Implement application settings.
 - ✓ Automate production deployment.
-- Add Show Active Only toggle to projects page.
+- ✓ Add Show Active Only toggle to projects page.
 
 Future enhancements outside the planned implementation phases will be recorded here as the project evolves.

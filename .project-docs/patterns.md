@@ -41,7 +41,7 @@
 
 - `Taurus.Web` is the composition root.
 - Expose Application registrations through `AddTaurusApplication()`.
-- Expose Infrastructure registrations through `AddTaurusInfrastructure(configuration)`.
+- Expose Infrastructure registrations through `AddTaurusInfrastructure(settings)`, passing the validated `TaurusSettings` model from the Web composition root.
 - Keep PegasusApi typed `HttpClient` registrations within Infrastructure.
 - Register Web-only services from the Web composition root.
 - Register services explicitly as they are introduced.
