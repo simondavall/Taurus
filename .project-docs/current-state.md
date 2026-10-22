@@ -9,11 +9,11 @@ where development should continue.
 
 # Current milestone
 
-- None
+- Enhancements
 
 # Current task
 
-- None
+- Add Show Active Only toggle to projects page.
 
 # Remaining milestone tasks
 
