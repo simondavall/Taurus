@@ -13,3 +13,6 @@ obj/
 .keys
 .certificates
 .publish
+
+# Hidden files
+deploy-production.ps1
