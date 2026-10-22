@@ -13,7 +13,7 @@ where development should continue.
 
 # Current task
 
-- Add Show Active Only toggle to projects page.
+- None
 
 # Remaining milestone tasks
 

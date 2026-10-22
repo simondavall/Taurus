@@ -7,8 +7,5 @@
 # Enhancements
 
 # Technical Debt
-- Move configuiration references to their own class. Verify all settings exist. 
-E.g replace "Configuration.GetValue("Tickets:SettingName", true);" 
-with something like Configuration.GetValue(Constants.Config.Tickets.SettingName, true);
 
 # Nice-to-have

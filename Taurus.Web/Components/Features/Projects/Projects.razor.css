@@ -6,12 +6,22 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: nowrap;
     gap: 1rem;
     margin-bottom: 1rem;
 }
 
-.projects-header ::deep .mud-button-root {
+.projects-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.projects-header-actions ::deep .mud-switch {
+    margin: 0;
+}
+
+.projects-header-actions ::deep .mud-button-root {
     flex-shrink: 0;
 }
 
@@ -69,6 +79,16 @@
         align-items: flex-start;
     }
 
+    .projects-header {
+        flex-wrap: wrap;
+    }
+
+    .projects-header-actions {
+        width: 100%;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    
     .projects-pagination {
         justify-content: center;
     }
