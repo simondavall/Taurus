@@ -10,10 +10,6 @@ public sealed class TicketCreateEditorValidator : AbstractValidator<TicketCreate
         RuleFor(ticket => ticket.Title)
             .NotEmpty()
             .WithMessage("Title is required.");
-
-        RuleFor(ticket => ticket.Description)
-            .NotEmpty()
-            .WithMessage("Description is required.");
     }
 
     public Func<object, string, Task<IEnumerable<string>>> ValidateValueAsync => ValidatePropertyAsync;
