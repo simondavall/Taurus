@@ -12,3 +12,4 @@ obj/
 .logs
 .keys
 .certificates
+.publish
